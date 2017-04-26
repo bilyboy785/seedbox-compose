@@ -6,6 +6,10 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
 Service | Port | Description | Link
 ------------ | ------------- | ------------- | ------------- |
 Nginx | 80, 443 | .. | https://nginx.org
+Fail2Ban | -- | .. | ..
+MariaDB | 3306 | .. | ..
+Nextcloud | 8181 | Self-hosted cloud Service | https://nextcloud.com
+Rtorrent/RuTorrent | 8282, 49160, 49161 | ... | ...
 
   * [https://www.nginx.com/|**Nginx**] : 80, 443
   * **Fail2Ban**
