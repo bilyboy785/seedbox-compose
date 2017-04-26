@@ -17,5 +17,5 @@ UI for Docker          | 8686               | ...                       | https:
 PlexMediaServer        | 32400              | ...                       | https://www.plex.tv/fr/
 PlexPy                 | 8787               | ...                       | https://github.com/JonnyWong16/plexpy
 Zerobin                | 8888               | ...                       | https://github.com/sebsauvage/ZeroBin
-Lufi                   | 8989               | ...                       | ...
-Lutim                  | 9090               | ...                       | ...
+Lufi                   | 8989               | ...                       | https://framablog.org/tag/lufi/
+Lutim                  | 9090               | ...                       | https://lut.im/
