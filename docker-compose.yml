@@ -1,0 +1,223 @@
+#Nginx
+nginx:
+  image: wonderfall/boring-nginx
+  container_name: nginx
+  links:
+    - postfixadmin:postfixadmin
+    - rainloop:rainloop
+  ports:
+    - "80:8000"
+    - "443:4430"
+  volumes:
+    - ./dockers/nginx/sites-enabled:/sites-enabled
+    - ./dockers/nginx/conf:/conf.d
+    - ./dockers/nginx/log:/var/log/nginx
+    - ./dockers/nginx/certs:/certs
+
+#Fail2Ban
+fail2ban:
+  image: superitman/fail2ban:latest
+  container_name: Fail2Ban
+  volumes:
+    - ./dockers/fail2ban/filter.d/custom_filter.conf:/etc/fail2ban/filter.d/custom_filter.conf
+    - ./dockers/jail.local:/etc/fail2ban/jail.local
+    - /var/log:/var/log
+  privileged: true
+
+#DBNextcloud
+dbnextcloud:
+  image: mariadb:10
+  container_name: dbnextcloud
+  environment:
+    - MYSQL_ROOT_PASSWORD=rootPassword
+    - MYSQL_DATABASE=nextcloud
+    - MYSQL_USER=nextcloud
+    - MYSQL_PASSWORD=nextcloudPassword
+  volumes:
+    - ./dockers/mariadb/db/nextcloud:/var/lib/mysql
+
+#Nextcloud
+nextcloud:
+  image: wonderfall/nextcloud:10.0
+  container_name: nextcloud
+  environment:
+    - UID=1001
+    - GID=1001
+    - UPLOAD_MAX_SIZE=10G
+    - APC_SHM_SIZE=128M
+    - OPCACHE_MEM_SIZE=128
+    - CRON_PERIOD=15m
+    - TZ=Europe/Paris
+    - ADMIN_USER=adminUser
+    - ADMIN_PASSWORD=adminPassword
+    - DOMAIN=cloud.domain.tld
+    - DB_TYPE=mysql
+    - DB_NAME=nextcloud
+    - DB_USER=nextcloud
+    - DB_PASSWORD=nextcloudPassword
+    - DB_HOST=dbnextcloud
+  links:
+    - dbnextcloud:dbnextcloud
+  ports:
+    - 8181:8888
+  volumes:
+    - ./dockers/nextcloud/data:/data
+    - ./dockers/nextcloud/config:/config
+    - ./dockers/nextcloud/apps:/apps
+    - ./dockers/nextcloud/themes:/nextcloud/themes
+
+#RuTorrent-rTorrent
+rutorrent:
+  image: diameter/rtorrent-rutorrent
+  container_name: rutorrent
+  environment:
+    - WEBROOT=/
+    - USR_ID=1001
+    - GRP_ID=1001
+  ports:
+    - "8282:80"
+    - "49160:49160/udp"
+    - "49161:49161"
+  volumes:
+    - /downloads:/downloads
+
+#Jackett
+jackett:
+  image : linuxserver/jackett
+  container_name: jackett
+  environment:
+    - PGID=1001
+    - PUID=1001
+    - TZ=Europe/Paris
+  ports:
+    - 8383:9117
+  volumes:
+    - /etc/localtime:/etc/locatime:ro
+    - ./dockers/jackett/downloads:/downloads
+
+#Radarr
+radarr:
+  image: hotio/radarr
+  container_name: radarr
+  environment:
+    - PUID=1001
+    - PGID=1001
+    - TZ=Europe/Paris
+  ports:
+    - 8484:7878
+  links:
+    - rutorrent:rutorrent
+  volumes:
+    - ./dockers/radarr/config:/config
+    - /movie-downloads:/downloads
+    - /movies:/movies
+
+#Sonarr
+sonarr:
+  image: linuxserver/sonarr
+  container_name: sonarr
+  environment:
+    - PUID=1001
+    - PGID=1001
+    - TZ=Europe/Paris
+  ports:
+    - 8585:8989
+  links:
+    - rutorrent:rutorrent
+  volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - ./dockers/sonarr/config:/config
+    - /tv-downloads:/downloads
+    - /tv:/tv
+
+#UI For Docker
+ui-for-docker:
+  image: uifd/ui-for-docker
+  container_name: ui-for-docker
+  ports:
+    - 8686:9000
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  privileged: true
+
+#Plex
+plex:
+  image: linuxserver/plex
+  container_name: plex
+  environment:
+    - VERSION=latest
+    - PUID=1001
+    - PGID=1001
+    - TZ=Europe/Paris
+  net: host
+  ports:
+    - 32400:32400
+    - 32400:32400/udp
+    - 32469:32469
+    - 32469:32469/udp
+    - 5353:5353/udp
+    - 1900:1900/udp
+  volumes:
+    - ./dockers/plex/config:/config
+    - /tv:/data/tvshows
+    - /movies:/data/movies
+
+#PlexPy
+plexpy:
+  image: linuxserver/plexpy
+  container_name: plexpy
+  environment:
+    - PGID=1001
+    - PUID=1001
+    - TZ=Europe/Paris
+  ports:
+    - 8787:8181
+  volumes:
+    - ./dockers/plexpy/config:/config
+    - ./dockers/plexply/logs:/logs:ro
+
+#Zerobin
+zerobin:
+  image: wonderfall/zerobin
+  container_name: zerobin
+  environment:
+    - UID=1001
+    - GID=1001
+  ports:
+    - 8888:8888
+  volumes:
+    - ./dockers/zerobin/data:/zerobin/data
+
+#Lufi
+lufi:
+  image: xataz/lufi
+  container_name: lufi
+  environment:
+    - UID=1001
+    - GID=1001
+    - WEBROOT=/lufi
+    - SECRET=$(date +%s | md5sum | head -c 32)
+    - CONTACT=contact@domain.tld
+    - MAX_FILE_SIZE=250000000
+  ports:
+    - 8989:8080
+  volumes:
+    - ./dockers/lufi/data:/data
+    - ./dockers/lufi/files:/files
+
+#Lutim
+lutim:
+  image: xataz/lutim
+  container_name: lutim
+  environment:
+    - UID=1001
+    - GID=1001
+    - WEBROOT=/lutim
+    - SECRET=$(date +%s | md5sum | head -c 32)
+    - CONTACT=contact@domain.tld
+    - MAX_FILE_SIZE=250000000
+  ports:
+    - 9090:8181
+  volumes:
+    - ./dockers/lutim/data:/data
+    - ./dockers/lutim/files:/lutim/files
