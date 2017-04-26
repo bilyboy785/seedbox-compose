@@ -24,7 +24,7 @@ Lutim                  | 9090               | ...                       | https:
  * First, clone this repo to a fresh Debian/Ubuntu server :
 ```shell
 git clone https://github.com/bilyboy785/seedbox-compose.git
-chmod +x seedbox-compose/build.sh && chmod +x seedbox-compose/functions.sh
+chmod +x seedbox-compose/build.sh && chmod +x seedbox-compose/includes/functions.sh
 ```
 
 ## Sources
