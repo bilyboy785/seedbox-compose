@@ -10,19 +10,20 @@ NC='\033[0m'
 DATE=`date +%d/%m/%Y-%H:%M:%S`
 
 if [ $USER = "root" ] ; then
-  if [ ! -f /var/run/docker.sock ]; then
-    read -p "Docker is not installed, do you wan't to install it now ? y/n" installDocker
+  ls -l /var/run/docker.sock
+  if [ $? != 1 ]; then
+    read -p "Docker is not installed, do you wan't to install it now ? (y/n) : " installDocker
       case $installDocker in
       "y")
         apt install docker
        ;;
       "n")
-        echo -e "We'll not install Docker"
+        echo "We'll not install Docker"
       ;;
       *)
         exit 0;
       ;;
       esac
   fi
-  echo "Début ! "
+  echo "Début !"
 fi
