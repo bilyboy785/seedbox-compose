@@ -4,7 +4,7 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
 ## Services availables in this docker-compose
 
 Service | Port | Description | Link
------------- | -------------
+------------ | ------------- | ------------- | ------------- |
 Nginx | 80, 443 | .. | https://nginx.org
 
   * [https://www.nginx.com/|**Nginx**] : 80, 443
