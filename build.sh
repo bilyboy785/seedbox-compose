@@ -25,6 +25,4 @@ if [ $USER = "root" ] ; then
       esac
   fi
   echo "Début ! "
-else
-
 fi
