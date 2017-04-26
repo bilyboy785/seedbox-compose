@@ -10,8 +10,9 @@ NC='\033[0m'
 DATE=`date +%d/%m/%Y-%H:%M:%S`
 
 if [ $USER = "root" ] ; then
-  ls -l /var/run/docker.sock
-  if [ $? != 1 ]; then
+  dpkg-query -l docker
+  echo $?
+  if [ $? != 0 ]; then
     read -p "Docker is not installed, do you wan't to install it now ? (y/n) : " installDocker
       case $installDocker in
       "y")
