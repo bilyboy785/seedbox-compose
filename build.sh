@@ -22,6 +22,7 @@ if [ $USER = "root" ] ; then
     *)
     exit 0;
   fi
+  echo "Début ! "
 else
 
 fi
