@@ -19,3 +19,7 @@ PlexPy                 | 8787               | ...                       | https:
 Zerobin                | 8888               | ...                       | https://github.com/sebsauvage/ZeroBin
 Lufi                   | 8989               | ...                       | https://framablog.org/tag/lufi/
 Lutim                  | 9090               | ...                       | https://lut.im/
+
+## Installation
+
+## Sources
