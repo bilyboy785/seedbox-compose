@@ -2,6 +2,11 @@
 A docker-compose file to deploy complete Seedbox based only Docker. Install a fresh Debian / Ubuntu Server, install git git-core and docker and use this **Docker-compose.yml** to deploy your Seedbox.
 
 ## Services availables in this docker-compose
+
+Service | Port | Description | Link
+------------ | -------------
+Nginx | 80, 443 | .. | https://nginx.org
+
   * [https://www.nginx.com/|**Nginx**] : 80, 443
   * **Fail2Ban**
   * **MariaDB**
