@@ -15,7 +15,7 @@ function intro() {
 }
 
 function install_docker() {
-	echo "## DOCKER ##"
+	echo "${BLUE}## DOCKER ##${NC}"
 	dpkg-query -l docker >> /dev/null
   	if [ $? != 0 ]; then
 		echo "Docker is not installed, it will be installed !"
@@ -30,7 +30,7 @@ function install_docker() {
 }
 
 function install_letsencrypt() {
-	echo "## LETS ENCRYPT ##"
+	echo "${BLUE}## LETS ENCRYPT ##${NC}"
 	if [ ! -d "/etc/letsencrypt" ]; then
 		read -p "Lets'Encrypt is not installed. Do you plan to generate certificates ? (y/n) : " installLetsencrypt
 		apt install git-core
@@ -43,7 +43,7 @@ function install_letsencrypt() {
 }
 
 function choose_services() {
-	echo "## SERVICES ##"
+	echo "${BLUE}## SERVICES ##${NC}"
 	echo "Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !"
 	echo "Choose wich services you want to add (default set to no) : "
 	read -p "	Plex and PlexPy ? (y/n) : " PLEXINSTALL
@@ -64,8 +64,8 @@ function choose_services() {
 }
 
 function define_parameters() {
-	echo "## PARAMETERS ##"
-	read -p "Choose user wich run dockers ($USER ?). If user doesn't exist, it will be added : " CURRUSER
+	echo "${BLUE}## PARAMETERS ##${NC}"
+	read -p "	Choose user wich run dockers ($USER ?). If user doesn't exist, it will be added : " CURRUSER
 	if [[ $CURRUSER == "" ]]; then
 		USERID=$(id -u $USER)
 		GRPID=$(id -g $USER)
@@ -75,26 +75,26 @@ function define_parameters() {
 			USERID=$(id -u $CURRUSER)
 			GRPID=$(id -g $CURRUSER)
 		else
-			read -s -p "Enter password : " PASSWORD
+			read -s -p "	Enter password : " PASSWORD
 			PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 			useradd -m -p $PASS $CURRUSER
 			[ $? -eq 0 ] && echo "User has been added to system !" || echo "Failed to add a user !"
 		fi
 	fi
 	CURRTIMEZONE=$(cat /etc/timezone)
-	read -p "Please specify your Timezone (Detected : $CURRTIMEZONE) : " TIMEZONEDEF
+	read -p "	Please specify your Timezone (Detected : $CURRTIMEZONE) : " TIMEZONEDEF
 	if [[ $TIMEZONEDEF == "" ]]; then
 		TIMEZONE=$CURRTIMEZONE
 	else
 		TIMEZONE=$TIMEZONEDEF
 	fi
-	echo "#### General Informations ####"
+	echo "#### GENERAL INFORMATIONS ####"
 	read -p "	Please enter an email address : " CONTACTEMAIL
 	read -p "	Enter your domain name : " DOMAIN
-	echo "#### MariaDB Informations ####"
+	echo "#### MARIADB INFORMATIONS ####"
 	read -p "	Choose a password for MySQL root user : " MARIADBROOTPASSWD
 	read -p "	Choose a password for Nextcloud Database (dbnextcloud) : " MARIADBNEXTCLOUDPASSWD 
-	echo "#### Nextcloud Informations ####"
+	echo "#### NEXTCLOUD INFORMATIONS ####"
 	read -p "	Choose an admin username for Nextcloud : " NEXTCLOUDADMIN
 	read -p "	Choose an admin password for Nextcloud : " NEXTCLOUDADMINPASSWD
 	read -p "	Choose a max upload size for Nextcloud (Ex: 10G or 128M) : " MAXUPLOADSIZENEXTCLOUD
