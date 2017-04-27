@@ -65,14 +65,23 @@ function choose_services() {
 
 function define_parameters() {
 	echo "## PARAMETERS ##"
-	read -p "Choose user wich run dockers : " USER
-	echo $USER
-	USERID = echo $(id $USER | grep uid | cut -d\= -f2 | cut -d\( -f1)
-	GRPID = echo $(id $USER | grep gid | cut -d\= -f2 | cut -d\( -f1)
+	read -p "Choose user wich run dockers ($USER ?) : " CURRUSER
+	if [ $CURRUSER = "" ]; then
+		USERID = $(id -u $USER)
+		GRPID = $(id -g $USER)
+	else
+		USEREXIST = $(id -u $CURRUSER)
+		if [ $USEREXIST = 1 ]
+			echo "User doesn't exist !"
+			define_parameters
+		else	
+			USERID = $(id -u $CURRUSER)
+			GRPID = $(id -g $CURRUSER)
+		fi
+	fi
 	TIMEZONEDEF=$(cat /etc/timezone)
 	read -p "Please specify your Timezone (Detected timezone : $TIMEZONEDEF by default) : " TIMEZONE
 	if [ $TIMEZONE = "" ]; then
 		$TIMEZONE = $TIMEZONEDEF
 	fi
-	echo $TIMEZONE
 }
