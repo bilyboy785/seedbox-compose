@@ -41,3 +41,12 @@ function install_letsencrypt() {
 		echo "letsencrypt ok"
 	fi
 }
+
+function choose_services() {
+	echo "Some services will be installed by default : Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr and Docker WebUI !"
+}
+function define_parameter() {
+	read -p "Please enter user ID you want to run dockers : " USERID
+	read -p "Please enter group ID you want to run dockers : " GRPID
+	read -p "Please enter
+}
