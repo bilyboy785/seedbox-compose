@@ -1,0 +1,16 @@
+#Lufi
+lufi:
+  image: xataz/lufi
+  container_name: lufi
+  environment:
+    - UID=1001
+    - GID=1001
+    - WEBROOT=/lufi
+    - SECRET=$(date +%s | md5sum | head -c 32)
+    - CONTACT=contact@domain.tld
+    - MAX_FILE_SIZE=250000000
+  ports:
+    - 8989:8080
+  volumes:
+    - ./dockers/lufi/data:/data
+    - ./dockers/lufi/files:/files
