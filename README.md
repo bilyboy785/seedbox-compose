@@ -3,22 +3,22 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
 
 ## Services availables in this docker-compose
 
-Service | Port | Access | Link
----------------------- | ------------------ | ------------------------- | ------------- |
-Nginx                  | 80, 443            | --                        | https://nginx.org
-Fail2Ban               | --                 | --                        | https://www.fail2ban.org/
-MariaDB                | 3306               | --                        | https://mariadb.org/
-Nextcloud              | 8181               | /nextcloud                | https://nextcloud.com
-Rtorrent/RuTorrent     | 8282, 49160, 49161 | ...                       | https://wiki.archlinux.org/index.php/RTorrent
-Jackett                | 8383               | ...                       | https://github.com/Jackett/Jackett
-Radarr                 | 8484               | ...                       | https://github.com/Radarr/Radarr
-Sonarr                 | 8585               | ...                       | https://sonarr.tv/
-UI for Docker          | 8686               | ...                       | https://github.com/kevana/ui-for-docker
-PlexMediaServer        | 32400              | ...                       | https://www.plex.tv/fr/
-PlexPy                 | 8787               | ...                       | https://github.com/JonnyWong16/plexpy
-Zerobin                | 8888               | ...                       | https://github.com/sebsauvage/ZeroBin
-Lufi                   | 8989               | ...                       | https://framablog.org/tag/lufi/
-Lutim                  | 9090               | ...                       | https://lut.im/
+Service                | Port               | Status      |   Access
+---------------------- | ------------------ | ----------- | --------------
+Nginx                  | 80, 443            | Installed   |  /                  
+Fail2Ban               | --                 | Installed   |  ---                   
+MariaDB                | 3306               | Installed   |  ---                   
+Nextcloud              | 8181               | Installed   |  nextcloud.domain.tld          
+Rtorrent/RuTorrent     | 8282, 49160, 49161 | Installed   |  rutorrent.domain.tld                  
+Jackett                | 8383               | Installed   |  jackett.domain.tld                 
+Radarr                 | 8484               | Installed   |  radarr.domain.tld                  
+Sonarr                 | 8585               | Installed   |  sonarr.domain.tld                 
+UI for Docker          | 8686               | Installed   |  docker.domain.tld                  
+PlexMediaServer        | 32400              | Optional    |  plex.domain.tld                 
+PlexPy                 | 8787               | Optional    |  plexpy.domain.tld                 
+Zerobin                | 8888               | Optional    |  zerobin.domain.tld                 
+Lufi                   | 8989               | Optional    |  lufi.domain.tld                 
+Lutim                  | 9090               | Optional    |  lutim.domain.tld                 
 
 ## Installation
  * First, clone this repo to a fresh Debian/Ubuntu server :
