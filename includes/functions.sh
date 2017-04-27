@@ -71,7 +71,8 @@ function define_parameters() {
 		GRPID=$(id -g $USER)
 	else
 		if [ $(id -u $CURRUSER) = "1" ]; then
-			echo "User doesn't exist !"
+			echo "User doesn't exist ! Create user : "
+			add_user
 		else
 			USERID=$(id -u $CURRUSER)
 			GRPID=$(id -g $CURRUSER)
@@ -113,4 +114,24 @@ function replace_parameters() {
 	sed -i "s|%NEXTCLOUD_ADMIN_USER%|$8|g" $DOCKERCOMPOSE
 	sed -i "s|%NEXTCLOUD_ADMIN_PASSWD%|$9|g" $DOCKERCOMPOSE
 	cat $DOCKERCOMPOSE
+}
+
+function add_user() {
+	# Script to add a user to Linux system
+	if [ $(id -u) -eq 0 ]; then
+		read -p "Enter username : " USERNAME
+		read -s -p "Enter password : " PASSWORD
+		egrep "^$USERNAME" /etc/passwd >/dev/null
+		if [ $? -eq 0 ]; then
+			echo "$USERNAME exists!"
+			exit 1
+		else
+			PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
+			useradd -m -p $PASS $USERNAME
+			[ $? -eq 0 ] && echo "User has been added to system !" || echo "Failed to add a user !"
+		fi
+	else
+		echo "Only root may add a user to the system"
+		exit 2
+	fi
 }
