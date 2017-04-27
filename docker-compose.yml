@@ -41,9 +41,9 @@ nextcloud:
   image: wonderfall/nextcloud:10.0
   container_name: nextcloud
   environment:
-    - UID=1001
-    - GID=1001
-    - UPLOAD_MAX_SIZE=10G
+    - UID=%UID%
+    - GID=%GID%
+    - UPLOAD_MAX_SIZE=%UPLOAD_NEXTCLOUD%
     - APC_SHM_SIZE=128M
     - OPCACHE_MEM_SIZE=128
     - CRON_PERIOD=15m
@@ -72,8 +72,8 @@ rutorrent:
   container_name: rutorrent
   environment:
     - WEBROOT=/
-    - USR_ID=1001
-    - GRP_ID=1001
+    - USR_ID=%UID%
+    - GRP_ID=%GID%
   ports:
     - "8282:80"
     - "49160:49160/udp"
@@ -86,9 +86,9 @@ jackett:
   image : linuxserver/jackett
   container_name: jackett
   environment:
-    - PGID=1001
-    - PUID=1001
-    - TZ=Europe/Paris
+    - PGID=%UID%
+    - PUID=%GID%
+    - TZ=%TIMEZONE%
   ports:
     - 8383:9117
   volumes:
@@ -100,9 +100,9 @@ radarr:
   image: hotio/radarr
   container_name: radarr
   environment:
-    - PUID=1001
-    - PGID=1001
-    - TZ=Europe/Paris
+    - PUID=%UID%
+    - PGID=%GID%
+    - TZ=%TIMEZONE%
   ports:
     - 8484:7878
   links:
@@ -117,9 +117,9 @@ sonarr:
   image: linuxserver/sonarr
   container_name: sonarr
   environment:
-    - PUID=1001
-    - PGID=1001
-    - TZ=Europe/Paris
+    - PUID=%UID%
+    - PGID=%GID%
+    - TZ=%TIMEZONE%
   ports:
     - 8585:8989
   links:
