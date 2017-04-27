@@ -55,5 +55,9 @@ function choose_services() {
 function define_parameter() {
 	read -p "Please enter user ID you want to run dockers : " USERID
 	read -p "Please enter group ID you want to run dockers : " GRPID
-	read -p "Please enter
+	TIMEZONEDEF=$(cat /etc/timezone)
+	read -p "Please specify your Timezone (Detected timezone : $TIMEZONEDEF by default) : " TIMEZONE
+	if [ $TIMEZONE = "" ]; then
+		TIMEZONE = $TIMEZONEDEF
+	fi
 }
