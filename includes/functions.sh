@@ -91,7 +91,8 @@ function define_parameters() {
 function replace_parameters() {
 	INFILE='docker-compose-base.yml'
 	SCRIPT='includes/variables.sed'
-	sed -i "s/%TIMEZONE/$1/g" "$INFILE"
+	echo "La timezone est $1"
+	sed -i "s|%TIMEZONE%|$1|g" $INFILE
 	cat $INFILE
 	# sed "s/%UID%/$2/g" "docker-compose-base.tmp" > docker-compose-base.tmp
 	# sed "s/%GID%/$3/g" "docker-compose-base.tmp" > docker-compose-base.tmp
