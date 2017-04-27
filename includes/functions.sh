@@ -15,11 +15,12 @@ function intro() {
 }
 
 function upgrade_system() {
-	apt-get install -y gawk
+	echo -e "${BLUE}## UPGRADING ##${NC}"
+	apt-get install -y gawk apt-transport-https
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	rm /etc/apt/sources.list
 	if [[ $SYSTEM == "Debian GNU/Linux" ]]; then
-		cp includes/sources.list.debian /etc/apt/sources.list
+		cat includes/sources.list.debian >> /etc/apt/sources.list
 		wget -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add -
 		wget -O- http://nginx.org/keys/nginx_signing.key | apt-key add -
 	elif [[ $SYSTEM == "Ubuntu" ]]; then
