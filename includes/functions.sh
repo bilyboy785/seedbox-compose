@@ -89,7 +89,8 @@ function define_parameters() {
 }
 
 function replace_parameters() {
-	sed -i "s/%TIMEZONE%/'$1'/g" "docker-compose-base.yml"
+	echo $1
+	sed -i 's/%TIMEZONE%/'$1'/g' docker-compose-base.yml
 	# sed "s/%UID%/$2/g" "docker-compose-base.tmp" > docker-compose-base.tmp
 	# sed "s/%GID%/$3/g" "docker-compose-base.tmp" > docker-compose-base.tmp
 	# sed "s/%LUFI_LUTIM_CONTACT%/$4/g" "docker-compose-base.tmp" > docker-compose.yml
