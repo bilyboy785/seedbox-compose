@@ -11,14 +11,14 @@ function install_docker() {
 		    ;;
 		    "n")
 		        echo "We'll not install Docker"
-		        echo "$RED Exiting$NC"
+		        echo "Exiting"
 		    ;;
 		    *)
 		        exit 0;
 		    ;;
 		esac
 	else
-		echo "$GREEN Docker is already installed !$NC"
+		echo "Docker is already installed !"
 	fi
 }
 
@@ -33,14 +33,14 @@ function install_letsencrypt() {
 		    ;;
 		    "n")
 		        echo "We'll not install LetsEncrypt"
-		        echo "$RED Exiting$NC"
+		        echo "Exiting"
 		    ;;
 		    *)
 		        exit 0;
 		    ;;
 		esac
 	else
-		echo "$GREEN Let's Encrypt is already installed !$NC"
+		echo "Let's Encrypt is already installed !"
 	fi
 }
 
