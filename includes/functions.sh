@@ -84,13 +84,18 @@ function define_parameters() {
 	else
 		TIMEZONE=$TIMEZONEDEF
 	fi
-	read -p "Please enter an email address"
-	replace_parameters $TIMEZONE $USERID $GRPID
+	read -p "Please enter an email address : " CONTACTEMAIL
+	replace_parameters $TIMEZONE $USERID $GRPID $CONTACTEMAIL
 }
 
 function replace_parameters() {
-	sed -e "s/%TIMEZONE%/$1/g" docker-compose.yml
-	sed -e "s/%UID%/$2/g" docker-compose.yml
-	sed -e "s/%GID%/$3/g" docker-compose.yml
-	sed -e "s/%LUFI_LUTIM_CONTACT%/$4/g" docker-compose.yml
+	TIMEZONE=$1
+	UID=$2
+	GID=$3
+	CONTACTEMAIL=$4
+	DOCKERCOMPOSE="docker-compose.yml"
+	cat $DOCKERCOMPOSE | awk -F "," '{gsub("%UID%",$UID,$1);print $1}'
+	cat $DOCKERCOMPOSE | awk -F "," '{gsub("%GID%",$GID,$1);print $1}'
+	cat $DOCKERCOMPOSE | awk -F "," '{gsub("%TIMEZONE%",$TIMEZONE,$1);print $1}'
+	cat $DOCKERCOMPOSE | awk -F "," '{gsub("%LUFI_LUTIM_CONTACT%",$CONTACTEMAIL,$1);print $1}'
 }
