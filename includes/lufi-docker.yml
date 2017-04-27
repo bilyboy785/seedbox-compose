@@ -4,8 +4,8 @@ lufi:
   image: xataz/lufi
   container_name: lufi
   environment:
-    - UID=1001
-    - GID=1001
+    - UID=%UID%
+    - GID=%GID%
     - WEBROOT=/lufi
     - SECRET=$(date +%s | md5sum | head -c 32)
     - CONTACT=contact@domain.tld
