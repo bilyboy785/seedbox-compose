@@ -19,4 +19,4 @@ plex:
   volumes:
     - ./dockers/plex/config:/config
     - /tv:/data/tvshows
-- /movies:/data/movies
+    - /movies:/data/movies
