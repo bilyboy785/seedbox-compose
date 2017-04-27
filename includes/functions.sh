@@ -65,7 +65,7 @@ function choose_services() {
 
 function define_parameters() {
 	echo -e "${BLUE}## PARAMETERS ##${NC}"
-	read -p "	Choose user wich run dockers ($USER ?). If user doesn't exist, it will be added : " CURRUSER
+	read -p "	* Choose user wich run dockers ($USER ?). If user doesn't exist, it will be added : " CURRUSER
 	if [[ $CURRUSER == "" ]]; then
 		USERID=$(id -u $USER)
 		GRPID=$(id -g $USER)
@@ -82,7 +82,7 @@ function define_parameters() {
 		fi
 	fi
 	CURRTIMEZONE=$(cat /etc/timezone)
-	read -p "	Please specify your Timezone (Detected : $CURRTIMEZONE) : " TIMEZONEDEF
+	read -p "	* Please specify your Timezone (Detected : $CURRTIMEZONE) : " TIMEZONEDEF
 	if [[ $TIMEZONEDEF == "" ]]; then
 		TIMEZONE=$CURRTIMEZONE
 	else
