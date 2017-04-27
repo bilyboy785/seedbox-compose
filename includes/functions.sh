@@ -65,17 +65,20 @@ function choose_services() {
 
 function define_parameters() {
 	echo "## PARAMETERS ##"
-	read -p "Choose user wich run dockers ($USER ?) : " CURRUSER
+	read -p "Choose user wich run dockers ($USER ?). If user doesn't exist, it will be added : " CURRUSER
 	if [[ $CURRUSER == "" ]]; then
 		USERID=$(id -u $USER)
 		GRPID=$(id -g $USER)
 	else
-		if [ $(id -u $CURRUSER) = "1" ]; then
-			echo "User doesn't exist ! Create user : "
-			add_user
-		else
+		egrep "^$CURRUSER" /etc/passwd >/dev/null
+		if [ $? -eq 0 ]; then
 			USERID=$(id -u $CURRUSER)
 			GRPID=$(id -g $CURRUSER)
+		else
+			read -s -p "Enter password : " PASSWORD
+			PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
+			useradd -m -p $PASS $CURRUSER
+			[ $? -eq 0 ] && echo "User has been added to system !" || echo "Failed to add a user !"
 		fi
 	fi
 	CURRTIMEZONE=$(cat /etc/timezone)
