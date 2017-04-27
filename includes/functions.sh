@@ -14,6 +14,20 @@ function intro() {
 	echo ""
 }
 
+function upgrade_system() {
+	apt-get install -y gawk
+	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
+	rm /etc/apt/sources.list
+	if [[ $SYSTEM == "Debian GNU/Linux" ]]; then
+		cp includes/sources.list.debian /etc/apt/sources.list
+		wget -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add -
+		wget -O- http://nginx.org/keys/nginx_signing.key | apt-key add -
+	elif [[ $SYSTEM == "Ubuntu" ]]; then
+		cp includes/sources.list.ubuntu /etc/apt/sources.list
+	fi
+	apt-get update && apt-get upgrade -y
+}
+
 function install_docker() {
 	echo -e "${BLUE}## DOCKER ##${NC}"
 	dpkg-query -l docker >> /dev/null
@@ -64,8 +78,8 @@ function choose_services() {
 }
 
 function define_parameters() {
-	echo -e "${BLUE}## PARAMETERS ##${NC}"
-	read -p "	* Choose user wich run dockers ($USER ?). If user doesn't exist, it will be added : " CURRUSER
+	echo -e "${BLUE}## USER INFORMATIONS ##${NC}"
+	read -p "	* Choose user wich run dockers (default $USER). If user doesn't exist, it will be added : " CURRUSER
 	if [[ $CURRUSER == "" ]]; then
 		USERID=$(id -u $USER)
 		GRPID=$(id -g $USER)
@@ -82,19 +96,19 @@ function define_parameters() {
 		fi
 	fi
 	CURRTIMEZONE=$(cat /etc/timezone)
-	read -p "	* Please specify your Timezone (Detected : $CURRTIMEZONE) : " TIMEZONEDEF
+	read -p "	* Please specify your Timezone (default $CURRTIMEZONE) : " TIMEZONEDEF
 	if [[ $TIMEZONEDEF == "" ]]; then
 		TIMEZONE=$CURRTIMEZONE
 	else
 		TIMEZONE=$TIMEZONEDEF
 	fi
-	echo "#### GENERAL INFORMATIONS ####"
+	echo -e "${BLUE}## GENERAL INFORMATIONS ##${NC}"
 	read -p "	Please enter an email address : " CONTACTEMAIL
 	read -p "	Enter your domain name : " DOMAIN
-	echo "#### MARIADB INFORMATIONS ####"
+	echo -e "${BLUE}## MARIADB INFORMATIONS ##${NC}"
 	read -p "	Choose a password for MySQL root user : " MARIADBROOTPASSWD
 	read -p "	Choose a password for Nextcloud Database (dbnextcloud) : " MARIADBNEXTCLOUDPASSWD 
-	echo "#### NEXTCLOUD INFORMATIONS ####"
+	echo -e "${BLUE}## NEXTCLOUD INFORMATIONS ##${NC}"
 	read -p "	Choose an admin username for Nextcloud : " NEXTCLOUDADMIN
 	read -p "	Choose an admin password for Nextcloud : " NEXTCLOUDADMINPASSWD
 	read -p "	Choose a max upload size for Nextcloud (Ex: 10G or 128M) : " MAXUPLOADSIZENEXTCLOUD

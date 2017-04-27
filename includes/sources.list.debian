@@ -1,0 +1,13 @@
+deb ftp://ftp.fr.debian.org/debian/ jessie main contrib non-free
+deb http://security.debian.org/ jessie/updates main contrib non-free
+ 
+deb ftp://ftp.fr.debian.org/debian/ jessie-updates main contrib non-free
+deb ftp://ftp.fr.debian.org/debian/ jessie-backports main contrib non-free
+ 
+# dotdeb
+deb http://packages.dotdeb.org jessie all
+deb-src http://packages.dotdeb.org jessie all
+ 
+# nginx
+deb http://nginx.org/packages/debian/ jessie nginx
+deb-src http://nginx.org/packages/debian/ jessie nginx

@@ -17,6 +17,9 @@ if [ $USER = "root" ] ; then
   ## Display script infos 
   intro
   
+  ## Upgrading system
+  upgrade_system
+  
   ## Check for docker on system
   install_docker
   
