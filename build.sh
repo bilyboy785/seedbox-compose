@@ -12,7 +12,7 @@ DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 
 if [ $USER = "root" ] ; then
   install_docker
-  instal_letsencrypt
+  install_letsencrypt
   choose_services
   define_parameters
 fi
