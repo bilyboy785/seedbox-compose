@@ -11,4 +11,4 @@ plexpy:
     - 8787:8181
   volumes:
     - ./dockers/plexpy/config:/config
-- ./dockers/plexply/logs:/logs:ro
+    - ./dockers/plexply/logs:/logs:ro
