@@ -89,9 +89,14 @@ function define_parameters() {
 }
 
 function replace_parameters() {
-	sed "s/%TIMEZONE%/$1/g" "docker-compose-base.yml" > docker-compose-base.tmp
-	sed "s/%UID%/$2/g" "docker-compose-base.tmp" > docker-compose-base.tmp
-	sed "s/%GID%/$3/g" "docker-compose-base.tmp" > docker-compose-base.tmp
-	sed "s/%LUFI_LUTIM_CONTACT%/$4/g" "docker-compose-base.tmp" > docker-compose.yml
-	cat docker-compose-base.yml >> docker-compose.yml
+string='foo bar qux'
+one="${string/ /.}"
+	DOCKERFILE=$(cat docker-compose-base.yml)
+	echo $DOCKERFILE
+	DOCKERFILEV1="${DOCKERFILE//%UID%/$2}"
+	echo $DOCKERFILEV1
+	# sed "s/%TIMEZONE%/$1/g" "docker-compose-base.yml" > docker-compose-base.tmp
+	# sed "s/%UID%/$2/g" "docker-compose-base.tmp" > docker-compose-base.tmp
+	# sed "s/%GID%/$3/g" "docker-compose-base.tmp" > docker-compose-base.tmp
+	# sed "s/%LUFI_LUTIM_CONTACT%/$4/g" "docker-compose-base.tmp" > docker-compose.yml
 }
