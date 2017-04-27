@@ -6,7 +6,7 @@ plexpy:
   environment:
     - PGID=%UID%
     - PUID=%GID%
-    - TZ=Europe/Paris
+    - TZ=%TIMEZONE%
   ports:
     - 8787:8181
   volumes:
