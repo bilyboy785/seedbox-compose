@@ -50,15 +50,15 @@ function choose_services() {
 	read -p "	ZeroBin ? (y/n) : " ZEROBININSTALL
 	read -p "	Lufi & Lutim ? (y/n) : " LUFILUTIMINSTALL
 	if [ $PLEXINSTALL = "y" ]; then
-		cat includes/plex-docker.yml >> docker-compose.yml
-		cat includes/plexpy-docker.yml >> docker-compose.yml
+		cat includes/plex-docker.yml >> docker-compose-base.yml
+		cat includes/plexpy-docker.yml >> docker-compose-base.yml
 	fi
 	if [ $ZEROBININSTALL = "y" ]; then
-		cat includes/zerobin-docker.yml >> docker-compose.yml
+		cat includes/zerobin-docker.yml >> docker-compose-base.yml
 	fi
 	if [ $LUFILUTIMINSTALL = "y" ]; then
-		cat includes/lufi-docker.yml >> docker-compose.yml
-		cat includes/lutim-docker.yml >> docker-compose.yml
+		cat includes/lufi-docker.yml >> docker-compose-base.yml
+		cat includes/lutim-docker.yml >> docker-compose-base.yml
 	fi
 	echo ""
 }
@@ -90,7 +90,9 @@ function define_parameters() {
 
 function replace_parameters() {
 	echo $1
-	sed -i 's/%TIMEZONE%/'$1'/g' docker-compose-base.yml
+	INFILE='docker-compose-base.yml'
+	SCRIPT='includes/variables.sed'
+	sed --in-place --file="$SCRIPT" "$INFILE"
 	# sed "s/%UID%/$2/g" "docker-compose-base.tmp" > docker-compose-base.tmp
 	# sed "s/%GID%/$3/g" "docker-compose-base.tmp" > docker-compose-base.tmp
 	# sed "s/%LUFI_LUTIM_CONTACT%/$4/g" "docker-compose-base.tmp" > docker-compose.yml
