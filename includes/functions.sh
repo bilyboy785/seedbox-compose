@@ -70,8 +70,7 @@ function define_parameters() {
 		USERID = $(id -u $USER)
 		GRPID = $(id -g $USER)
 	else
-		USEREXIST = $(id -u $CURRUSER)
-		if [ $USEREXIST = "1" ]; then
+		if [ $(id -u $CURRUSER) = "1" ]; then
 			echo "User doesn't exist !"
 		else
 			USERID = $(id -u $CURRUSER)
