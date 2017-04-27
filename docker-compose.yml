@@ -29,10 +29,10 @@ dbnextcloud:
   image: mariadb:10
   container_name: dbnextcloud
   environment:
-    - MYSQL_ROOT_PASSWORD=rootPassword
-    - MYSQL_DATABASE=nextcloud
-    - MYSQL_USER=nextcloud
-    - MYSQL_PASSWORD=nextcloudPassword
+    - MYSQL_ROOT_PASSWORD=%MYSQL_ROOT_PASSWD%
+    - MYSQL_DATABASE=%DB_NEXTCLOUD%
+    - MYSQL_USER=%MYSQL_NEXTCLOUD_USER%
+    - MYSQL_PASSWORD=%MYSQL_NEXTCLOUD_PASSWD%
   volumes:
     - ./dockers/mariadb/db/nextcloud:/var/lib/mysql
 
@@ -48,13 +48,13 @@ nextcloud:
     - OPCACHE_MEM_SIZE=128
     - CRON_PERIOD=15m
     - TZ=Europe/Paris
-    - ADMIN_USER=adminUser
-    - ADMIN_PASSWORD=adminPassword
-    - DOMAIN=cloud.domain.tld
+    - ADMIN_USER=%NEXTCLOUD_ADMIN_USER%
+    - ADMIN_PASSWORD=%NEXTCLOUD_ADMIN_PASSWD%
+    - DOMAIN=%CLOUD_DOMAIN%
     - DB_TYPE=mysql
-    - DB_NAME=nextcloud
-    - DB_USER=nextcloud
-    - DB_PASSWORD=nextcloudPassword
+    - DB_NAME=%DB_NEXTCLOUD%
+    - DB_USER=%MYSQL_NEXTCLOUD_USER%
+    - DB_PASSWORD=%MYSQL_NEXTCLOUD_PASSWD%
     - DB_HOST=dbnextcloud
   links:
     - dbnextcloud:dbnextcloud
