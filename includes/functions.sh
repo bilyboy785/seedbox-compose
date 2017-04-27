@@ -1,4 +1,19 @@
 #!/bin/bash
+function intro() {
+	echo "########################################################"
+	echo "###						   ###"
+	echo "###                  SEEDBOX-COMPOSE                 ###"
+	echo "###   Deploy a complete Seedbox with Docker easily   ###"
+	echo "###               Author : bilyboy785                ###"
+	echo "###                Version : 1.0                     ###"
+	echo "###           Publication date : 2017-03-26          ###"
+	echo "###               Update date : 2017-03-27           ###"
+	echo "###						   ###"
+	echo "########################################################"
+	echo ""
+	echo ""
+}
+
 function install_docker() {
 	dpkg-query -l docker >> /dev/null
   	if [ $? != 0 ]; then
