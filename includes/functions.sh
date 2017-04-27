@@ -15,7 +15,7 @@ function intro() {
 }
 
 function install_docker() {
-	echo "## DOCKER ##
+	echo "## DOCKER ##"
 	dpkg-query -l docker >> /dev/null
   	if [ $? != 0 ]; then
 		echo "Docker is not installed, it will be installed !"
@@ -30,7 +30,7 @@ function install_docker() {
 }
 
 function install_letsencrypt() {
-	echo "## LETS ENCRYPT ##
+	echo "## LETS ENCRYPT ##"
 	if [ ! -d "/etc/letsencrypt" ]; then
 		read -p "Lets'Encrypt is not installed. Do you plan to generate certificates ? (y/n) : " installLetsencrypt
 		apt install git-core
@@ -43,7 +43,7 @@ function install_letsencrypt() {
 }
 
 function choose_services() {
-	echo "## SERVICES ##
+	echo "## SERVICES ##"
 	echo "Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !"
 	echo "Choose wich services you want to add : "
 	read -p "	Plex and PlexPy ? (y/n) : " PLEXINSTALL
@@ -53,7 +53,7 @@ function choose_services() {
 }
 
 function define_parameters() {
-	echo "## PARAMETERS ##
+	echo "## PARAMETERS ##"
 	read -p "Please enter user ID you want to run dockers : " USERID
 	read -p "Please enter group ID you want to run dockers : " GRPID
 	TIMEZONEDEF=$(cat /etc/timezone)
