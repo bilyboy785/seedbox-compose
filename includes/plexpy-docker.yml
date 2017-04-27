@@ -4,8 +4,8 @@ plexpy:
   image: linuxserver/plexpy
   container_name: plexpy
   environment:
-    - PGID=1001
-    - PUID=1001
+    - PGID=%UID%
+    - PUID=%GID%
     - TZ=Europe/Paris
   ports:
     - 8787:8181
