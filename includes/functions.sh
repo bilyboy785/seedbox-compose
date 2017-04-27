@@ -17,6 +17,8 @@ function install_docker() {
 		        exit 0;
 		    ;;
 		esac
+	else
+		echo "$GREEN Docker is already installed !$NC"
 	fi
 }
 
@@ -38,7 +40,7 @@ function install_letsencrypt() {
 		    ;;
 		esac
 	else
-		echo "letsencrypt ok"
+		echo "$GREEN Let's Encrypt is already installed !$NC"
 	fi
 }
 
