@@ -66,8 +66,9 @@ function choose_services() {
 function define_parameters() {
 	echo "## PARAMETERS ##"
 	read -p "Choose user wich run dockers : " USER
-	USERID = $(id $USER | grep uid | cut -d\= -f2 | cut -d\( -f1)
-	GRPID = $(id $USER | grep gid | cut -d\= -f2 | cut -d\( -f1)
+	echo $USER
+	USERID = echo $(id $USER | grep uid | cut -d\= -f2 | cut -d\( -f1)
+	GRPID = echo $(id $USER | grep gid | cut -d\= -f2 | cut -d\( -f1)
 	TIMEZONEDEF=$(cat /etc/timezone)
 	read -p "Please specify your Timezone (Detected timezone : $TIMEZONEDEF by default) : " TIMEZONE
 	if [ $TIMEZONE = "" ]; then
