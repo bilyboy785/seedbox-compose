@@ -52,12 +52,13 @@ function choose_services() {
 	read -p "Lufi & Lutim ? (y/n) " LUFILUTIMINSTALL
 }
 
-function define_parameter() {
+function define_parameters() {
 	read -p "Please enter user ID you want to run dockers : " USERID
 	read -p "Please enter group ID you want to run dockers : " GRPID
 	TIMEZONEDEF=$(cat /etc/timezone)
 	read -p "Please specify your Timezone (Detected timezone : $TIMEZONEDEF by default) : " TIMEZONE
 	if [ $TIMEZONE = "" ]; then
-		TIMEZONE = $TIMEZONEDEF
+		$TIMEZONE = $TIMEZONEDEF
 	fi
+	echo $TIMEZONE
 }
