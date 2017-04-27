@@ -49,13 +49,16 @@ function choose_services() {
 	read -p "	Plex and PlexPy ? (y/n) : " PLEXINSTALL
 	read -p "	ZeroBin ? (y/n) : " ZEROBININSTALL
 	read -p "	Lufi & Lutim ? (y/n) : " LUFILUTIMINSTALL
-	if [ PLEXINSTALL = "y" ]; then
+	if [ $PLEXINSTALL = "y" ]; then
 		cat includes/plex-docker.yml >> docker-compose.yml
-	else
-		echo "BAD"
+		cat includes/plexpy-docker.yml >> docker-compose.yml
 	fi
-	if [ ZEROBININSTALL = "y" ]; then
+	if [ $ZEROBININSTALL = "y" ]; then
 		cat includes/zerobin-docker.yml >> docker-compose.yml
+	fi
+	if [ $LUFILUTIMINSTALL = "y" ]; then
+		cat includes/lufi-docker.yml >> docker-compose.yml
+		cat includes/lutim-docker.yml >> docker-compose.yml
 	fi
 	echo ""
 }
