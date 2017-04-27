@@ -4,8 +4,8 @@ zerobin:
   image: wonderfall/zerobin
   container_name: zerobin
   environment:
-    - UID=1001
-    - GID=1001
+    - UID=%UID%
+    - GID=%GID%
   ports:
     - 8888:8888
   volumes:
