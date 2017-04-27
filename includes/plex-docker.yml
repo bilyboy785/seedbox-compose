@@ -1,0 +1,21 @@
+#Plex
+plex:
+  image: linuxserver/plex
+  container_name: plex
+  environment:
+    - VERSION=latest
+    - PUID=1001
+    - PGID=1001
+    - TZ=Europe/Paris
+  net: host
+  ports:
+    - 32400:32400
+    - 32400:32400/udp
+    - 32469:32469
+    - 32469:32469/udp
+    - 5353:5353/udp
+    - 1900:1900/udp
+  volumes:
+    - ./dockers/plex/config:/config
+    - /tv:/data/tvshows
+- /movies:/data/movies
