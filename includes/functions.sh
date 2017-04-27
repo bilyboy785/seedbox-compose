@@ -84,7 +84,7 @@ function define_parameters() {
 	else
 		TIMEZONE = $TIMEZONEDEF
 	fi
-	read -p "Please enter an email address
+	read -p "Please enter an email address"
 	replace_parameters $TIMEZONE $USERID $GRPID
 }
 
