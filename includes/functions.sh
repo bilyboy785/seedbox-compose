@@ -41,11 +41,12 @@ function install_letsencrypt() {
 }
 
 function choose_services() {
-	echo "Some services will be installed by default : Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI !"
-	echo "Choose wich services you want to install additionaly : "
-	read -p "Plex and PlexPy ? (y/n) " PLEXINSTALL
-	read -p "ZeroBin ? (y/n) " ZEROBININSTALL
-	read -p "Lufi & Lutim ? (y/n) " LUFILUTIMINSTALL
+	echo "Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !"
+	echo "Choose wich services you want to add : "
+	read -p "		Plex and PlexPy ? (y/n) : " PLEXINSTALL
+	read -p "		ZeroBin ? (y/n) : " ZEROBININSTALL
+	read -p "		Lufi & Lutim ? (y/n) : " LUFILUTIMINSTALL
+	echo ""
 }
 
 function define_parameters() {
