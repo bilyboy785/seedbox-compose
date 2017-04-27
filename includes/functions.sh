@@ -17,16 +17,16 @@ function intro() {
 function install_docker() {
 	dpkg-query -l docker >> /dev/null
   	if [ $? != 0 ]; then
-		read -p "Docker is not installed, do you wan't to install it now ? (y/n) : " installDocker
-		case $installDocker in
-		    "y")
-		    	echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
-		        apt update
-		        apt install docker docker-engine docker-compose
+		echo "Docker is not installed, it will be installed !"
+		echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
+		apt update
+		apt install docker docker-engine docker-compose
+		echo ""
 		    ;;
 		    "n")
 		        echo "We'll not install Docker"
 		        echo "Exiting"
+			echo ""
 		    ;;
 		    *)
 		        exit 0;
@@ -34,21 +34,22 @@ function install_docker() {
 		esac
 	else
 		echo "Docker is already installed !"
+		echo ""
 	fi
 }
 
 function install_letsencrypt() {
-	if [! -d "/etc/letsencrypt" ]; then
+	if [ ! -d "/etc/letsencrypt" ]; then
 		read -p "Lets'Encrypt is not installed. Do you plan to generate certificates ? (y/n) : " installLetsencrypt
 		case $installLetsencrypt in
 		    "y")
 		    	apt install git-core
 		    	git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
-		   		cd /opt/letsencrypt
 		    ;;
 		    "n")
 		        echo "We'll not install LetsEncrypt"
 		        echo "Exiting"
+			echo ""
 		    ;;
 		    *)
 		        exit 0;
@@ -56,6 +57,7 @@ function install_letsencrypt() {
 		esac
 	else
 		echo "Let's Encrypt is already installed !"
+		echo ""
 	fi
 }
 
