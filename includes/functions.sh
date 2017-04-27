@@ -51,6 +51,8 @@ function choose_services() {
 	read -p "	Lufi & Lutim ? (y/n) : " LUFILUTIMINSTALL
 	if [ PLEXINSTALL = "y" ]; then
 		cat includes/plex-docker.yml >> docker-compose.yml
+	else
+		echo "BAD"
 	fi
 	if [ ZEROBININSTALL = "y" ]; then
 		cat includes/zerobin-docker.yml >> docker-compose.yml
