@@ -8,7 +8,7 @@ Service                | Port               | Status      |   Access
 Nginx                  | 80, 443            | Installed   |  /                  
 Fail2Ban               | --                 | Installed   |  ---                   
 MariaDB                | 3306               | Installed   |  ---                   
-Nextcloud              | 8181               | Installed   |  nextcloud.domain.tld          
+Nextcloud              | 8181               | Installed   |  cloud.domain.tld          
 Rtorrent/RuTorrent     | 8282, 49160, 49161 | Installed   |  rutorrent.domain.tld                  
 Jackett                | 8383               | Installed   |  jackett.domain.tld                 
 Radarr                 | 8484               | Installed   |  radarr.domain.tld                  
