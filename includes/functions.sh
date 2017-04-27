@@ -89,7 +89,8 @@ function define_parameters() {
 }
 
 function replace_parameters() {
-	echo $1
+	VARIABLES=$(cat includes/variables.sed)
+	VARIABLESV1=${VARIABLES/$1/$1}
 	INFILE='docker-compose-base.yml'
 	SCRIPT='includes/variables.sed'
 	sed --in-place --file="$SCRIPT" "$INFILE"
