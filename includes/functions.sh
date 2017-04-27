@@ -45,17 +45,24 @@ function install_letsencrypt() {
 function choose_services() {
 	echo "## SERVICES ##"
 	echo "Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !"
-	echo "Choose wich services you want to add : "
+	echo "Choose wich services you want to add (default set to no) : "
 	read -p "	Plex and PlexPy ? (y/n) : " PLEXINSTALL
 	read -p "	ZeroBin ? (y/n) : " ZEROBININSTALL
 	read -p "	Lufi & Lutim ? (y/n) : " LUFILUTIMINSTALL
+	if [ PLEXINSTALL = "y" ]; then
+		cat includes/plex-docker.yml >> docker-compose.yml
+	fi
+	if [ ZEROBININSTALL = "y" ]; then
+		cat includes/zerobin-docker.yml >> docker-compose.yml
+	fi
 	echo ""
 }
 
 function define_parameters() {
 	echo "## PARAMETERS ##"
-	read -p "Please enter user ID you want to run dockers : " USERID
-	read -p "Please enter group ID you want to run dockers : " GRPID
+	read -p "Choose user wich run dockers : " USER
+	USERID = $(id $USER | grep uid | cut -d\= -f2 | cut -d\( -f1)
+	GRPID = $(id $USER | grep gid | cut -d\= -f2 | cut -d\( -f1)
 	TIMEZONEDEF=$(cat /etc/timezone)
 	read -p "Please specify your Timezone (Detected timezone : $TIMEZONEDEF by default) : " TIMEZONE
 	if [ $TIMEZONE = "" ]; then
