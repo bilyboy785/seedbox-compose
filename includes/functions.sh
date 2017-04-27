@@ -71,9 +71,9 @@ function define_parameters() {
 		GRPID = $(id -g $USER)
 	else
 		USEREXIST = $(id -u $CURRUSER)
-		if [ $USEREXIST = 1 ]
+		if [ $USEREXIST = 1 ]; then
 			echo "User doesn't exist !"
-		else	
+		else
 			USERID = $(id -u $CURRUSER)
 			GRPID = $(id -g $CURRUSER)
 		fi
@@ -83,4 +83,9 @@ function define_parameters() {
 	if [ $TIMEZONE = "" ]; then
 		$TIMEZONE = $TIMEZONEDEF
 	fi
+	replace_parameters $TIMEZONE
+}
+
+function replace_parameters() {
+	sed -e 's/%TIMEZONE%/'$1'/g' docker-compose.yml
 }
