@@ -71,17 +71,19 @@ function define_parameters() {
 		GRPID = $(id -g $USER)
 	else
 		USEREXIST = $(id -u $CURRUSER)
-		if [ $USEREXIST = 1 ]; then
+		if [ $USEREXIST = "1" ]; then
 			echo "User doesn't exist !"
 		else
 			USERID = $(id -u $CURRUSER)
 			GRPID = $(id -g $CURRUSER)
 		fi
 	fi
-	TIMEZONEDEF=$(cat /etc/timezone)
-	read -p "Please specify your Timezone (Detected timezone : $TIMEZONEDEF by default) : " TIMEZONE
-	if [ $TIMEZONE = "" ]; then
-		$TIMEZONE = $TIMEZONEDEF
+	CURRTIMEZONE=$(cat /etc/timezone)
+	read -p "Please specify your Timezone (Detected : $CURRTIMEZONE) : " TIMEZONEDEF
+	if [ $TIMEZONEDEF = "" ]; then
+		TIMEZONE = $CURRTIMEZONE
+	else
+		TIMEZONE = $TIMEZONEDEF
 	fi
 	replace_parameters $TIMEZONE
 }
