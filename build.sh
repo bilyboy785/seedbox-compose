@@ -4,10 +4,10 @@ source includes/functions.sh
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 ## PARAMETERS
-#RED='\033[0;31m'
 RED='\e[0;31m'
 GREEN='\033[0;32m'
-BLUE='\e[0;34m'
+BLUE='\e[0;36m'
+YELLOW='\e[0;33m'
 NC='\033[0m'
 DATE=`date +%d/%m/%Y-%H:%M:%S`
 DOCKERLIST="/etc/apt/sources.list.d/docker.list"
