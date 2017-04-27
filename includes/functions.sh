@@ -44,11 +44,11 @@ function install_letsencrypt() {
 
 function choose_services() {
 	echo -e "${BLUE}## SERVICES ##${NC}"
-	echo "Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !"
-	echo "Choose wich services you want to add (default set to no) : "
-	read -p "	Plex and PlexPy ? (y/n) : " PLEXINSTALL
-	read -p "	ZeroBin ? (y/n) : " ZEROBININSTALL
-	read -p "	Lufi & Lutim ? (y/n) : " LUFILUTIMINSTALL
+	echo -e "${BWHITE}Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !${NC}"
+	echo "--> Choose wich services you want to add (default set to no) : "
+	read -p "	* Plex and PlexPy ? (y/n) : " PLEXINSTALL
+	read -p "	* ZeroBin ? (y/n) : " ZEROBININSTALL
+	read -p "	* Lufi & Lutim ? (y/n) : " LUFILUTIMINSTALL
 	if [ $PLEXINSTALL = "y" ]; then
 		cat includes/plex-docker.yml >> docker-compose-base.yml
 		cat includes/plexpy-docker.yml >> docker-compose-base.yml
