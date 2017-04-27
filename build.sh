@@ -23,6 +23,6 @@ if [ $USER = "root" ] ; then
   ## Choose wich services will be installed
   choose_services
   
-  ## Defines parameters for dockers, password, domains
+  ## Defines parameters for dockers : password, domains and replace it in docker-compose file
   define_parameters
 fi
