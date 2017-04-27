@@ -5,8 +5,8 @@ plex:
   container_name: plex
   environment:
     - VERSION=latest
-    - PUID=1001
-    - PGID=1001
+    - PUID=%UID%
+    - PGID=%GID%
     - TZ=Europe/Paris
   net: host
   ports:
