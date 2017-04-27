@@ -7,7 +7,7 @@ plex:
     - VERSION=latest
     - PUID=%UID%
     - PGID=%GID%
-    - TZ=Europe/Paris
+    - TZ=%TIMEZONE%
   net: host
   ports:
     - 32400:32400
