@@ -89,8 +89,8 @@ function define_parameters() {
 }
 
 function replace_parameters() {
-	sed -e 's/%TIMEZONE%/'$1'/g' docker-compose.yml >> /dev/null
-	sed -e 's/%UID%/'$2'/g' docker-compose.yml >> /dev/null
-	sed -e 's/%GID%/'$3'/g' docker-compose.yml >> /dev/null
-	sed -e 's/%LUFI_LUTIM_CONTACT%/'$4'/g' docker-compose.yml >> /dev/null
+	sed -i 's/%TIMEZONE%/'$1'/g' docker-compose.yml >> /dev/null
+	sed -i 's/%UID%/'$2'/g' docker-compose.yml >> /dev/null
+	sed -i 's/%GID%/'$3'/g' docker-compose.yml >> /dev/null
+	sed -i 's/%LUFI_LUTIM_CONTACT%/'$4'/g' docker-compose.yml >> /dev/null
 }
