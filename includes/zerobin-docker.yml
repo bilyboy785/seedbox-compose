@@ -9,4 +9,4 @@ zerobin:
   ports:
     - 8888:8888
   volumes:
-- ./dockers/zerobin/data:/zerobin/data
+    - ./dockers/zerobin/data:/zerobin/data
