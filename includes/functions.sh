@@ -89,13 +89,10 @@ function define_parameters() {
 }
 
 function replace_parameters() {
-	TIMEZONE=$1
-	USERUID=$2
-	USERGID=$3
-	CONTACTEMAIL=$4
-	DOCKERCOMPOSE="docker-compose.yml"
-	cat docker-compose.yml | awk -F "," '{gsub("%UID%",$USERUID,$1);print $1}'
-	cat docker-compose.yml | awk -F "," '{gsub("%GID%",$USERGID,$1);print $1}'
-	cat docker-compose.yml | awk -F "," '{gsub("%TIMEZONE%",$TIMEZONE,$1);print $1}'
-	cat docker-compose.yml | awk -F "," '{gsub("%LUFI_LUTIM_CONTACT%",$CONTACTEMAIL,$1);print $1}'
+	DOCKERCOMPOSE=$(cat docker-compose-base.yml)
+	$DOCKERCOMPOSE="${$DOCKERCOMPOSE/%TIMEZONE%/$1}"
+	$DOCKERCOMPOSE="${$DOCKERCOMPOSE/%UID%/$2}"
+	$DOCKERCOMPOSE="${$DOCKERCOMPOSE/%GID%/$3}"
+	$DOCKERCOMPOSE="${$DOCKERCOMPOSE/%LUFI_LUTIM_CONTACT%/$4}"
+	echo $DOCERCOMPOSE >> docker-compose.yml
 }
