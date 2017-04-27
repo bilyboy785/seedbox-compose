@@ -26,19 +26,19 @@ fail2ban:
 
 #DBNextcloud
 dbnextcloud:
-  image: mariadb:10
+  image: mariadb:latest
   container_name: dbnextcloud
   environment:
     - MYSQL_ROOT_PASSWORD=%MYSQL_ROOT_PASSWD%
-    - MYSQL_DATABASE=%DB_NEXTCLOUD%
-    - MYSQL_USER=%MYSQL_NEXTCLOUD_USER%
+    - MYSQL_DATABASE=dbnextcloud
+    - MYSQL_USER=dbnextcloud
     - MYSQL_PASSWORD=%MYSQL_NEXTCLOUD_PASSWD%
   volumes:
     - ./dockers/mariadb/db/nextcloud:/var/lib/mysql
 
 #Nextcloud
 nextcloud:
-  image: wonderfall/nextcloud:10.0
+  image: wonderfall/nextcloud:latest
   container_name: nextcloud
   environment:
     - UID=%UID%
@@ -52,8 +52,8 @@ nextcloud:
     - ADMIN_PASSWORD=%NEXTCLOUD_ADMIN_PASSWD%
     - DOMAIN=%CLOUD_DOMAIN%
     - DB_TYPE=mysql
-    - DB_NAME=%DB_NEXTCLOUD%
-    - DB_USER=%MYSQL_NEXTCLOUD_USER%
+    - DB_NAME=dbnextcloud
+    - DB_USER=dbnextcloud
     - DB_PASSWORD=%MYSQL_NEXTCLOUD_PASSWD%
     - DB_HOST=dbnextcloud
   links:
