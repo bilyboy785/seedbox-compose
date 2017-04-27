@@ -11,11 +11,18 @@ DATE=`date +%d/%m/%Y-%H:%M:%S`
 DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 
 if [ $USER = "root" ] ; then
+  ## Display script infos 
+  intro
+  
+  ## Check for docker on system
   install_docker
-  echo ""
+  
+  ## Check for LetsEncrypt packages on system
   install_letsencrypt
-  echo ""
+  
+  ## Choose wich services will be installed
   choose_services
-  echo ""
+  
+  ## Defines parameters for dockers, password, domains
   define_parameters
 fi
