@@ -89,10 +89,9 @@ function define_parameters() {
 }
 
 function replace_parameters() {
-	DOCKERCOMPOSE=$(cat docker-compose-base.yml)
-	$DOCKERCOMPOSE=${DOCKERCOMPOSE/%TIMEZONE%/$1}
-	$DOCKERCOMPOSE=${DOCKERCOMPOSE/%UID%/$2}
-	$DOCKERCOMPOSE=${DOCKERCOMPOSE/%GID%/$3}
-	$DOCKERCOMPOSE=${DOCKERCOMPOSE/%LUFI_LUTIM_CONTACT%/$4}
-	echo $DOCERCOMPOSE >> docker-compose.yml
+	sed "s/%TIMEZONE%/$1/g" "docker-compose-base.yml" > docker-compose-base.tmp
+	sed "s/%UID%/$2/g" "docker-compose-base.tmp" > docker-compose-base.tmp
+	sed "s/%GID%/$3/g" "docker-compose-base.tmp" > docker-compose-base.tmp
+	sed "s/%LUFI_LUTIM_CONTACT%/$4/g" "docker-compose-base.tmp" > docker-compose.yml
+	cat docker-compose-base.yml >> docker-compose.yml
 }
