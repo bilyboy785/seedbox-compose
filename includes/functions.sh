@@ -15,7 +15,7 @@ function intro() {
 }
 
 function install_docker() {
-	echo "${BLUE}## DOCKER ##${NC}"
+	echo -e "${BLUE}## DOCKER ##${NC}"
 	dpkg-query -l docker >> /dev/null
   	if [ $? != 0 ]; then
 		echo "Docker is not installed, it will be installed !"
@@ -30,7 +30,7 @@ function install_docker() {
 }
 
 function install_letsencrypt() {
-	echo "${BLUE}## LETS ENCRYPT ##${NC}"
+	echo -e "${BLUE}## LETS ENCRYPT ##${NC}"
 	if [ ! -d "/etc/letsencrypt" ]; then
 		read -p "Lets'Encrypt is not installed. Do you plan to generate certificates ? (y/n) : " installLetsencrypt
 		apt install git-core
@@ -43,7 +43,7 @@ function install_letsencrypt() {
 }
 
 function choose_services() {
-	echo "${BLUE}## SERVICES ##${NC}"
+	echo -e "${BLUE}## SERVICES ##${NC}"
 	echo "Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !"
 	echo "Choose wich services you want to add (default set to no) : "
 	read -p "	Plex and PlexPy ? (y/n) : " PLEXINSTALL
@@ -64,7 +64,7 @@ function choose_services() {
 }
 
 function define_parameters() {
-	echo "${BLUE}## PARAMETERS ##${NC}"
+	echo -e "${BLUE}## PARAMETERS ##${NC}"
 	read -p "	Choose user wich run dockers ($USER ?). If user doesn't exist, it will be added : " CURRUSER
 	if [[ $CURRUSER == "" ]]; then
 		USERID=$(id -u $USER)
