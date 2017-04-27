@@ -84,7 +84,18 @@ function define_parameters() {
 	else
 		TIMEZONE=$TIMEZONEDEF
 	fi
-	read -p "Please enter an email address : " CONTACTEMAIL
+	echo "#### General Informations ####"
+	read -p "	Please enter an email address : " CONTACTEMAIL
+	read -p "	Enter your domain name : " DOMAIN
+	echo "#### MariaDB Informations ####"
+	read -p "	Choose a password for MySQL root user : " MARIADBROOTPASSWD
+	read -p "	Choose a password for Nextcloud Database (dbnextcloud) : " MARIADBNEXTCLOUDPASSWD 
+	echo "#### Nextcloud Informations ####"
+	read -p "	Choose an admin username for Nextcloud : " NEXTCLOUDADMIN
+	read -p "	Choose an admin password for Nextcloud : " NEXTCLOUDADMINPASSWD
+	read -p "	Choose a max upload size for Nextcloud (Ex: 10G or 128M) : " MAXUPLOADSIZENEXTCLOUD
+	
+	## Function to replace parameters in docker-compose file
 	replace_parameters $TIMEZONE $USERID $GRPID $CONTACTEMAIL
 }
 
