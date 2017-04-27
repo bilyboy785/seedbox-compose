@@ -89,11 +89,10 @@ function define_parameters() {
 }
 
 function replace_parameters() {
-	VARIABLES=$(cat includes/variables.sed)
-	VARIABLESV1=${VARIABLES/$1/$1}
 	INFILE='docker-compose-base.yml'
 	SCRIPT='includes/variables.sed'
-	sed --in-place --file="$SCRIPT" "$INFILE"
+	sed -i "s/%TIMEZONE/$1/g" "$INFILE"
+	cat $INFILE
 	# sed "s/%UID%/$2/g" "docker-compose-base.tmp" > docker-compose-base.tmp
 	# sed "s/%GID%/$3/g" "docker-compose-base.tmp" > docker-compose-base.tmp
 	# sed "s/%LUFI_LUTIM_CONTACT%/$4/g" "docker-compose-base.tmp" > docker-compose.yml
