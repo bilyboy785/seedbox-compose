@@ -67,22 +67,22 @@ function define_parameters() {
 	echo "## PARAMETERS ##"
 	read -p "Choose user wich run dockers ($USER ?) : " CURRUSER
 	if [ $CURRUSER = "" ]; then
-		USERID = $(id -u $USER)
-		GRPID = $(id -g $USER)
+		USERID=$(id -u $USER)
+		GRPID=$(id -g $USER)
 	else
 		if [ $(id -u $CURRUSER) = "1" ]; then
 			echo "User doesn't exist !"
 		else
-			USERID = $(id -u $CURRUSER)
-			GRPID = $(id -g $CURRUSER)
+			USERID=$(id -u $CURRUSER)
+			GRPID=$(id -g $CURRUSER)
 		fi
 	fi
 	CURRTIMEZONE=$(cat /etc/timezone)
 	read -p "Please specify your Timezone (Detected : $CURRTIMEZONE) : " TIMEZONEDEF
 	if [ $TIMEZONEDEF = "" ]; then
-		TIMEZONE = $CURRTIMEZONE
+		TIMEZONE=$CURRTIMEZONE
 	else
-		TIMEZONE = $TIMEZONEDEF
+		TIMEZONE=$TIMEZONEDEF
 	fi
 	read -p "Please enter an email address"
 	replace_parameters $TIMEZONE $USERID $GRPID
