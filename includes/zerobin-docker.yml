@@ -1,0 +1,11 @@
+#Zerobin
+zerobin:
+  image: wonderfall/zerobin
+  container_name: zerobin
+  environment:
+    - UID=1001
+    - GID=1001
+  ports:
+    - 8888:8888
+  volumes:
+- ./dockers/zerobin/data:/zerobin/data
