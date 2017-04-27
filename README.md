@@ -21,7 +21,8 @@ Lufi                   | 8989               | Optional    |  lufi.domain.tld
 Lutim                  | 9090               | Optional    |  lutim.domain.tld                 
 
 ## Installation
- * First, clone this repo to a fresh Debian/Ubuntu server :
+ * First, you need to create DNS entry type A for each service you want to install : **service.domain.tld**
+ * Second, clone this repo to a fresh Debian/Ubuntu server :
 ```shell
 git clone https://github.com/bilyboy785/seedbox-compose.git
 chmod +x seedbox-compose/build.sh && chmod +x seedbox-compose/includes/functions.sh
