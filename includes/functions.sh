@@ -299,8 +299,8 @@ function restart_docker_apps() {
 	declare -i i=1
 	while [ $i -le $(echo "$DOCKERS" | wc -w) ]
 	do
-		$APP=$(echo $DOCKERS | cut -d\  -f$i)
-		echo "	* [$i] - $APP"
+		APP=$(echo $DOCKERS | cut -d\  -f$i)
+		echo "	* \[$i\] - $APP"
 		i=$i+1
 	done
 }
