@@ -41,7 +41,9 @@ if [ $USER = "root" ] ; then
 	    add_user_htpasswd	
 	  ;;
 	"ADDDOCKAPP")
-	  
+	  ;;
+	"DELETEDOCKERS")
+	    delete_dockers
 	  ;;
 	esac
 fi
