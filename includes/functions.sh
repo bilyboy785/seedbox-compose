@@ -268,7 +268,8 @@ function create_reverse() {
 		echo "	* Creating reverse for $FILE"
 		cat $REVERSEFOLDER/$FILE >> $SITEFOLDER/$FILE
 	done
-	
+	echo "	* Restarting Nginx..."
+	docker restart nginx > /dev/null 2>&1
 }
 
 function delete_dockers() {
