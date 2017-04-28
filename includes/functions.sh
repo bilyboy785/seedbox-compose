@@ -296,11 +296,11 @@ function delete_dockers() {
 
 function restart_docker_apps() {
 	DOCKERS=$(docker ps --format "{{.Names}}")
-	echo $DOCKERS
 	declare -i i=1
 	while [ $i -le $(echo "$DOCKERS" | wc -w) ]
 	do
-	  echo $DOCKERS | cut -d\  -f$i
-	  i=$i+1
+		$APP=$(echo $DOCKERS | cut -d\  -f$i)
+		echo "	* [$i] - $APP"
+		i=$i+1
 	done
 }
