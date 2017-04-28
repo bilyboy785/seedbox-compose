@@ -42,6 +42,9 @@ if [ $USER = "root" ] ; then
 	  ;;
 	"ADDDOCKAPP")
 	  ;;
+	"RESTARTDOCKER")
+	    restart_docker_apps
+	  ;;
 	"DELETEDOCKERS")
 	    delete_dockers
 	  ;;
