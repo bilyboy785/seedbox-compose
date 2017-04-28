@@ -59,8 +59,8 @@ function upgrade_system() {
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
 		echo "	* Creating new sources.list for Debian"
 		cat $DEBIANSOURCES >> $SOURCESFOLDER
-		wget -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add -
-		wget -O- http://nginx.org/keys/nginx_signing.key | apt-key add -
+		wget -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add - > /dev/null 2>&1
+		wget -O- http://nginx.org/keys/nginx_signing.key | apt-key add - > /dev/null 2>&1
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo "	* Creating new sources.list for Ubuntu"
 		cat $UBUNTUSOURCES >> $SOURCESFOLDER
@@ -87,9 +87,9 @@ function install_docker() {
   	if [ $? != 0 ]; then
 		echo "Docker is not installed, it will be installed !"
 		echo "	* Installing docker, docker-engine"
-		apt-get install docker
+		apt-get install docker > /dev/null 2>&1
 		echo "	* Installing docker-compose"
-		curl -L --fail https://github.com/docker/compose/releases/download/1.12.0/run.sh > /usr/local/bin/docker-compose
+		curl -L --fail https://github.com/docker/compose/releases/download/1.12.0/run.sh > /usr/local/bin/docker-compose > /dev/null 2>&1
 		chmod +x /usr/local/bin/docker-compose
 		echo ""
 	else
