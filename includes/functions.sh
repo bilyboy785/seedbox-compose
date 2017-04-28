@@ -42,7 +42,8 @@ function script_option() {
 
 function upgrade_system() {
 	echo -e "${BLUE}## UPGRADING ##${NC}"
-	apt-get install -y gawk apt-transport-https
+	apt-get update > /dev/null 2>&1
+	apt-get install -y gawk awk apt-transport-https
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	rm /etc/apt/sources.list
 	if [[ $SYSTEM == "Debian GNU/Linux" ]]; then
@@ -50,7 +51,7 @@ function upgrade_system() {
 		wget -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add -
 		wget -O- http://nginx.org/keys/nginx_signing.key | apt-key add -
 	elif [[ $SYSTEM == "Ubuntu" ]]; then
-		cp includes/sources.list.ubuntu /etc/apt/sources.list
+		cat includes/sources.list.ubuntu >> /etc/apt/sources.list
 	fi
 	apt-get update && apt-get upgrade -y
 	echo ""
@@ -71,10 +72,12 @@ function install_docker() {
 	echo -e "${BLUE}## DOCKER ##${NC}"
 	dpkg-query -l docker >> /dev/null
   	if [ $? != 0 ]; then
-		echo "	* Docker is not installed, it will be installed !"
-		echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
-		apt update
-		apt install docker docker-engine docker-compose
+		echo "Docker is not installed, it will be installed !"
+		echo "	* Installing docker, docker-engine"
+		apt-get install docker docker-engine
+		echo "	* Installing docker-compose"
+		curl -L --fail https://github.com/docker/compose/releases/download/1.12.0/run.sh > /usr/local/bin/docker-compose
+		chmod +x /usr/local/bin/docker-compose
 		echo ""
 	else
 		echo "	* Docker is already installed !"
