@@ -14,6 +14,10 @@ DATE=`date +%d/%m/%Y-%H:%M:%S`
 DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 
 if [ $USER = "root" ] ; then
+  
+  ## Check option for script lauching
+  script_option
+  
   ## Display script infos 
   intro
   
