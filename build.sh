@@ -34,6 +34,8 @@ if [ $USER = "root" ] ; then
 	    define_parameters
 	    ## Docker compose function running in background
 	    docker_compose
+	    ## Create reverse proxy
+	    create_reverse
 	  ;;
 	"ADDUSER")
 	    add_user_htpasswd	
