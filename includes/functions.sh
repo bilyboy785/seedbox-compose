@@ -78,7 +78,7 @@ function install_docker() {
   	if [ $? != 0 ]; then
 		echo "Docker is not installed, it will be installed !"
 		echo "	* Installing docker, docker-engine"
-		apt-get install docker docker-engine
+		apt-get install docker
 		echo "	* Installing docker-compose"
 		curl -L --fail https://github.com/docker/compose/releases/download/1.12.0/run.sh > /usr/local/bin/docker-compose
 		chmod +x /usr/local/bin/docker-compose
