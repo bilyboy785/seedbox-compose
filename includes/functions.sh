@@ -189,7 +189,7 @@ function add_user_htpasswd() {
 	HTFILE=".htpasswd"
 	echo -e "${BLUE}## HTPASSWD MANAGER ##${NC}"
 	read -p "	Enter an username for HTACCESS : " HTUSER
-	read -p "	Enter password : " HTPASSWORD
+	read -s -p "	Enter password : " HTPASSWORD
 	if [[ ! -f $HTFOLDER$HTFILE ]]; then
 		mkdir -p $HTFOLDER
 		htpasswd -c -b $HTFOLDER$HTFILE $HTUSER $HTPASSWORD
