@@ -34,7 +34,7 @@ if [ $USER = "root" ] ; then
 	    define_parameters
 	    ## Docker compose function running in background
 	    docker_compose
-	    ## Create reverse proxy
+	    ## Create reverse proxy for each apps
 	    create_reverse
 	  ;;
 	"ADDUSER")
