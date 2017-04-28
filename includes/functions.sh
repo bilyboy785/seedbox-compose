@@ -238,12 +238,16 @@ function add_user() {
 }
 
 function create_reverse() {
+	echo -e "${BLUE}## REVERSE PROXY ##${NC}"
 	SITEFOLER="/dockers/nginx/sites-enabled"
 	REVERSEFOLDER="includes/nginxproxy"
-	cat $REVERSEFOLDER/rutorrent.conf >> $SITEFOLDER/rutorrent.conf
-	cat $REVERSEFOLDER/radarr.conf >> $SITEFOLDER/radarr.conf
-	cat $REVERSEFOLDER/sonarr.conf >> $SITEFOLDER/sonarr.conf
-	cat $REVERSEFOLDER/uifordocker.conf >> $SITEFOLDER/uifordocker.conf
-	cat $REVERSEFOLDER/jackett.conf >> $SITEFOLDER/jackett.conf
+	CONFFOLDER="/tmp/seedboxdocker/includes/nginxproxy"
+	for file in $CONFFOLDER/*.conf
+	do
+		echo "	* Creating reverse for $file"
+		FILE=$(echo $file | grep nginxproxy | cut -d\/ -f6)
+		echo 
+		cat $REVERSEFOLDER/$FILE >> $SITEFOLDER/$FILE
+	done
 	
 }
