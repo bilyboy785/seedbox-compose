@@ -3,13 +3,13 @@ nginx:
   image: wonderfall/boring-nginx
   container_name: nginx
   ports:
-    - "8070:8000"
-    - "4430:4430"
+    - "80:8000"
+    - "443:4430"
   volumes:
-    - ./dockers/nginx/sites-enabled:/sites-enabled
-    - ./dockers/nginx/conf:/conf.d
-    - ./dockers/nginx/log:/var/log/nginx
-    - ./dockers/nginx/certs:/certs
+    - /dockers/nginx/sites-enabled:/sites-enabled
+    - /dockers/nginx/conf:/conf.d
+    - /dockers/nginx/log:/var/log/nginx
+    - /dockers/nginx/certs:/certs
 
 #RuTorrent-rTorrent
 rutorrent:
@@ -37,7 +37,7 @@ jackett:
     - 8383:9117
   volumes:
     - /etc/localtime:/etc/locatime:ro
-    - ./dockers/jackett/downloads:/downloads
+    - /dockers/jackett/downloads:/downloads
 
 #Radarr
 radarr:
@@ -52,7 +52,7 @@ radarr:
   links:
     - rutorrent:rutorrent
   volumes:
-    - ./dockers/radarr/config:/config
+    - /dockers/radarr/config:/config
     - /movie-downloads:/downloads
     - /movies:/movies
 
@@ -70,7 +70,7 @@ sonarr:
     - rutorrent:rutorrent
   volumes:
     - /etc/localtime:/etc/localtime:ro
-    - ./dockers/sonarr/config:/config
+    - /dockers/sonarr/config:/config
     - /tv-downloads:/downloads
     - /tv:/tv
 
