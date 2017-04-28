@@ -49,7 +49,7 @@ function upgrade_system() {
 	UBUNTUSOURCES="includes/sources.list.ubuntu"
 	SOURCESFOLDER="/etc/apt/sources.list"
 	echo -e "${BLUE}## UPGRADING ##${NC}"
-	echo "	* Installing gawk & apt transport https"
+	echo "	* Installing gawk, curl & apt transport https"
 	apt-get install -y gawk apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 	echo "	* Checking system OS release"
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
@@ -60,13 +60,14 @@ function upgrade_system() {
 		cat $DEBIANSOURCES >> $SOURCESFOLDER
 		wget -q -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add - | > /dev/null 2>&1
 		wget -q -O- http://nginx.org/keys/nginx_signing.key | apt-key add - | > /dev/null 2>&1
-		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo "	* Creating new sources.list for Ubuntu"
 		cat $UBUNTUSOURCES >> $SOURCESFOLDER
 	fi
 	echo "	* Updating sources and upgrading system"
-	apt-get update > /dev/null 2>&1 && apt-get upgrade -y > /dev/null 2>&1
+	apt-get update > /dev/null 2>&1
+	apt-get upgrade -y > /dev/null 2>&1
 	echo ""
 }
 
