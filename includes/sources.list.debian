@@ -11,3 +11,6 @@ deb-src http://packages.dotdeb.org jessie all
 # nginx
 deb http://nginx.org/packages/debian/ jessie nginx
 deb-src http://nginx.org/packages/debian/ jessie nginx
+
+# docker
+deb https://apt.dockerproject.org/repo debian-jessie main
