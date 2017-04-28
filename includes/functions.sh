@@ -27,14 +27,18 @@ function script_option() {
 	echo ""
 	case $CHOICE in
 	"1")
+	  echo -e "${BLUE}##############################${NC}"
 	  echo -e "${BLUE}# INSTALLING SEEDBOX-COMPOSE #${NC}"
+	  echo -e "${BLUE}##############################${NC}"
 	  SCRIPT="INSTALL"
 	  ;;
 	"2")
 	  SCRIPT="ADDUSER"
 	  ;;
 	"3")
+	  echo -e "${BLUE}######################${NC}"
 	  echo -e "${BLUE}# ADDING DOCKER APPS #${NC}"
+	  echo -e "${BLUE}######################${NC}"
 	  SCRIPT="ADDDOCKAPP"
 	  ;;
 	"4")
@@ -268,7 +272,9 @@ function create_reverse() {
 }
 
 function delete_dockers() {
+	echo -e "${BLUE}##########################${NC}"
 	echo -e "${BLUE}## CLEANING DOCKER APPS ##${NC}"
+	echo -e "${BLUE}##########################${NC}"
 	echo "	* Stopping dockers..."
 	docker stop $(docker ps) > /dev/null 2>&1
 	echo "	* Removing dockers..."
