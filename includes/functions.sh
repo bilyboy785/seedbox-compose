@@ -105,23 +105,23 @@ function choose_services() {
 	read -p "	* Plex and PlexPy ? (y/n) : " PLEXINSTALL
 	if [[ $PLEXINSTALL == "y" ]]; then
 		echo -e "		${GREEN}Plex will be installed${NC}"
-		cat includes/plex-docker.yml >> docker-compose-base.yml
-		cat includes/plexpy-docker.yml >> docker-compose-base.yml
+		cat includes/dockerapps/plex-docker.yml >> docker-compose-base.yml
+		cat includes/dockerapps/plexpy-docker.yml >> docker-compose-base.yml
 	else
 		echo -e "		${RED}Plex will no be installed${NC}"
 	fi
 	read -p "	* ZeroBin ? (y/n) : " ZEROBININSTALL
 	if [[ $ZEROBININSTALL == "y" ]]; then
 		echo -e "		${GREEN}Zerobin will be installed${NC}"
-		cat includes/zerobin-docker.yml >> docker-compose-base.yml
+		cat includes/dockerapps/zerobin-docker.yml >> docker-compose-base.yml
 	else
 		echo -e "		${RED}Zerobin will no be installed${NC}"
 	fi
 	read -p "	* Lufi & Lutim ? (y/n) : " LUFILUTIMINSTALL
 	if [[ $LUFILUTIMINSTALL == "y" ]]; then
 		echo -e "		${GREEN}Lufi&Lutim will be installed${NC}"
-		cat includes/lufi-docker.yml >> docker-compose-base.yml
-		cat includes/lutim-docker.yml >> docker-compose-base.yml
+		cat includes/dockerapps/lufi-docker.yml >> docker-compose-base.yml
+		cat includes/dockerapps/lutim-docker.yml >> docker-compose-base.yml
 	else
 		echo -e "		${RED}Lufi&Lutim will no be installed${NC}"
 	fi
@@ -232,4 +232,15 @@ function add_user() {
 		echo "Only root may add a user to the system"
 		exit 2
 	fi
+}
+
+function create_reverse() {
+	SITEFOLER="/dockers/nginx/sites-enabled"
+	REVERSEFOLDER="includes/nginxproxy"
+	cat $REVERSEFOLDER/rutorrent.conf >> $SITEFOLDER/rutorrent.conf
+	cat $REVERSEFOLDER/radarr.conf >> $SITEFOLDER/radarr.conf
+	cat $REVERSEFOLDER/sonarr.conf >> $SITEFOLDER/sonarr.conf
+	cat $REVERSEFOLDER/uifordocker.conf >> $SITEFOLDER/uifordocker.conf
+	cat $REVERSEFOLDER/jackett.conf >> $SITEFOLDER/jackett.conf
+	
 }
