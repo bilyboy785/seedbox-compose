@@ -15,11 +15,12 @@ DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 
 if [ $USER = "root" ] ; then
   
-  ## Check option for script lauching
-  script_option
-  
   ## Display script infos 
   intro
+  
+    
+  ## Check option for script lauching
+  script_option
   
   ## Upgrading system
   # upgrade_system
