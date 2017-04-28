@@ -21,6 +21,7 @@ function script_option() {
 	echo -e "	${GREEN}(1) Install the Seedbox${NC}"
 	echo -e "	${GREEN}(2) Add an user to the Htaccess${NC}"
 	echo -e "	${GREEN}(3) Add a docker App${NC}"
+	echo -e "	${GREEN}(4) Delete and clean all Dockers${NC}"
 	echo ""
 	read -p "	Your choice : " CHOICE
 	echo ""
@@ -35,6 +36,9 @@ function script_option() {
 	"3")
 	  echo -e "${BLUE}# ADDING DOCKER APPS #${NC}"
 	  SCRIPT="ADDDOCKAPP"
+	  ;;
+	"4")
+	  SCRIPT="DELETEDOCKERS"
 	  ;;
 	esac
 	
@@ -249,4 +253,12 @@ function create_reverse() {
 		cat $REVERSEFOLDER/$FILE >> $SITEFOLDER/$FILE
 	done
 	
+}
+
+function delete_dockers() {
+	echo -e "${BLUE}## CLEANING DOCKER APPS ##${NC}"
+	echo "	* Stopping dockers..."
+	docker stop $(docker ps) > /dev/null 2>&1
+	echo "	* Removing dockers..."
+	docker rm $(docker ps -a) > /dev/null 2>&1
 }
