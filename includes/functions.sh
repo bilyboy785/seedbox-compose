@@ -148,9 +148,8 @@ function define_parameters() {
 	echo -e "${BLUE}## GENERAL INFORMATIONS ##${NC}"
 	read -p "	Please enter an email address : " CONTACTEMAIL
 	read -p "	Enter your domain name : " DOMAIN
-	read -p "	Enter an username for HTACCESS : " HTUSER
-	read -p "	Enter password : " HTPASSWORD
-	add_user_htpasswd $HTUSER $HTPASSWORD
+	echo ""
+	add_user_htpasswd
 	## Function to replace parameters in docker-compose file
 	echo ""
 	replace_parameters $TIMEZONE $USERID $GRPID $CONTACTEMAIL $DOMAIN # $MARIADBROOTPASSWD $MARIADBNEXTCLOUDPASSWD $NEXTCLOUDADMIN $NEXTCLOUDADMINPASSWD $MAXUPLOADSIZENEXTCLOUD
@@ -188,10 +187,13 @@ function docker_compose() {
 
 function add_user_htpasswd() {
 	FILE="/dockers/nginx/conf/.htpasswd"
+	echo -e "${BLUE}## HTPASSWD MANAGER ##${NC}"
+	read -p "	Enter an username for HTACCESS : " HTUSER
+	read -p "	Enter password : " HTPASSWORD
 	if [[! -f $FILE ]]; then
-		htpasswd -c -b $FILE $1 $2
+		htpasswd -c -b $FILE $HTUSER $HTPASSWORD
 	else
-		htpasswd -b $FILE $1 $2
+		htpasswd -b $FILE $HTUSER $HTPASSWORD
 	fi
 }
 
