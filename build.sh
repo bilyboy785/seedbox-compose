@@ -18,7 +18,7 @@ if [ $USER = "root" ] ; then
   intro
   
   ## Upgrading system
-  upgrade_system
+  # upgrade_system
   
   ## Check for docker on system
   install_docker
