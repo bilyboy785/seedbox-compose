@@ -90,8 +90,8 @@ function define_parameters() {
 			USERID=$(id -u $CURRUSER)
 			GRPID=$(id -g $CURRUSER)
 		else
-			read -s -p "	Enter password : " PASSWORD > /dev/null 2>&1
-			PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD) > /dev/null 2>&1
+			read -s -p "	Enter password : " PASSWORD
+			PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 			useradd -m -p $PASS $CURRUSER > /dev/null 2>&1
 			[ $? -eq 0 ] && echo "User has been added to system !" || echo "Failed to add a user !"
 			USERID=$(id -u $CURRUSER)
