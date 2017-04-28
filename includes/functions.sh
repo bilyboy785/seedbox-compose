@@ -94,6 +94,8 @@ function define_parameters() {
 			PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 			useradd -m -p $PASS $CURRUSER
 			[ $? -eq 0 ] && echo "User has been added to system !" || echo "Failed to add a user !"
+			USERID=$(id -u $CURRUSER)
+			GRPID=$(id -g $CURRUSER)
 		fi
 	fi
 	CURRTIMEZONE=$(cat /etc/timezone)
