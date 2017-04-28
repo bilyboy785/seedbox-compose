@@ -30,7 +30,6 @@ function script_option() {
 	  SCRIPT="INSTALL"
 	  ;;
 	"2")
-	  echo -e "${BLUE}# ADDING USER #${NC}"
 	  SCRIPT="ADDUSER"
 	  ;;
 	"3")
