@@ -193,21 +193,26 @@ function docker_compose() {
 	echo "	* Starting docker..."
 	service docker restart
 	echo "	* Docker-composing"
-	# docker-compose up -d
+	docker-compose up -d
+	valid_htpasswd
 }
 
 function add_user_htpasswd() {
 	HTFOLDER="/dockers/nginx/conf/"
+	HTTEMPFOLDER="/tmp/"
 	HTFILE=".htpasswd"
 	echo -e "${BLUE}## HTPASSWD MANAGER ##${NC}"
 	read -p "	Enter an username for HTACCESS : " HTUSER
 	read -s -p "	Enter password : " HTPASSWORD
 	if [[ ! -f $HTFOLDER$HTFILE ]]; then
-		mkdir -p $HTFOLDER
-		htpasswd -c -b $HTFOLDER$HTFILE $HTUSER $HTPASSWORD
+		htpasswd -c -b $HTTEMPFOLDER$HTFILE $HTUSER $HTPASSWORD
 	else
 		htpasswd -b $HTFOLDER$HTFILE $HTUSER $HTPASSWORD
 	fi
+}
+
+function valid_htpasswd() {
+	cat /tmp/.htpasswd >> /dockers/nginx/conf/.htpasswd
 }
 
 function add_user() {
