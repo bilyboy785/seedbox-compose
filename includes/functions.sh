@@ -140,10 +140,9 @@ function replace_parameters() {
 
 function docker_compose() {
 	echo -e "${BLUE}## DOCKERCOMPOSE ##${NC}"
-	echo ""
-	echo "Starting docker..."
-	echo ""
+	echo "	* Starting docker..."
 	service docker restart
+	echo "	* Docker-composing"
 	docker-compose up -d
 }
 
