@@ -136,6 +136,13 @@ function replace_parameters() {
 	cat $DOCKERCOMPOSE
 }
 
+function docker_compose() {
+	echo -e "${BLUE}## DOCKERCOMPOSE ##${NC}"
+	echo "Starting docker..."
+	service docker restart
+	docker-compose up -d
+}
+
 function add_user() {
 	# Script to add a user to Linux system
 	if [ $(id -u) -eq 0 ]; then
