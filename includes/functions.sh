@@ -108,16 +108,16 @@ function define_parameters() {
 	echo -e "${BLUE}## GENERAL INFORMATIONS ##${NC}"
 	read -p "	Please enter an email address : " CONTACTEMAIL
 	read -p "	Enter your domain name : " DOMAIN
-	echo -e "${BLUE}## MARIADB INFORMATIONS ##${NC}"
-	read -p "	Choose a password for MySQL root user : " MARIADBROOTPASSWD
-	read -p "	Choose a password for Nextcloud Database (dbnextcloud) : " MARIADBNEXTCLOUDPASSWD 
-	echo -e "${BLUE}## NEXTCLOUD INFORMATIONS ##${NC}"
-	read -p "	Choose an admin username for Nextcloud : " NEXTCLOUDADMIN
-	read -p "	Choose an admin password for Nextcloud : " NEXTCLOUDADMINPASSWD
-	read -p "	Choose a max upload size for Nextcloud (Ex: 10G or 128M) : " MAXUPLOADSIZENEXTCLOUD
+	# echo -e "${BLUE}## MARIADB INFORMATIONS ##${NC}"
+	# read -p "	Choose a password for MySQL root user : " MARIADBROOTPASSWD
+	# read -p "	Choose a password for Nextcloud Database (dbnextcloud) : " MARIADBNEXTCLOUDPASSWD 
+	# echo -e "${BLUE}## NEXTCLOUD INFORMATIONS ##${NC}"
+	# read -p "	Choose an admin username for Nextcloud : " NEXTCLOUDADMIN
+	# read -p "	Choose an admin password for Nextcloud : " NEXTCLOUDADMINPASSWD
+	# read -p "	Choose a max upload size for Nextcloud (Ex: 10G or 128M) : " MAXUPLOADSIZENEXTCLOUD
 	
 	## Function to replace parameters in docker-compose file
-	replace_parameters $TIMEZONE $USERID $GRPID $CONTACTEMAIL $DOMAIN $MARIADBROOTPASSWD $MARIADBNEXTCLOUDPASSWD $NEXTCLOUDADMIN $NEXTCLOUDADMINPASSWD $MAXUPLOADSIZENEXTCLOUD
+	replace_parameters $TIMEZONE $USERID $GRPID $CONTACTEMAIL $DOMAIN # $MARIADBROOTPASSWD $MARIADBNEXTCLOUDPASSWD $NEXTCLOUDADMIN $NEXTCLOUDADMINPASSWD $MAXUPLOADSIZENEXTCLOUD
 }
 
 function replace_parameters() {
@@ -127,13 +127,13 @@ function replace_parameters() {
 	sed -i "s|%TIMEZONE%|$1|g" $DOCKERCOMPOSE
 	sed -i "s|%UID%|$2|g" $DOCKERCOMPOSE
 	sed -i "s|%GID%|$3|g" $DOCKERCOMPOSE
-	sed -i "s|%LUFI_LUTIM_CONTACT%|$4|g" $DOCKERCOMPOSE
-	sed -i "s|%CLOUD_DOMAIN%|$CLOUDDOMAIN|g" $DOCKERCOMPOSE
-	sed -i "s|%MYSQL_ROOT_PASSWD%|$6|g" $DOCKERCOMPOSE
-	sed -i "s|%MYSQL_NEXTCLOUD_PASSWD%|$7|g" $DOCKERCOMPOSE
-	sed -i "s|%NEXTCLOUD_ADMIN_USER%|$8|g" $DOCKERCOMPOSE
-	sed -i "s|%NEXTCLOUD_ADMIN_PASSWD%|$9|g" $DOCKERCOMPOSE
-	sed -i "s|%SECRET%|$SECRET|g" $DOCKERCOMPOSE
+	# sed -i "s|%LUFI_LUTIM_CONTACT%|$4|g" $DOCKERCOMPOSE
+	# sed -i "s|%CLOUD_DOMAIN%|$CLOUDDOMAIN|g" $DOCKERCOMPOSE
+	# sed -i "s|%MYSQL_ROOT_PASSWD%|$6|g" $DOCKERCOMPOSE
+	# sed -i "s|%MYSQL_NEXTCLOUD_PASSWD%|$7|g" $DOCKERCOMPOSE
+	# sed -i "s|%NEXTCLOUD_ADMIN_USER%|$8|g" $DOCKERCOMPOSE
+	# sed -i "s|%NEXTCLOUD_ADMIN_PASSWD%|$9|g" $DOCKERCOMPOSE
+	# sed -i "s|%SECRET%|$SECRET|g" $DOCKERCOMPOSE
 	cp $DOCKERCOMPOSE docker-compose.yml
 	echo ""
 }
