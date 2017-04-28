@@ -43,10 +43,10 @@ function script_option() {
 	  SCRIPT="ADDDOCKAPP"
 	  ;;
 	"4")
+	  SCRIPT="RESTARTDOCKER"
 	  echo -e "${BLUE}##########################${NC}"
 	  echo -e "${BLUE}# RESTARTING DOCKER APPS #${NC}"
 	  echo -e "${BLUE}##########################${NC}"
-	  SCRIPT="RESTARTDOCKER"
 	  ;;
 	"5")
 	  SCRIPT="DELETEDOCKERS"
