@@ -55,7 +55,7 @@ function upgrade_system() {
 	echo "	* Checking system OS release"
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	echo "	* Removing default sources.list"
-	rm /etc/apt/sources.list
+	mv $SOURCESFOLDER $SOURCESFOLDER\.bak > /dev/null 2>&1
 	if [[ $SYSTEM == "Debian GNU/Linux" ]]; then
 		echo "	* Creating new sources.list for Debian"
 		cat $DEBIANSOURCES >> $SOURCESFOLDER
@@ -66,7 +66,7 @@ function upgrade_system() {
 		cat $UBUNTUSOURCES >> $SOURCESFOLDER
 	fi
 	echo "	* Updating sources and upgrading system"
-	apt-get update && apt-get upgrade -y
+	apt-get update && apt-get upgrade -y > /dev/null 2>&1
 	echo ""
 }
 
