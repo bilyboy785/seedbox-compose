@@ -14,32 +14,32 @@ DATE=`date +%d/%m/%Y-%H:%M:%S`
 DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 
 if [ $USER = "root" ] ; then
-  
   ## Display script infos 
   intro
-  
-    
   ## Check option for script lauching
   script_option
-  
-  ## Upgrading system
-  # upgrade_system
-  
-  ## Check for docker on system
-  install_docker
-  
-  ## Installing base packages
-  base_packages
-  
-  ## Check for LetsEncrypt packages on system
-  install_letsencrypt
-  
-  ## Choose wich services will be installed
-  choose_services
-  
-  ## Defines parameters for dockers : password, domains and replace it in docker-compose file
-  define_parameters
-  
-  ## Docker compose function running in background
-  docker_compose
+  case $SCRIPT in
+	"INSTALL")
+	  ## Upgrading system
+    # upgrade_system
+    ## Check for docker on system
+    install_docker
+    ## Installing base packages
+    base_packages
+    ## Check for LetsEncrypt packages on system
+    install_letsencrypt
+    ## Choose wich services will be installed
+    choose_services
+    ## Defines parameters for dockers : password, domains and replace it in docker-compose file
+    define_parameters
+    ## Docker compose function running in background
+    docker_compose
+	  ;;
+	"ADDUSER")
+	  
+	  ;;
+	"ADDDOCKAPP")
+	  
+	  ;;
+	esac
 fi
