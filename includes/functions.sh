@@ -31,7 +31,9 @@ function upgrade_system() {
 
 function base_packages() {
 	echo -e "${BLUE}## INSTALLING ZSH ##${NC}"
+	echo -e "	* Installing ZSH & Git-core"
 	apt-get install zsh git-core > /dev/null 2>&1
+	echo -e "	* Cloning Oh-My-ZSH"
 	wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh > /dev/null 2>&1
 	sed -i -e 's/^\ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"bira\"/g' ~/.zshrc > /dev/null 2>&1
 	sed -i -e 's/^\# DISABLE_AUTO_UPDATE=\"true\"/DISABLE_AUTO_UPDATE=\"true\"/g' ~root/.zshrc > /dev/null 2>&1
@@ -163,7 +165,7 @@ function docker_compose() {
 	echo "	* Starting docker..."
 	service docker restart
 	echo "	* Docker-composing"
-	docker-compose up -d
+	# docker-compose up -d
 }
 
 function add_user() {
