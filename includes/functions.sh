@@ -211,7 +211,10 @@ function add_user_htpasswd() {
 }
 
 function valid_htpasswd() {
-	cat /tmp/.htpasswd >> /dockers/nginx/conf/.htpasswd
+	HTFOLDER="/dockers/nginx/conf/"
+	HTTEMPFOLDER="/tmp/"
+	HTFILE=".htpasswd"
+	cat $HTTEMPFOLDER$HTFILE >> $HTFOLDER$HTFILE
 }
 
 function add_user() {
