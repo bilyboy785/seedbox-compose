@@ -59,14 +59,14 @@ function upgrade_system() {
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
 		echo "	* Creating new sources.list for Debian"
 		cat $DEBIANSOURCES >> $SOURCESFOLDER
-		wget -q -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add - > /dev/null 2>&1
-		wget -q -O- http://nginx.org/keys/nginx_signing.key | apt-key add - > /dev/null 2>&1
+		wget -q -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add - | > /dev/null 2>&1
+		wget -q -O- http://nginx.org/keys/nginx_signing.key | apt-key add - | > /dev/null 2>&1
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo "	* Creating new sources.list for Ubuntu"
 		cat $UBUNTUSOURCES >> $SOURCESFOLDER
 	fi
 	echo "	* Updating sources and upgrading system"
-	apt-get update && apt-get upgrade -y > /dev/null 2>&1
+	apt-get update > /dev/null 2>&1 && apt-get upgrade -y > /dev/null 2>&1
 	echo ""
 }
 
