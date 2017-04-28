@@ -2,12 +2,9 @@
 nginx:
   image: wonderfall/boring-nginx
   container_name: nginx
-  links:
-    - postfixadmin:postfixadmin
-    - rainloop:rainloop
   ports:
-    - "80:8000"
-    - "443:4430"
+    - "8070:8000"
+    - "4430:4430"
   volumes:
     - ./dockers/nginx/sites-enabled:/sites-enabled
     - ./dockers/nginx/conf:/conf.d
