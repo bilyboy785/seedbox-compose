@@ -123,7 +123,7 @@ function define_parameters() {
 function replace_parameters() {
 	DOCKERCOMPOSE='docker-compose-base.yml'
 	CLOUDDOMAIN="cloud.$5"
-	echo "La timezone est $1"
+	SECRET=$(date +%s | md5sum | head -c 32)
 	sed -i "s|%TIMEZONE%|$1|g" $DOCKERCOMPOSE
 	sed -i "s|%UID%|$2|g" $DOCKERCOMPOSE
 	sed -i "s|%GID%|$3|g" $DOCKERCOMPOSE
@@ -133,13 +133,16 @@ function replace_parameters() {
 	sed -i "s|%MYSQL_NEXTCLOUD_PASSWD%|$7|g" $DOCKERCOMPOSE
 	sed -i "s|%NEXTCLOUD_ADMIN_USER%|$8|g" $DOCKERCOMPOSE
 	sed -i "s|%NEXTCLOUD_ADMIN_PASSWD%|$9|g" $DOCKERCOMPOSE
+	sed -i "s|%SECRET%|$SECRET|g" $DOCKERCOMPOSE
 	cp $DOCKERCOMPOSE docker-compose.yml
 	echo ""
 }
 
 function docker_compose() {
 	echo -e "${BLUE}## DOCKERCOMPOSE ##${NC}"
+	echo ""
 	echo "Starting docker..."
+	echo ""
 	service docker restart
 	docker-compose up -d
 }
