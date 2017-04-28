@@ -21,7 +21,8 @@ function script_option() {
 	echo -e "	${GREEN}(1) Install the Seedbox${NC}"
 	echo -e "	${GREEN}(2) Add an user to the Htaccess${NC}"
 	echo -e "	${GREEN}(3) Add a docker App${NC}"
-	echo -e "	${GREEN}(4) Delete and clean all Dockers${NC}"
+	echo -e "	${GREEN}(4) Restart docker machines${NC}"
+	echo -e "	${GREEN}(5) Delete and clean all Dockers${NC}"
 	echo ""
 	read -p "	Your choice : " CHOICE
 	echo ""
@@ -42,6 +43,12 @@ function script_option() {
 	  SCRIPT="ADDDOCKAPP"
 	  ;;
 	"4")
+	  echo -e "${BLUE}##########################${NC}"
+	  echo -e "${BLUE}# RESTARTING DOCKER APPS #${NC}"
+	  echo -e "${BLUE}##########################${NC}"
+	  SCRIPT="RESTARTDOCKER"
+	  ;;
+	"5")
 	  SCRIPT="DELETEDOCKERS"
 	  ;;
 	esac
@@ -285,4 +292,8 @@ function delete_dockers() {
 		echo "	* Deleting files..."
 		rm /dockers -R
 	fi
+}
+
+function restart_docker_apps() {
+	
 }
