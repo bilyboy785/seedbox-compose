@@ -45,22 +45,25 @@ function script_option() {
 }
 
 function upgrade_system() {
+	DEBIANSOURCES="includes/sources.list.debian"
+	UBUNTUSOURCES="includes/sources.list.ubuntu"
+	SOURCESFOLDER="/etc/apt/sources.list"
 	echo -e "${BLUE}## UPGRADING ##${NC}"
 	# apt-get update > /dev/null 2>&1
 	echo "	* Installing gawk & apt transport https"
-	apt-get install -y gawk apt-transport-https
+	apt-get install -y gawk apt-transport-https > /dev/null 2>&1
 	echo "	* Checking system OS release"
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	echo "	* Removing default sources.list"
 	rm /etc/apt/sources.list
 	if [[ $SYSTEM == "Debian GNU/Linux" ]]; then
 		echo "	* Creating new sources.list for Debian"
-		cat includes/sources.list.debian >> /etc/apt/sources.list
+		cat $DEBIANSOURCES >> $SOURCESFOLDER
 		wget -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add -
 		wget -O- http://nginx.org/keys/nginx_signing.key | apt-key add -
 	elif [[ $SYSTEM == "Ubuntu" ]]; then
 		echo "	* Creating new sources.list for Ubuntu"
-		cat includes/sources.list.ubuntu >> /etc/apt/sources.list
+		cat $UBUNTUSOURCES >> $SOURCESFOLDER
 	fi
 	echo "	* Updating sources and upgrading system"
 	apt-get update && apt-get upgrade -y
@@ -80,7 +83,7 @@ function base_packages() {
 
 function install_docker() {
 	echo -e "${BLUE}## DOCKER ##${NC}"
-	dpkg-query -l docker >> /dev/null
+	dpkg-query -l docker > /dev/null 2>&1
   	if [ $? != 0 ]; then
 		echo "Docker is not installed, it will be installed !"
 		echo "	* Installing docker, docker-engine"
