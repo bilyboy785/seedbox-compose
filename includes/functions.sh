@@ -300,6 +300,6 @@ function restart_docker_apps() {
 	i=1
 	while [ $i -le $(echo "$DOCKERS" | wc -w) ]
 	do
-	  echo $DOCKERS | cut -d\ -f$i
+	  echo $DOCKERS | cut -d\  -f$i
 	done
 }
