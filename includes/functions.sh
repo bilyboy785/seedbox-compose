@@ -297,10 +297,25 @@ function delete_dockers() {
 function restart_docker_apps() {
 	DOCKERS=$(docker ps --format "{{.Names}}")
 	declare -i i=1
+	declare -a TABAPP
+	echo "	* [0] - All dockers (default)"
 	while [ $i -le $(echo "$DOCKERS" | wc -w) ]
 	do
 		APP=$(echo $DOCKERS | cut -d\  -f$i)
-		echo "	* \[$i\] - $APP"
+		echo "	* [$i] - $APP"
+		TABAPP[$i]=$APP
 		i=$i+1
 	done
+	read -p "Please enter the number you want to restart, let blank to default value (all) : " RESTARTAPP
+	case $RESTARTAPP in
+	"")
+	  docker restart $(docker ps)
+	  ;;
+	"0")
+	  docker restart $(docker ps)
+	  ;;
+	"1")
+	  echo TABAPP[1]
+	  #docker restart TABAPP[1]
+	esac
 }
