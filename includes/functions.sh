@@ -56,12 +56,12 @@ function upgrade_system() {
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	echo "	* Removing default sources.list"
 	mv $SOURCESFOLDER $SOURCESFOLDER\.bak > /dev/null 2>&1
-	if [[ $SYSTEM == "Debian GNU/Linux" ]]; then
+	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
 		echo "	* Creating new sources.list for Debian"
 		cat $DEBIANSOURCES >> $SOURCESFOLDER
 		wget -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add -
 		wget -O- http://nginx.org/keys/nginx_signing.key | apt-key add -
-	elif [[ $SYSTEM == "Ubuntu" ]]; then
+	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo "	* Creating new sources.list for Ubuntu"
 		cat $UBUNTUSOURCES >> $SOURCESFOLDER
 	fi
