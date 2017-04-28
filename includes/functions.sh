@@ -58,7 +58,7 @@ function upgrade_system() {
 }
 
 function base_packages() {
-	echo -e "${BLUE}## INSTALLING ZSH ##${NC}"
+	echo -e "${BLUE}## ZSH-OhMyZSH ##${NC}"
 	echo -e "	* Installing ZSH & Git-core"
 	apt-get install zsh git-core > /dev/null 2>&1
 	echo -e "	* Cloning Oh-My-ZSH"
