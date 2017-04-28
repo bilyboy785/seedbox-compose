@@ -31,4 +31,7 @@ if [ $USER = "root" ] ; then
   
   ## Defines parameters for dockers : password, domains and replace it in docker-compose file
   define_parameters
+  
+  ## Docker compose function running in background
+  docker_compose
 fi
