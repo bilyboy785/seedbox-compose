@@ -46,17 +46,23 @@ function script_option() {
 
 function upgrade_system() {
 	echo -e "${BLUE}## UPGRADING ##${NC}"
-	apt-get update > /dev/null 2>&1
-	apt-get install -y gawk awk apt-transport-https
+	# apt-get update > /dev/null 2>&1
+	echo "	* Installing gawk & apt transport https"
+	apt-get install -y gawk apt-transport-https
+	echo "	* Checking system OS release"
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
+	echo "	* Removing default sources.list"
 	rm /etc/apt/sources.list
 	if [[ $SYSTEM == "Debian GNU/Linux" ]]; then
+		echo "	* Creating new sources.list for Debian"
 		cat includes/sources.list.debian >> /etc/apt/sources.list
 		wget -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add -
 		wget -O- http://nginx.org/keys/nginx_signing.key | apt-key add -
 	elif [[ $SYSTEM == "Ubuntu" ]]; then
+		echo "	* Creating new sources.list for Ubuntu"
 		cat includes/sources.list.ubuntu >> /etc/apt/sources.list
 	fi
+	echo "	* Updating sources and upgrading system"
 	apt-get update && apt-get upgrade -y
 	echo ""
 }
