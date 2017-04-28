@@ -21,7 +21,7 @@ if [ $USER = "root" ] ; then
   case $SCRIPT in
 	"INSTALL")
 	    ## Upgrading system
-	    # upgrade_system
+	    upgrade_system
 	    ## Check for docker on system
 	    install_docker
 	    ## Installing base packages
