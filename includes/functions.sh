@@ -26,17 +26,24 @@ function script_option() {
 	echo ""
 	case $CHOICE in
 	"1")
-	  echo "option 1"
+	  echo -e "${BLUE}## INSTALLING SEEDBOX-COMPOSE ##${NC}"
+	  echo ""
+	  SCRIPT="INSTALL"
 	  ;;
 	"2")
-	  echo "option 2"
+	  echo -e "${BLUE}## ADDING USER ##${NC}"
+	  echo ""
+	  SCRIPT="ADDUSER"
 	  ;;
 	"3")
-	  echo "option 3"
+	  echo -e "${BLUE}## ADDING DOCKER APPS ##${NC}"
+	  echo ""
+	  SCRIPT="ADDDOCKAPP"
 	  ;;
 	esac
 	
 }
+
 function upgrade_system() {
 	echo -e "${BLUE}## UPGRADING ##${NC}"
 	apt-get install -y gawk apt-transport-https
