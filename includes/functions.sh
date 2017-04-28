@@ -83,7 +83,7 @@ function base_packages() {
 
 function install_docker() {
 	echo -e "${BLUE}## DOCKER ##${NC}"
-	dpkg-query -l docker > /dev/null 2>&1
+	dpkg-query -l docker
   	if [ $? != 0 ]; then
 		echo "Docker is not installed, it will be installed !"
 		echo "	* Installing docker, docker-engine"
