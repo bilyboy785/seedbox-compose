@@ -296,6 +296,7 @@ function delete_dockers() {
 
 function restart_docker_apps() {
 	DOCKERS=$(docker ps --format "{{.Names}}")
+	echo $DOCKERS
 	while read APP;
 	do
 		echo $APP;
