@@ -117,6 +117,7 @@ function define_parameters() {
 	else
 		TIMEZONE=$TIMEZONEDEF
 	fi
+	echo ""
 	echo -e "${BLUE}## GENERAL INFORMATIONS ##${NC}"
 	read -p "	Please enter an email address : " CONTACTEMAIL
 	read -p "	Enter your domain name : " DOMAIN
@@ -129,6 +130,7 @@ function define_parameters() {
 	# read -p "	Choose a max upload size for Nextcloud (Ex: 10G or 128M) : " MAXUPLOADSIZENEXTCLOUD
 	
 	## Function to replace parameters in docker-compose file
+	echo ""
 	replace_parameters $TIMEZONE $USERID $GRPID $CONTACTEMAIL $DOMAIN # $MARIADBROOTPASSWD $MARIADBNEXTCLOUDPASSWD $NEXTCLOUDADMIN $NEXTCLOUDADMINPASSWD $MAXUPLOADSIZENEXTCLOUD
 }
 
