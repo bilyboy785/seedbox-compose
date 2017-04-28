@@ -244,9 +244,8 @@ function create_reverse() {
 	CONFFOLDER="/tmp/seedboxdocker/includes/nginxproxy"
 	for file in $CONFFOLDER/*.conf
 	do
-		echo "	* Creating reverse for $file"
 		FILE=$(echo $file | grep nginxproxy | cut -d\/ -f6)
-		echo 
+		echo "	* Creating reverse for $FILE"
 		cat $REVERSEFOLDER/$FILE >> $SITEFOLDER/$FILE
 	done
 	
