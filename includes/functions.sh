@@ -38,6 +38,7 @@ function base_packages() {
 	wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh > /dev/null 2>&1
 	sed -i -e 's/^\ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"bira\"/g' ~/.zshrc > /dev/null 2>&1
 	sed -i -e 's/^\# DISABLE_AUTO_UPDATE=\"true\"/DISABLE_AUTO_UPDATE=\"true\"/g' ~root/.zshrc > /dev/null 2>&1
+	echo ""
 }
 
 function install_docker() {
@@ -58,12 +59,12 @@ function install_docker() {
 function install_letsencrypt() {
 	echo -e "${BLUE}## LETS ENCRYPT ##${NC}"
 	if [ ! -d "/etc/letsencrypt" ]; then
-		read -p "Lets'Encrypt is not installed. Do you plan to generate certificates ? (y/n) : " installLetsencrypt
+		echo "	* Lets'Encrypt is not installed. It will be installed"
 		apt install git-core
 		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
 		echo ""
 	else
-		echo "Let's Encrypt is already installed !"
+		echo "	* Let's Encrypt is already installed !"
 		echo ""
 	fi
 }
