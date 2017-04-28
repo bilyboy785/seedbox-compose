@@ -7,7 +7,7 @@ lutim:
     - UID=%UID%
     - GID=%GID%
     - WEBROOT=/lutim
-    - SECRET=$(date +%s | md5sum | head -c 32)
+    - SECRET=%SECRET%
     - CONTACT=%LUFI_LUTIM_CONTACT%
     - MAX_FILE_SIZE=250000000
   ports:
