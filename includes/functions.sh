@@ -301,6 +301,6 @@ function restart_docker_apps() {
 	while [ $i -le $(echo "$DOCKERS" | wc -w) ]
 	do
 	  echo $DOCKERS | cut -d\  -f$i
-	  $i=$((i+1))
+	  i=$((i+1))
 	done
 }
