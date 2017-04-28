@@ -26,18 +26,15 @@ function script_option() {
 	echo ""
 	case $CHOICE in
 	"1")
-	  echo -e "${BLUE}## INSTALLING SEEDBOX-COMPOSE ##${NC}"
-	  echo ""
+	  echo -e "${BLUE}# INSTALLING SEEDBOX-COMPOSE #${NC}"
 	  SCRIPT="INSTALL"
 	  ;;
 	"2")
-	  echo -e "${BLUE}## ADDING USER ##${NC}"
-	  echo ""
+	  echo -e "${BLUE}# ADDING USER #${NC}"
 	  SCRIPT="ADDUSER"
 	  ;;
 	"3")
-	  echo -e "${BLUE}## ADDING DOCKER APPS ##${NC}"
-	  echo ""
+	  echo -e "${BLUE}# ADDING DOCKER APPS #${NC}"
 	  SCRIPT="ADDDOCKAPP"
 	  ;;
 	esac
@@ -152,7 +149,8 @@ function define_parameters() {
 	read -p "	Please enter an email address : " CONTACTEMAIL
 	read -p "	Enter your domain name : " DOMAIN
 	read -p "	Enter an username for HTACCESS : " HTUSER
-	read -s -p "	Enter password : " HTPASSWORD
+	read -p "	Enter password : " HTPASSWORD
+	add_user_htpasswd $HTUSER $HTPASSWORD
 	## Function to replace parameters in docker-compose file
 	echo ""
 	replace_parameters $TIMEZONE $USERID $GRPID $CONTACTEMAIL $DOMAIN # $MARIADBROOTPASSWD $MARIADBNEXTCLOUDPASSWD $NEXTCLOUDADMIN $NEXTCLOUDADMINPASSWD $MAXUPLOADSIZENEXTCLOUD
@@ -176,7 +174,6 @@ function replace_parameters() {
 	sed -i "s|%SONARR_DOMAIN%|$SONARRDOMAIN|g" $NGINXPROXY/uifordocker.conf
 	sed -i "s|%DOCKERUI_DOMAIN%|$UIDOCKERDOMAIN|g" $NGINXPROXY/sonarr.conf
 	sed -i "s|%RUTORRENT_DOMAIN%|$RUTORRENTDOMAIN|g" $NGINXPROXY/rutorrent.conf
-	cat $NGINXPROXY/rutorrent.conf
 	cp $DOCKERCOMPOSE docker-compose.yml
 	echo ""
 }
@@ -187,6 +184,15 @@ function docker_compose() {
 	service docker restart
 	echo "	* Docker-composing"
 	# docker-compose up -d
+}
+
+function add_user_htpasswd() {
+	FILE="/dockers/nginx/conf/.htpasswd"
+	if [[! -f $FILE ]]; then
+		htpasswd -c -b $FILE $1 $2
+	else
+		htpasswd -b $FILE $1 $2
+	fi
 }
 
 function add_user() {
