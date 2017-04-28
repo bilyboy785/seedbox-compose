@@ -49,9 +49,8 @@ function upgrade_system() {
 	UBUNTUSOURCES="includes/sources.list.ubuntu"
 	SOURCESFOLDER="/etc/apt/sources.list"
 	echo -e "${BLUE}## UPGRADING ##${NC}"
-	# apt-get update > /dev/null 2>&1
 	echo "	* Installing gawk & apt transport https"
-	apt-get install -y gawk apt-transport-https > /dev/null 2>&1
+	apt-get install -y gawk apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 	echo "	* Checking system OS release"
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	echo "	* Removing default sources.list"
@@ -61,6 +60,7 @@ function upgrade_system() {
 		cat $DEBIANSOURCES >> $SOURCESFOLDER
 		wget -q -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add - | > /dev/null 2>&1
 		wget -q -O- http://nginx.org/keys/nginx_signing.key | apt-key add - | > /dev/null 2>&1
+		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo "	* Creating new sources.list for Ubuntu"
 		cat $UBUNTUSOURCES >> $SOURCESFOLDER
@@ -86,8 +86,9 @@ function install_docker() {
 	dpkg-query -l docker
   	if [ $? != 0 ]; then
 		echo "Docker is not installed, it will be installed !"
-		echo "	* Installing docker, docker-engine"
-		apt-get install docker > /dev/null 2>&1
+		echo "	* Installing docker"
+		apt-get install docker-engine > /dev/null 2>&1
+		service docker start > /dev/null 2>&1
 		echo "	* Installing docker-compose"
 		curl -L --fail https://github.com/docker/compose/releases/download/1.12.0/run.sh > /usr/local/bin/docker-compose > /dev/null 2>&1
 		chmod +x /usr/local/bin/docker-compose
