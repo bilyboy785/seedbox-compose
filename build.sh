@@ -41,6 +41,7 @@ if [ $USER = "root" ] ; then
 	    add_user_htpasswd	
 	  ;;
 	"ADDDOCKAPP")
+	    echo ""
 	  ;;
 	"RESTARTDOCKER")
 	    restart_docker_apps
