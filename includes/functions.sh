@@ -133,7 +133,8 @@ function replace_parameters() {
 	sed -i "s|%MYSQL_NEXTCLOUD_PASSWD%|$7|g" $DOCKERCOMPOSE
 	sed -i "s|%NEXTCLOUD_ADMIN_USER%|$8|g" $DOCKERCOMPOSE
 	sed -i "s|%NEXTCLOUD_ADMIN_PASSWD%|$9|g" $DOCKERCOMPOSE
-	cat $DOCKERCOMPOSE
+	cp $DOCKERCOMPOSE docker-compose.yml
+	echo ""
 }
 
 function docker_compose() {
