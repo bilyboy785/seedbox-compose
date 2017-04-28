@@ -185,14 +185,16 @@ function docker_compose() {
 }
 
 function add_user_htpasswd() {
-	FILE="/dockers/nginx/conf/.htpasswd"
+	HTFOLDER="/dockers/nginx/conf/"
+	HTFILE=".htpasswd"
 	echo -e "${BLUE}## HTPASSWD MANAGER ##${NC}"
 	read -p "	Enter an username for HTACCESS : " HTUSER
 	read -p "	Enter password : " HTPASSWORD
 	if [[ ! -f $FILE ]]; then
-		htpasswd -c -b $FILE $HTUSER $HTPASSWORD
+		mkdir -p $HTFOLDER
+		htpasswd -c -b $HTFOLDER$HTFILE $HTUSER $HTPASSWORD
 	else
-		htpasswd -b $FILE $HTUSER $HTPASSWORD
+		htpasswd -b $HTFOLDER$HTFILE $HTUSER $HTPASSWORD
 	fi
 }
 
