@@ -103,18 +103,24 @@ function choose_services() {
 	echo -e "${BWHITE}Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !${NC}"
 	echo "--> Choose wich services you want to add (default set to no) : "
 	read -p "	* Plex and PlexPy ? (y/n) : " PLEXINSTALL
-	read -p "	* ZeroBin ? (y/n) : " ZEROBININSTALL
-	read -p "	* Lufi & Lutim ? (y/n) : " LUFILUTIMINSTALL
-	if [ $PLEXINSTALL = "y" ]; then
+	if [[ $PLEXINSTALL == "y" ]]; then
 		cat includes/plex-docker.yml >> docker-compose-base.yml
 		cat includes/plexpy-docker.yml >> docker-compose-base.yml
+	else
+		echo -e "		${RED}Plex will no be installed${NC}"
 	fi
-	if [ $ZEROBININSTALL = "y" ]; then
+	read -p "	* ZeroBin ? (y/n) : " ZEROBININSTALL
+	if [[ $ZEROBININSTALL == "y" ]]; then
 		cat includes/zerobin-docker.yml >> docker-compose-base.yml
+	else
+		echo -e "		${RED}Zerobin will no be installed${NC}"
 	fi
-	if [ $LUFILUTIMINSTALL = "y" ]; then
+	read -p "	* Lufi & Lutim ? (y/n) : " LUFILUTIMINSTALL
+	if [[ $LUFILUTIMINSTALL == "y" ]]; then
 		cat includes/lufi-docker.yml >> docker-compose-base.yml
 		cat includes/lutim-docker.yml >> docker-compose-base.yml
+	else
+		echo -e "		${RED}Lufi&Lutim will no be installed${NC}"
 	fi
 	echo ""
 }
