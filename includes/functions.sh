@@ -130,11 +130,23 @@ function define_parameters() {
 
 function replace_parameters() {
 	DOCKERCOMPOSE='docker-compose-base.yml'
+	NGINXPROXY='includes/nginxproxy'
 	CLOUDDOMAIN="cloud.$5"
+	JACKETDOMAIN="jackett.$5"
+	RADARRDOMAIN="radarr.$5"
+	SONARRDOMAIN="sonarr.$5"
+	UIDOCKERDOMAIN="dockerui.$5"
+	RUTORRENTDOMAIN="rutorrent.$5"
 	SECRET=$(date +%s | md5sum | head -c 32)
 	sed -i "s|%TIMEZONE%|$1|g" $DOCKERCOMPOSE
 	sed -i "s|%UID%|$2|g" $DOCKERCOMPOSE
 	sed -i "s|%GID%|$3|g" $DOCKERCOMPOSE
+	sed -i "s|%JACKETT_DOMAIN%|$JACKETDOMAIN|g" $NGINXPROXY/jackett.conf
+	sed -i "s|%RADARR_DOMAIN%|$RADARRDOMAIN|g" $NGINXPROXY/radarr.conf
+	sed -i "s|%SONARR_DOMAIN%|$SONARRDOMAIN|g" $NGINXPROXY/uifordocker.conf
+	sed -i "s|%DOCKERUI_DOMAIN%|$UIDOCKERDOMAIN|g" $NGINXPROXY/sonarr.conf
+	sed -i "s|%RUTORRENT_DOMAIN%|$RUTORRENTDOMAIN|g" $NGINXPROXY/rutorrent.conf
+	cat $NGINXPROXY/rutorrent.conf
 	# sed -i "s|%LUFI_LUTIM_CONTACT%|$4|g" $DOCKERCOMPOSE
 	# sed -i "s|%CLOUD_DOMAIN%|$CLOUDDOMAIN|g" $DOCKERCOMPOSE
 	# sed -i "s|%MYSQL_ROOT_PASSWD%|$6|g" $DOCKERCOMPOSE
