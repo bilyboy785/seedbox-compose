@@ -57,6 +57,7 @@ function upgrade_system() {
 	mv $SOURCESFOLDER $SOURCESFOLDER\.bak > /dev/null 2>&1
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
 		echo "	* Creating new sources.list for Debian"
+		mv $SOURCESFOLDER $SOURCESFOLDER.bak
 		cat $DEBIANSOURCES >> $SOURCESFOLDER
 		wget -q -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add - | > /dev/null 2>&1
 		wget -q -O- http://nginx.org/keys/nginx_signing.key | apt-key add - | > /dev/null 2>&1
