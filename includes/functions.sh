@@ -185,7 +185,6 @@ function replace_parameters() {
 	sed -i "s|%DOCKERUI_DOMAIN%|$UIDOCKERDOMAIN|g" $NGINXPROXY/sonarr.conf
 	sed -i "s|%RUTORRENT_DOMAIN%|$RUTORRENTDOMAIN|g" $NGINXPROXY/rutorrent.conf
 	cp $DOCKERCOMPOSE docker-compose.yml
-	echo ""
 }
 
 function docker_compose() {
