@@ -3,7 +3,6 @@ rutorrent:
   image: diameter/rtorrent-rutorrent
   container_name: rutorrent
   environment:
-    - WEBROOT=/
     - USR_ID=%UID%
     - GRP_ID=%GID%
   ports:
