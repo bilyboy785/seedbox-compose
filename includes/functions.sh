@@ -104,6 +104,7 @@ function choose_services() {
 	echo "--> Choose wich services you want to add (default set to no) : "
 	read -p "	* Plex and PlexPy ? (y/n) : " PLEXINSTALL
 	if [[ $PLEXINSTALL == "y" ]]; then
+		echo -e "		${GREEN}Plex will be installed${NC}"
 		cat includes/plex-docker.yml >> docker-compose-base.yml
 		cat includes/plexpy-docker.yml >> docker-compose-base.yml
 	else
@@ -111,12 +112,14 @@ function choose_services() {
 	fi
 	read -p "	* ZeroBin ? (y/n) : " ZEROBININSTALL
 	if [[ $ZEROBININSTALL == "y" ]]; then
+		echo -e "		${GREEN}Zerobin will be installed${NC}"
 		cat includes/zerobin-docker.yml >> docker-compose-base.yml
 	else
 		echo -e "		${RED}Zerobin will no be installed${NC}"
 	fi
 	read -p "	* Lufi & Lutim ? (y/n) : " LUFILUTIMINSTALL
 	if [[ $LUFILUTIMINSTALL == "y" ]]; then
+		echo -e "		${GREEN}Lufi&Lutim will be installed${NC}"
 		cat includes/lufi-docker.yml >> docker-compose-base.yml
 		cat includes/lutim-docker.yml >> docker-compose-base.yml
 	else
