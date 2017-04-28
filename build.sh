@@ -32,7 +32,7 @@ if [ $USER = "root" ] ; then
 	    choose_services
 	    ## Defines parameters for dockers : password, domains and replace it in docker-compose file
 	    define_parameters
-	    ## Docker compose function running in background
+	    ## Generate dockers apps running in background
 	    docker_compose
 	    ## Create reverse proxy for each apps
 	    create_reverse
