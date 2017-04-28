@@ -27,6 +27,7 @@ function upgrade_system() {
 		cp includes/sources.list.ubuntu /etc/apt/sources.list
 	fi
 	apt-get update && apt-get upgrade -y
+	echo ""
 }
 
 function base_packages() {
@@ -43,13 +44,13 @@ function install_docker() {
 	echo -e "${BLUE}## DOCKER ##${NC}"
 	dpkg-query -l docker >> /dev/null
   	if [ $? != 0 ]; then
-		echo "Docker is not installed, it will be installed !"
+		echo "	* Docker is not installed, it will be installed !"
 		echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
 		apt update
 		apt install docker docker-engine docker-compose
 		echo ""
 	else
-		echo "Docker is already installed !"
+		echo "	* Docker is already installed !"
 		echo ""
 	fi
 }
