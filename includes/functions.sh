@@ -296,8 +296,9 @@ function delete_dockers() {
 
 function restart_docker_apps() {
 	DOCKERS=$(docker ps --format "{{.Names}}")
-	#echo $DOCKERS
+	i=1
 	for APP in $DOCKERS;
-		echo $APP;
+		echo "	* $i-$APP"
+		$i=$((i+1))
 	done
 }
