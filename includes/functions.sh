@@ -303,7 +303,7 @@ function restart_docker_apps() {
 	do
 		APP=$(echo $DOCKERS | cut -d\  -f$i)
 		echo "	* [$i] - $APP"
-		TABAPP[$i]=$APP
+		$TABAPP[$i]=$APP
 		i=$i+1
 	done
 	read -p "Please enter the number you want to restart, let blank to default value (all) : " RESTARTAPP
@@ -315,7 +315,7 @@ function restart_docker_apps() {
 	  docker restart $(docker ps)
 	  ;;
 	"1")
-	  echo TABAPP[1]
+	  echo $TABAPP[1]
 	  #docker restart TABAPP[1]
 	esac
 }
