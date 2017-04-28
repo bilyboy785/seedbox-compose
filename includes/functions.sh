@@ -243,7 +243,7 @@ function add_user() {
 
 function create_reverse() {
 	echo -e "${BLUE}## REVERSE PROXY ##${NC}"
-	SITEFOLER="/dockers/nginx/sites-enabled"
+	SITEFOLDER="/dockers/nginx/sites-enabled"
 	REVERSEFOLDER="includes/nginxproxy"
 	CONFFOLDER="/tmp/seedboxdocker/includes/nginxproxy"
 	for file in $CONFFOLDER/*.conf
