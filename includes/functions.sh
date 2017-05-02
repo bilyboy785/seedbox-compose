@@ -67,8 +67,8 @@ function upgrade_system() {
 	SOURCESFOLDER="/etc/apt/sources.list"
 	echo ""
 	echo -e "${BLUE}### UPGRADING ###${NC}"
-	echo " * Installing gawk, curl, gnup2, apache2-utils & apt-transport-https"
-	apt-get install -y gawk apache2-utils apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
+	echo " * Installing gawk, curl, gnup2, apache2-utils, unzip & apt-transport-https"
+	apt-get install -y gawk apache2-utils unzip apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 	if [[ $? = 0 ]]; then
 		echo -e "	${BWHITE}--> Packages installation done !${NC}"
 	else
@@ -153,6 +153,13 @@ function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
 	echo -e "${BWHITE}Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !${NC}"
 	echo "--> Choose wich services you want to add (default set to no) : "
+	read -p "	* H5ai Index ? (y/n) : " H5AIINSTALL
+	if [[ $H5AIINSTALL == "y" ]]; then
+		echo -e "		${GREEN}H5ai will be installed${NC}"
+		echo "h5ai" >> "includes/services"
+	else
+		echo -e "		${RED}H5ai will no be installed${NC}"
+	fi
 	read -p "	* Plex ? (y/n) : " PLEXINSTALL
 	if [[ $PLEXINSTALL == "y" ]]; then
 		echo -e "		${GREEN}Plex will be installed${NC}"
@@ -329,6 +336,14 @@ function create_reverse() {
 	SITEFOLDER="/dockers/nginx/sites-enabled/"
 	REVERSEFOLDER="includes/nginxproxy/"
 	CONFFOLDER="includes/nginxproxy"
+	H5AI="h5ai.conf"
+	if [[ -f "$REVERSEFOLDER$H5AI" ]]; then
+		ROOTFOLDER="/media/"
+		MOVIEDIR="/movies/"
+		TVDIR="/tv/"
+		ln -s $MOVIEDIR $ROOTFOLDER
+		ln -s $TVDIR $ROOTFOLDER
+	fi
 	for line in $(cat $SERVICES);
 	do
 		FILE=$line.conf
@@ -438,6 +453,6 @@ function backup_docker_conf() {
 }
 
 function already_installed() {
-	INSTALLEDFILE="$CONFDIR/seedboxcompose.txt"
+	INSTALLEDFILE="$CONFDIR/seedboxcompose"
 	touch $INSTALLEDFILE
 }
