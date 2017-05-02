@@ -1,17 +1,17 @@
 #!/bin/bash
 function intro() {
 	echo ""
-	echo "########################################################"
-	echo "###                                                  ###"
-	echo "###                  SEEDBOX-COMPOSE                 ###"
-	echo "###   Deploy a complete Seedbox with Docker easily   ###"
-	echo "###               Author : bilyboy785                ###"
-	echo "###                Version : 1.0                     ###"
-	echo "###       Publication date : 2017-03-26              ###"
-	echo "###            Update date : 2017-03-27              ###"
-	echo "###                                                  ###"
-	echo "########################################################"
-	echo ""
+	echo -e "${RED}########################################################"
+	echo -e "###                                                  ###"
+	echo -e "###                  SEEDBOX-COMPOSE                 ###"
+	echo -e "###   Deploy a complete Seedbox with Docker easily   ###"
+	echo -e "###               Author : bilyboy785                ###"
+	echo -e "###                Version : 1.0                     ###"
+	echo -e "###       Publication date : 2017-03-26              ###"
+	echo -e "###            Update date : 2017-03-27              ###"
+	echo -e "###                                                  ###"
+	echo -e "########################################################${NC}"
+	echo -e ""
 }
 function script_option() {
 	echo -e "${BLUE}### WELCOME TO SEEDBOX-COMPOSE ###${NC}"
