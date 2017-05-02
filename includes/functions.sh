@@ -220,7 +220,6 @@ function docker_compose() {
 	service docker restart
 	echo "	* Docker-composing"
 	docker-compose up -d > /dev/null 2>&1
-	valid_htpasswd
 }
 
 function add_user_htpasswd() {
