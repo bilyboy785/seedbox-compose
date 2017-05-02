@@ -178,6 +178,7 @@ function choose_services() {
 
 function install_services() {
 	DOCKERCOMPOSEFILE="docker-compose.yml"
+	touch $DOCKERCOMPOSEFILE
 	for LINE in $(cat $SERVICES);
 	do
 		echo $LINE
