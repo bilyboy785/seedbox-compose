@@ -233,18 +233,17 @@ function install_services() {
 	else
 		declare -i PORT=$FIRSTPORT
 	fi
-	echo "Le premier port est $PORT"
 	for line in $(cat $SERVICES);
 	do
 		NGINXPROXYFILE="includes/nginxproxy/$line.conf"
 		NGINXFINALPROXY="/dockers/nginx/sites-enabled/$line.conf"
-		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
-		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
-		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
-		sed -i "s|%GID%|$GRPID|g" $DOCKERCOMPOSEFILE
-		sed -i "s|%PORT%|$PORT|g" $DOCKERCOMPOSEFILE
-		sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE
-		sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE
+		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE > /dev/null 2>&1
+		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE > /dev/null 2>&1
+		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE > /dev/null 2>&1
+		sed -i "s|%GID%|$GRPID|g" $DOCKERCOMPOSEFILE > /dev/null 2>&1
+		sed -i "s|%PORT%|$PORT|g" $DOCKERCOMPOSEFILE > /dev/null 2>&1
+		sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE > /dev/null 2>&1
+		sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE > /dev/null 2>&1
 		PORT=$PORT+1
 	done
 	echo ""
