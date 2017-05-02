@@ -285,6 +285,7 @@ function add_user_htpasswd() {
 	HTFOLDER="/dockers/nginx/conf/"
 	HTTEMPFOLDER="/tmp/"
 	HTFILE=".htpasswd"
+	echo ""
 	echo -e "${BLUE}## HTPASSWD MANAGER ##${NC}"
 	read -p "	* Enter an username for HTACCESS : " HTUSER
 	read -s -p "	* Enter password : " HTPASSWORD
