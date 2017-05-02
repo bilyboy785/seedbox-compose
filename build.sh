@@ -21,7 +21,7 @@ if [ $USER = "root" ] ; then
   case $SCRIPT in
 	"INSTALL")
 	    ## Upgrading system
-	    #upgrade_system
+	    upgrade_system
 	    ## Check for docker on system
 	    install_docker
 	    ## Installing base packages
@@ -36,6 +36,8 @@ if [ $USER = "root" ] ; then
 	    docker_compose
 	    ## Create reverse proxy for each apps
 	    create_reverse
+	    ## Validating Htpasswd
+	    valid_htpasswd
 	  ;;
 	"ADDUSER")
 	    add_user_htpasswd	
