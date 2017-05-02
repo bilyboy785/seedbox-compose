@@ -109,7 +109,7 @@ function install_docker() {
 		apt-get install -y docker docker-engine > /dev/null 2>&1
 		service docker start > /dev/null 2>&1
 		echo "	* Installing docker-compose"
-		curl -L --fail https://github.com/docker/compose/releases/download/1.12.0/run.sh > /usr/local/bin/docker-compose > /dev/null 2>&1
+		curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose > /dev/null 2>&1
 		chmod +x /usr/local/bin/docker-compose
 		echo ""
 	else
@@ -122,7 +122,7 @@ function install_letsencrypt() {
 	echo -e "${BLUE}## LETS ENCRYPT ##${NC}"
 	if [[ ! -d "/etc/letsencrypt" ]]; then
 		echo "	* Lets'Encrypt is not installed. It will be installed"
-		apt install git-core
+		apt install -y git-core > /dev/null 2>&1
 		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
 		echo ""
 	else
