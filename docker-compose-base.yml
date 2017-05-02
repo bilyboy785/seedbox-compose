@@ -53,7 +53,7 @@ radarr:
     - rutorrent:rutorrent
   volumes:
     - /dockers/radarr/config:/config
-    - /movie-downloads:/downloads
+    - /movies-downloads:/downloads
     - /movies:/movies
 
 #Sonarr
