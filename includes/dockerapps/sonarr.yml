@@ -1,0 +1,18 @@
+
+#Sonarr
+sonarr:
+  image: linuxserver/sonarr
+  container_name: sonarr
+  environment:
+    - PUID=%UID%
+    - PGID=%GID%
+    - TZ=%TIMEZONE%
+  ports:
+    - %SONARR_PORT%:8989
+  links:
+    - rutorrent:rutorrent
+  volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - /dockers/sonarr/config:/config
+    - /tv-downloads:/downloads
+    - /tv:/tv
