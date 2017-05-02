@@ -1,0 +1,14 @@
+
+#Jackett
+jackett:
+  image : linuxserver/jackett
+  container_name: jackett
+  environment:
+    - PGID=%UID%
+    - PUID=%GID%
+    - TZ=%TIMEZONE%
+  ports:
+    - %JACKETT_PORT%:9117
+  volumes:
+    - /etc/localtime:/etc/locatime:ro
+    - /dockers/jackett/downloads:/downloads
