@@ -22,7 +22,8 @@ function script_option() {
 	echo -e "	${GREEN}(2) Add an user to the Htaccess${NC}"
 	echo -e "	${GREEN}(3) Add a docker App${NC}"
 	echo -e "	${GREEN}(4) Restart docker machines${NC}"
-	echo -e "	${GREEN}(5) Delete and clean all Dockers${NC}"
+	echo -e "	${GREEN}(5) Backup dockers conf${NC}"
+	echo -e "	${GREEN}(6) Delete and clean all Dockers${NC}"
 	echo ""
 	read -p "	Your choice : " CHOICE
 	echo ""
@@ -49,6 +50,9 @@ function script_option() {
 	  echo -e "${BLUE}##########################${NC}"
 	  ;;
 	"5")
+	   SCRIPT="BACKUPCONF"
+	  ;;
+	"6")
 	  SCRIPT="DELETEDOCKERS"
 	  ;;
 	esac
@@ -380,5 +384,5 @@ function backup_docker_conf() {
 	echo ""
 	mkdir -p $BACKUPDIR$BACKUPNAME$BACKUPDATE
 	tar cvpzf $BACKUP $CONFDIR > /dev/null 2>&1
-	echo ""
+	echo "	* Your backup was successfully created in /var/archives"
 }
