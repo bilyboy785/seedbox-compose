@@ -121,8 +121,8 @@ function install_docker() {
 
 function install_letsencrypt() {
 	echo -e "${BLUE}## LETS ENCRYPT ##${NC}"
-	LEDIR="/etc/letsencrypt"
-	if [ ! -f "$LEDIR" ]; then
+	LEDIR="/opt/letsencrypt"
+	if [[ ! -d "$LEDIR" ]]; then
 		echo "	* Lets'Encrypt is not installed. It will be installed"
 		apt install -y git-core > /dev/null 2>&1
 		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
