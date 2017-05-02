@@ -150,38 +150,38 @@ function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
 	echo -e "${BWHITE}Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !${NC}"
 	echo "--> Choose wich services you want to add (default set to no) : "
-	read -p "	* Plex and PlexPy ? (y/n) : " PLEXINSTALL
+	read -p "	* Plex ? (y/n) : " PLEXINSTALL
 	if [[ $PLEXINSTALL == "y" ]]; then
 		echo -e "		${GREEN}Plex will be installed${NC}"
 		echo "plex" >> "includes/services"
-		#cat includes/dockerapps/plex-docker.yml >> docker-compose-base.yml
-		#cat includes/dockerapps/plexpy-docker.yml >> docker-compose-base.yml
 	else
 		echo -e "		${RED}Plex will no be installed${NC}"
+	fi
+	read -p "	* PlexPy ? (y/n) : " PLEXPYINSTALL
+	if [[ $PLEXPYINSTALL == "y" ]]; then
+		echo -e "		${GREEN}PlexPy will be installed${NC}"
+		echo "plexpy" >> "includes/services"
+	else
+		echo -e "		${RED}PlexPy will no be installed${NC}"
 	fi
 	read -p "	* ZeroBin ? (y/n) : " ZEROBININSTALL
 	if [[ $ZEROBININSTALL == "y" ]]; then
 		echo -e "		${GREEN}Zerobin will be installed${NC}"
 		echo "zerobin" >> "includes/services"
-		#cat includes/dockerapps/zerobin-docker.yml >> docker-compose-base.yml
 	else
 		echo -e "		${RED}Zerobin will no be installed${NC}"
 	fi
 	read -p "	* Lufi  ? (y/n) : " LUFIINSTALL
-	if [[ $LUFILUTIMINSTALL == "y" ]]; then
+	if [[ $LUFIINSTALL == "y" ]]; then
 		echo -e "		${GREEN}Lufi will be installed${NC}"
 		echo "lufi" >> "includes/services"
-		#cat includes/dockerapps/lufi-docker.yml >> docker-compose-base.yml
-		#cat includes/dockerapps/lutim-docker.yml >> docker-compose-base.yml
 	else
 		echo -e "		${RED}Lufi will no be installed${NC}"
 	fi
 	read -p "	* Lutim ? (y/n) : " LUTIMINSTALL
-	if [[ $LUFILUTIMINSTALL == "y" ]]; then
+	if [[ $LUTIMINSTALL == "y" ]]; then
 		echo -e "		${GREEN}Lutim will be installed${NC}"
 		echo "lutim" >> "includes/services"
-		#cat includes/dockerapps/lufi-docker.yml >> docker-compose-base.yml
-		#cat includes/dockerapps/lutim-docker.yml >> docker-compose-base.yml
 	else
 		echo -e "		${RED}Lutim will no be installed${NC}"
 	fi
@@ -191,9 +191,9 @@ function choose_services() {
 function install_services() {
 	DOCKERCOMPOSEFILE="docker-compose.yml"
 	touch $DOCKERCOMPOSEFILE
-	for LINE in $(cat $SERVICES);
+	for line in $(cat $SERVICES);
 	do
-		cat "includes/dockerapps/$LINE.yml" >> $DOCKERCOMPOSEFILE
+		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 	done
 	echo ""
 }
@@ -227,8 +227,8 @@ function define_parameters() {
 	fi
 	echo ""
 	echo -e "${BLUE}## GENERAL INFORMATIONS ##${NC}"
-	read -p "	Please enter an email address : " CONTACTEMAIL
-	read -p "	Enter your domain name : " DOMAIN
+	read -p "	* Please enter an email address : " CONTACTEMAIL
+	read -p "	* Enter your domain name : " DOMAIN
 	echo ""
 	add_user_htpasswd
 	## Function to replace parameters in docker-compose file
@@ -272,8 +272,8 @@ function add_user_htpasswd() {
 	HTTEMPFOLDER="/tmp/"
 	HTFILE=".htpasswd"
 	echo -e "${BLUE}## HTPASSWD MANAGER ##${NC}"
-	read -p "	Enter an username for HTACCESS : " HTUSER
-	read -s -p "	Enter password : " HTPASSWORD
+	read -p "	* Enter an username for HTACCESS : " HTUSER
+	read -s -p "	* Enter password : " HTPASSWORD
 	if [[ ! -f $HTFOLDER$HTFILE ]]; then
 		htpasswd -c -b $HTTEMPFOLDER$HTFILE $HTUSER $HTPASSWORD
 	else
@@ -419,4 +419,9 @@ function backup_docker_conf() {
 		echo -e " ${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
 	fi
 	echo ""
+}
+
+function already_installed() {
+	INSTALLEDFILE="$CONFDIR/seedboxcompose.txt"
+	touch $INSTALLEDFILE
 }
