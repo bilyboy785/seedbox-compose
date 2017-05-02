@@ -196,7 +196,6 @@ function install_services() {
 		echo $LINE
 		cat "includes/dockerapps/$LINE.yml" >> $DOCKERCOMPOSEFILE
 	done
-	exit 1
 }
 
 function define_parameters() {
