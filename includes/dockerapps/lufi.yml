@@ -8,7 +8,7 @@ lufi:
     - GID=%GID%
     - WEBROOT=/lufi
     - SECRET=%SECRET%
-    - CONTACT=%LUFI_LUTIM_CONTACT%
+    - CONTACT=%EMAIL%
     - MAX_FILE_SIZE=250000000
   ports:
     - %PORT%:8080
