@@ -1,0 +1,17 @@
+
+#Radarr
+radarr:
+  image: hotio/radarr
+  container_name: radarr
+  environment:
+    - PUID=%UID%
+    - PGID=%GID%
+    - TZ=%TIMEZONE%
+  ports:
+    - %RADARR_PORT%:7878
+  links:
+    - rutorrent:rutorrent
+  volumes:
+    - /dockers/radarr/config:/config
+    - /movies-downloads:/downloads
+    - /movies:/movies
