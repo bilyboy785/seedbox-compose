@@ -1,0 +1,13 @@
+
+#Nginx
+nginx:
+  image: wonderfall/boring-nginx
+  container_name: nginx
+  ports:
+    - "80:8000"
+    - "443:4430"
+  volumes:
+    - /dockers/nginx/sites-enabled:/sites-enabled
+    - /dockers/nginx/conf:/conf.d
+    - /dockers/nginx/log:/var/log/nginx
+    - /dockers/nginx/certs:/certs
