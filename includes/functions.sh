@@ -353,16 +353,16 @@ function resuming_seedbox() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo ""
 	echo -e "	${BWHITE}* Access apps from these URL :${NC}"
-	echo "		--> Your Web server is available on $DOMAIN"
-	echo "		--> Sonarr from $SONARRDOMAIN"
-	echo "		--> Sonarr from $RADARRDOMAIN"
-	echo "		--> Sonarr from $JACKETTDOMAIN"
-	echo "		--> Sonarr from $RUTORRENTDOMAIN"
-	echo "		--> Sonarr from $UIDOCKERDOMAIN"
+	echo -e "		--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
+	echo -e "		--> Sonarr from ${YELLOW}$SONARRDOMAIN${NC}"
+	echo -e "		--> Sonarr from ${YELLOW}$RADARRDOMAIN${NC}"
+	echo -e "		--> Sonarr from ${YELLOW}$JACKETTDOMAIN${NC}"
+	echo -e "		--> Sonarr from ${YELLOW}$RUTORRENTDOMAIN${NC}"
+	echo -e "		--> Sonarr from ${YELLOW}$UIDOCKERDOMAIN${NC}"
 	echo ""
 	echo -e "	${BWHITE}* Here is your IDs :${NC}"
-	echo "		--> Username : $HTUSER"
-	echo "		--> Password : $HTPASSWORD"
+	echo -e "		--> Username : ${YELLOW}$HTUSER${NC}"
+	echo -e "		--> Password : ${YELLOW}$HTPASSWORD${NC}"
 	echo ""
 	read -p "	* Do you want to backup your Dockers conf ? (y/n) : " BACKUPCONF
 	case $BACKUPCONF in
@@ -375,6 +375,7 @@ function resuming_seedbox() {
 	*)
 	  exit 1
 	esac
+	echo ""
 }
 
 function backup_docker_conf() {
