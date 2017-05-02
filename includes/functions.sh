@@ -331,7 +331,6 @@ function create_reverse() {
 	for line in $(cat $SERVICES);
 	do
 		FILE=$line.conf
-		echo $FILE
 		echo "	* Creating reverse for $FILE"
 		cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 	done
@@ -394,11 +393,10 @@ function resuming_seedbox() {
 	echo ""
 	echo -e "	${BWHITE}* Access apps from these URL :${NC}"
 	echo -e "		--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
-	echo -e "		--> Sonarr from ${YELLOW}$SONARRDOMAIN${NC}"
-	echo -e "		--> Sonarr from ${YELLOW}$RADARRDOMAIN${NC}"
-	echo -e "		--> Sonarr from ${YELLOW}$JACKETTDOMAIN${NC}"
-	echo -e "		--> Sonarr from ${YELLOW}$RUTORRENTDOMAIN${NC}"
-	echo -e "		--> Sonarr from ${YELLOW}$UIDOCKERDOMAIN${NC}"
+	for line in $(cat $SERVICES);
+	do
+		echo -e "		--> $line from ${YELLOW}$line.$DOMAIN${NC}"
+	done
 	echo ""
 	echo -e "	${BWHITE}* Here is your IDs :${NC}"
 	echo -e "		--> Username : ${YELLOW}$HTUSER${NC}"
