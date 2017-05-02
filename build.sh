@@ -11,6 +11,7 @@ YELLOW='\e[0;33m'
 BWHITE='\e[1;37m'
 NC='\033[0m'
 DATE=`date +%d/%m/%Y-%H:%M:%S`
+BACKUPDATE=`date +%d-%m-%Y-%H-%M-%S`
 DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 
 if [ $USER = "root" ] ; then
