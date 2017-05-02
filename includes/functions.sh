@@ -293,6 +293,7 @@ function create_reverse() {
 	done
 	echo "	* Restarting Nginx..."
 	docker restart nginx > /dev/null 2>&1
+	resuming_seedbox
 }
 
 function delete_dockers() {
@@ -334,4 +335,42 @@ function restart_docker_apps() {
 	  echo $TABAPP[1]
 	  #docker restart TABAPP[1]
 	esac
+}
+
+function resuming_seedbox() {
+	echo ""
+	echo ""
+	echo -e "${BLUE}##############################${NC}"
+	echo -e "${BLUE}## RESUMING SEEDBOX INSTALL ##${NC}"
+	echo -e "${BLUE}##############################${NC}"
+	echo ""
+	echo "	${BWHITE}* Access apps from these URL :${NC}"
+	echo "		--> Your Web server is available on $DOMAIN"
+	echo "		--> Sonarr from $SONARRDOMAIN"
+	echo "		--> Sonarr from $RADARRDOMAIN"
+	echo "		--> Sonarr from $JACKETTDOMAIN"
+	echo "		--> Sonarr from $RUTORRENTDOMAIN"
+	echo "		--> Sonarr from $UIDOCKERDOMAIN"
+	echo ""
+	echo "	${BWHITE}* Here is your IDs :${NC}"
+	echo "		--> Username : $HTUSER"
+	echo "		--> Password : $HTPASSWORD"
+	echo ""
+	read -p "	* Do you want to backup your Dockers conf ? (y/n) : " BACKUPCONF
+	case $BACKUPCONF in
+	"y")
+	  backup_docker_conf
+	  ;;
+	"n")
+	  exit 1
+	  ;;
+	*)
+	  exit 1
+	esac
+}
+
+function backup_docker_conf() {
+	echo -e "${BLUE}##############################${NC}"
+	echo -e "${BLUE}##    BACKUP DOCKER CONF    ##${NC}"
+	echo -e "${BLUE}##############################${NC}"
 }
