@@ -153,25 +153,37 @@ function choose_services() {
 	read -p "	* Plex and PlexPy ? (y/n) : " PLEXINSTALL
 	if [[ $PLEXINSTALL == "y" ]]; then
 		echo -e "		${GREEN}Plex will be installed${NC}"
-		cat includes/dockerapps/plex-docker.yml >> docker-compose-base.yml
-		cat includes/dockerapps/plexpy-docker.yml >> docker-compose-base.yml
+		echo "plex" >> "includes/services"
+		#cat includes/dockerapps/plex-docker.yml >> docker-compose-base.yml
+		#cat includes/dockerapps/plexpy-docker.yml >> docker-compose-base.yml
 	else
 		echo -e "		${RED}Plex will no be installed${NC}"
 	fi
 	read -p "	* ZeroBin ? (y/n) : " ZEROBININSTALL
 	if [[ $ZEROBININSTALL == "y" ]]; then
 		echo -e "		${GREEN}Zerobin will be installed${NC}"
-		cat includes/dockerapps/zerobin-docker.yml >> docker-compose-base.yml
+		echo "zerobin" >> "includes/services"
+		#cat includes/dockerapps/zerobin-docker.yml >> docker-compose-base.yml
 	else
 		echo -e "		${RED}Zerobin will no be installed${NC}"
 	fi
-	read -p "	* Lufi & Lutim ? (y/n) : " LUFILUTIMINSTALL
+	read -p "	* Lufi  ? (y/n) : " LUFIINSTALL
 	if [[ $LUFILUTIMINSTALL == "y" ]]; then
-		echo -e "		${GREEN}Lufi&Lutim will be installed${NC}"
-		cat includes/dockerapps/lufi-docker.yml >> docker-compose-base.yml
-		cat includes/dockerapps/lutim-docker.yml >> docker-compose-base.yml
+		echo -e "		${GREEN}Lufi will be installed${NC}"
+		echo "lufi" >> "includes/services"
+		#cat includes/dockerapps/lufi-docker.yml >> docker-compose-base.yml
+		#cat includes/dockerapps/lutim-docker.yml >> docker-compose-base.yml
 	else
-		echo -e "		${RED}Lufi&Lutim will no be installed${NC}"
+		echo -e "		${RED}Lufi will no be installed${NC}"
+	fi
+	read -p "	* Lutim ? (y/n) : " LUTIMINSTALL
+	if [[ $LUFILUTIMINSTALL == "y" ]]; then
+		echo -e "		${GREEN}Lutim will be installed${NC}"
+		echo "lutim" >> "includes/services"
+		#cat includes/dockerapps/lufi-docker.yml >> docker-compose-base.yml
+		#cat includes/dockerapps/lutim-docker.yml >> docker-compose-base.yml
+	else
+		echo -e "		${RED}Lutim will no be installed${NC}"
 	fi
 	echo ""
 }
