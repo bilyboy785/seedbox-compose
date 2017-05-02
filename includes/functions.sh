@@ -191,7 +191,6 @@ function choose_services() {
 function install_services() {
 	DOCKERCOMPOSEFILE="docker-compose.yml"
 	touch $DOCKERCOMPOSEFILE
-	echo -e "${BLUE}### SERVICES UPDATING ###${NC}"
 	for LINE in $(cat $SERVICES);
 	do
 		cat "includes/dockerapps/$LINE.yml" >> $DOCKERCOMPOSEFILE
