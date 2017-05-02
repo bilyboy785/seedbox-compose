@@ -246,6 +246,7 @@ function install_services() {
 		sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE > /dev/null 2>&1
 		PORT=$PORT+1
 	done
+	echo $PORT >> $FILEPORTPATH
 	echo ""
 }
 
@@ -326,9 +327,9 @@ function create_reverse() {
 	SITEFOLDER="/dockers/nginx/sites-enabled/"
 	REVERSEFOLDER="includes/nginxproxy/"
 	CONFFOLDER="includes/nginxproxy"
-	for file in $CONFFOLDER/*.conf
+	for line in $(cat $SERVICES);
 	do
-		FILE=$(echo $file | cut -d\/ -f3)
+		FILE=$line.conf
 		echo "	* Creating reverse for $FILE"
 		cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 	done
