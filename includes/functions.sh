@@ -69,19 +69,19 @@ function upgrade_system() {
 	echo " * Installing gawk, curl & apt transport https"
 	apt-get install -y gawk apache2-utils apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 	if [[ $? = 0 ]]; then
-		echo "	--> Packages installation done !"
+		echo -e "	${BWHITE}--> Packages installation done !${NC}"
 	else
 		echo -e "	${RED}--> Error while installing packages, please see logs${NC}"
 	fi
 	echo " * Checking system OS release"
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
-	echo -e "	--> System detected : ${BWHITE}$SYSTEM${NC}"
+	echo -e "	${BWHITE}--> System detected : $SYSTEM${NC}"
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
 		echo " * Creating docker.list for $SYSTEM"
 		echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
 		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
 		if [[ $? = 0 ]]; then
-			echo -e "	--> ${BWHITE}Docker.list${NC} successfully created !"
+			echo -e "	${BWHITE}--> Docker.list successfully created !${NC}"
 		else
 			echo -e "	${RED}--> Error adding the Key P80.POOL.SKS for Docker's Repo${NC}" 	
 		fi
@@ -92,7 +92,7 @@ function upgrade_system() {
 	apt-get update > /dev/null 2>&1
 	apt-get upgrade -y > /dev/null 2>&1
 	if [[ $? = 0 ]]; then
-		echo "	--> System upgraded successfully !"
+		echo -e "	${BWHITE}--> System upgraded successfully !${NC}"
 	fi
 	echo ""
 }
