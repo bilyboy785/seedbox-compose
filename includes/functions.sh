@@ -81,7 +81,7 @@ function upgrade_system() {
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo " * Creating docker.list for $SYSTEM"
 	fi
-	echo "	* Updating sources and upgrading system"
+	echo " * Updating sources and upgrading system"
 	apt-get update > /dev/null 2>&1
 	apt-get upgrade -y > /dev/null 2>&1
 	if [[ $? = 0 ]]; then
