@@ -66,7 +66,7 @@ function upgrade_system() {
 	SOURCESFOLDER="/etc/apt/sources.list"
 	echo ""
 	echo -e "${BLUE}### UPGRADING ###${NC}"
-	echo " * Installing gawk, curl & apt transport https"
+	echo " * Installing gawk, curl, gnup2, apache2-utils & apt-transport-https"
 	apt-get install -y gawk apache2-utils apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 	if [[ $? = 0 ]]; then
 		echo -e "	${BWHITE}--> Packages installation done !${NC}"
@@ -382,12 +382,12 @@ function backup_docker_conf() {
 	BACKUPDIR="/var/archives/"
 	BACKUPNAME="backup-seedboxcompose-"
 	CONFDIR="/dockers/"
-	BACKUP="$BACKUPNAME$BACKUPDATE.tar.gz"
+	BACKUP="$BACKUPDIR$BACKUPNAME$BACKUPDATE.tar.gz"
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	if [[ -d "$CONFDIR" ]]; then
-		mkdir -p $BACKUPDIR$BACKUPNAME$BACKUPDATE
+		mkdir -p $BACKUPDIR
 		tar cvpzf $BACKUP $CONFDIR > /dev/null 2>&1
 		echo " * Your backup was successfully created in /var/archives"
 	else
