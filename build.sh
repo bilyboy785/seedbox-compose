@@ -52,5 +52,7 @@ if [ $USER = "root" ] ; then
 	"DELETEDOCKERS")
 	    delete_dockers
 	  ;;
+	"BACKUPCONF")
+	    backup_docker_conf
 	esac
 fi
