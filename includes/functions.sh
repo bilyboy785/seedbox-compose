@@ -242,6 +242,7 @@ function install_services() {
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%GID%|$GRPID|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%PORT%|$PORT|g" $DOCKERCOMPOSEFILE
+		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE
 		sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE
 		PORT=$PORT+1
