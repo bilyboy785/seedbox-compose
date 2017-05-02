@@ -68,7 +68,7 @@ function upgrade_system() {
 	echo -e "${BLUE}### UPGRADING ###${NC}"
 	echo " * Installing gawk, curl & apt transport https"
 	apt-get install -y gawk apache2-utils apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
-	if [[ $? > 0 ]]; then
+	if [[ $? = 0 ]]; then
 		echo "	--> Packages installation done !"
 	else
 		echo -e "	${RED}--> Error while installing packages, please see logs${NC}"
@@ -92,7 +92,7 @@ function upgrade_system() {
 	apt-get update > /dev/null 2>&1
 	apt-get upgrade -y > /dev/null 2>&1
 	if [[ $? = 0 ]]; then
-		echo "		--> System upgraded successfully !"
+		echo "	--> System upgraded successfully !"
 	fi
 	echo ""
 }
