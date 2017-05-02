@@ -305,12 +305,12 @@ function delete_dockers() {
 	echo -e "${BLUE}##########################${NC}"
 	echo -e "${BLUE}## CLEANING DOCKER APPS ##${NC}"
 	echo -e "${BLUE}##########################${NC}"
-	echo "	* Stopping dockers..."
+	echo " * Stopping dockers..."
 	docker stop $(docker ps) > /dev/null 2>&1
-	echo "	* Removing dockers..."
+	echo " * Removing dockers..."
 	docker rm $(docker ps -a) > /dev/null 2>&1
 	if [[ -d "$DOCKERFOLDER" ]]; then
-		read -p "	* Do you want to delete all docker's configuration files ? (y/n) " DELETECONF
+		read -p " * Do you want to delete all docker's configuration files ? (y/n) " DELETECONF
 		if [[ $DELETECONF == "y" ]]; then
 			echo "	* Deleting files..."
 			rm /dockers -R
