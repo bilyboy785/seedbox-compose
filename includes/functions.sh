@@ -301,6 +301,7 @@ function create_reverse() {
 }
 
 function delete_dockers() {
+	DOCKERFOLDER="/dockers/"
 	echo -e "${BLUE}##########################${NC}"
 	echo -e "${BLUE}## CLEANING DOCKER APPS ##${NC}"
 	echo -e "${BLUE}##########################${NC}"
@@ -308,11 +309,14 @@ function delete_dockers() {
 	docker stop $(docker ps) > /dev/null 2>&1
 	echo "	* Removing dockers..."
 	docker rm $(docker ps -a) > /dev/null 2>&1
-	read -p "	* Do you want to delete all docker's configuration files ? (y/n) " DELETECONF
-	if [[ $DELETECONF == "y" ]]; then
-		echo "	* Deleting files..."
-		rm /dockers -R
+	if [[ -d "$DOCKERFOLDER" ]]; then
+		read -p "	* Do you want to delete all docker's configuration files ? (y/n) " DELETECONF
+		if [[ $DELETECONF == "y" ]]; then
+			echo "	* Deleting files..."
+			rm /dockers -R
+		fi
 	fi
+	echo ""
 }
 
 function restart_docker_apps() {
