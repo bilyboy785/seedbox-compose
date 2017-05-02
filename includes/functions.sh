@@ -66,32 +66,25 @@ function upgrade_system() {
 	SOURCESFOLDER="/etc/apt/sources.list"
 	echo ""
 	echo -e "${BLUE}### UPGRADING ###${NC}"
-	echo "	* Installing gawk, curl & apt transport https"
+	echo " * Installing gawk, curl & apt transport https"
 	apt-get install -y gawk apache2-utils apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 	if [[ $? > 0 ]]; then
 		echo "		--> Packages installation done !"
 	fi
-	echo "	* Checking system OS release"
+	echo " * Checking system OS release"
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	echo "		--> System detected : $SYSTEM"
-	echo "	* Removing default sources.list"
-	#mv $SOURCESFOLDER $SOURCESFOLDER\.bak > /dev/null 2>&1
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
-		echo "	* Creating new sources.list for $SYSTEM"
-		#mv $SOURCESFOLDER $SOURCESFOLDER.bak
-		#cat $DEBIANSOURCES >> $SOURCESFOLDER
-		#wget -q -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add - | > /dev/null 2>&1
-		#wget -q -O- http://nginx.org/keys/nginx_signing.key | apt-key add - | > /dev/null 2>&1
+		echo " * Creating docker.list for $SYSTEM"
 		echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
 		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
-		echo "	* Creating new sources.list for $SYSTEM"
-		#cat $UBUNTUSOURCES >> $SOURCESFOLDER
+		echo " * Creating docker.list for $SYSTEM"
 	fi
 	echo "	* Updating sources and upgrading system"
 	apt-get update > /dev/null 2>&1
 	apt-get upgrade -y > /dev/null 2>&1
-	if [[ $? > 0 ]]; then
+	if [[ $? = 0 ]]; then
 		echo "		--> System upgraded successfully !"
 	fi
 	echo ""
@@ -101,14 +94,14 @@ function base_packages() {
 	echo -e "${BLUE}### ZSH-OhMyZSH ###${NC}"
 	ZSHDIR="/usr/share/zsh"
 	if [ ! -d "$ZSHDIR" ]; then
-		echo -e "	* Installing ZSH & Git-core"
+		echo -e " * Installing ZSH & Git-core"
 		apt-get install -y zsh git-core > /dev/null 2>&1
-		echo -e "	* Cloning Oh-My-ZSH"
+		echo -e " * Cloning Oh-My-ZSH"
 		wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh > /dev/null 2>&1
 		sed -i -e 's/^\ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"bira\"/g' ~/.zshrc > /dev/null 2>&1
 		sed -i -e 's/^\# DISABLE_AUTO_UPDATE=\"true\"/DISABLE_AUTO_UPDATE=\"true\"/g' ~root/.zshrc > /dev/null 2>&1
 	else
-		echo -e "	* ZSH is already installed !"
+		echo -e " * ZSH is already installed !"
 	fi
 	echo ""
 }
@@ -118,15 +111,15 @@ function install_docker() {
 	dpkg-query -l docker > /dev/null 2>&1
   	if [ $? != 0 ]; then
 		echo "Docker is not installed, it will be installed !"
-		echo "	* Installing docker"
+		echo " * Installing Docker"
 		apt-get install -y docker docker-engine > /dev/null 2>&1
 		service docker start > /dev/null 2>&1
-		echo "	* Installing docker-compose"
+		echo " * Installing Docker-compose"
 		curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose > /dev/null 2>&1
 		chmod +x /usr/local/bin/docker-compose
 		echo ""
 	else
-		echo "	* Docker is already installed !"
+		echo " * Docker is already installed !"
 		echo ""
 	fi
 }
@@ -135,12 +128,12 @@ function install_letsencrypt() {
 	echo -e "${BLUE}### LETS ENCRYPT ###${NC}"
 	LEDIR="/opt/letsencrypt"
 	if [[ ! -d "$LEDIR" ]]; then
-		echo "	* Lets'Encrypt is not installed. It will be installed"
+		echo " * Installing Lets'Encrypt"
 		apt install -y git-core > /dev/null 2>&1
 		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
 		echo ""
 	else
-		echo "	* Let's Encrypt is already installed !"
+		echo " * Let's Encrypt is already installed !"
 		echo ""
 	fi
 }
