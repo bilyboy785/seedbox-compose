@@ -85,12 +85,16 @@ function upgrade_system() {
 
 function base_packages() {
 	echo -e "${BLUE}## ZSH-OhMyZSH ##${NC}"
-	echo -e "	* Installing ZSH & Git-core"
-	apt-get install -y zsh git-core > /dev/null 2>&1
-	echo -e "	* Cloning Oh-My-ZSH"
-	wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh > /dev/null 2>&1
-	sed -i -e 's/^\ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"bira\"/g' ~/.zshrc > /dev/null 2>&1
-	sed -i -e 's/^\# DISABLE_AUTO_UPDATE=\"true\"/DISABLE_AUTO_UPDATE=\"true\"/g' ~root/.zshrc > /dev/null 2>&1
+	if [[ ! -d "/usr/share/zsh" ]]; then
+		echo -e "	* Installing ZSH & Git-core"
+		apt-get install -y zsh git-core > /dev/null 2>&1
+		echo -e "	* Cloning Oh-My-ZSH"
+		wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh > /dev/null 2>&1
+		sed -i -e 's/^\ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"bira\"/g' ~/.zshrc > /dev/null 2>&1
+		sed -i -e 's/^\# DISABLE_AUTO_UPDATE=\"true\"/DISABLE_AUTO_UPDATE=\"true\"/g' ~root/.zshrc > /dev/null 2>&1
+	else
+		echo -e "	* ZSH is already installed !"
+	fi
 	echo ""
 }
 
