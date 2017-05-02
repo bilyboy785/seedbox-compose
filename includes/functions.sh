@@ -14,7 +14,7 @@ function intro() {
 	echo ""
 }
 function script_option() {
-	echo -e "${BLUE}## WELCOME TO SEEDBOX-COMPOSE ##${NC}"
+	echo -e "${BLUE}### WELCOME TO SEEDBOX-COMPOSE ###${NC}"
 	echo "This script will help you to make a complete seedbox with Rutorrent, Sonarr, Radarr and Jacket, based on Docker !"
 	echo "Choose an option to launch the script (1, 2...) : "
 	echo ""
@@ -29,25 +29,25 @@ function script_option() {
 	echo ""
 	case $CHOICE in
 	"1")
-	  echo -e "${BLUE}##############################${NC}"
-	  echo -e "${BLUE}# INSTALLING SEEDBOX-COMPOSE #${NC}"
-	  echo -e "${BLUE}##############################${NC}"
+	  echo -e "${BLUE}##########################################${NC}"
+	  echo -e "${BLUE}###    INSTALLING SEEDBOX-COMPOSE      ###${NC}"
+	  echo -e "${BLUE}##########################################${NC}"
 	  SCRIPT="INSTALL"
 	  ;;
 	"2")
 	  SCRIPT="ADDUSER"
 	  ;;
 	"3")
-	  echo -e "${BLUE}######################${NC}"
-	  echo -e "${BLUE}# ADDING DOCKER APPS #${NC}"
-	  echo -e "${BLUE}######################${NC}"
+	  echo -e "${BLUE}##########################################${NC}"
+	  echo -e "${BLUE}###         ADDING DOCKER APPS         ###${NC}"
+	  echo -e "${BLUE}##########################################${NC}"
 	  SCRIPT="ADDDOCKAPP"
 	  ;;
 	"4")
 	  SCRIPT="RESTARTDOCKER"
-	  echo -e "${BLUE}##########################${NC}"
-	  echo -e "${BLUE}# RESTARTING DOCKER APPS #${NC}"
-	  echo -e "${BLUE}##########################${NC}"
+	  echo -e "${BLUE}##########################################${NC}"
+	  echo -e "${BLUE}###       RESTARTING DOCKER APPS       ###${NC}"
+	  echo -e "${BLUE}##########################################${NC}"
 	  ;;
 	"5")
 	   SCRIPT="BACKUPCONF"
@@ -65,7 +65,7 @@ function upgrade_system() {
 	DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 	SOURCESFOLDER="/etc/apt/sources.list"
 	echo ""
-	echo -e "${BLUE}## UPGRADING ##${NC}"
+	echo -e "${BLUE}### UPGRADING ###${NC}"
 	echo "	* Installing gawk, curl & apt transport https"
 	apt-get install -y gawk apache2-utils apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 	if [[ $? > 0 ]]; then
@@ -98,7 +98,7 @@ function upgrade_system() {
 }
 
 function base_packages() {
-	echo -e "${BLUE}## ZSH-OhMyZSH ##${NC}"
+	echo -e "${BLUE}### ZSH-OhMyZSH ###${NC}"
 	ZSHDIR="/usr/share/zsh"
 	if [ ! -d "$ZSHDIR" ]; then
 		echo -e "	* Installing ZSH & Git-core"
@@ -114,7 +114,7 @@ function base_packages() {
 }
 
 function install_docker() {
-	echo -e "${BLUE}## DOCKER ##${NC}"
+	echo -e "${BLUE}### DOCKER ###${NC}"
 	dpkg-query -l docker > /dev/null 2>&1
   	if [ $? != 0 ]; then
 		echo "Docker is not installed, it will be installed !"
@@ -132,7 +132,7 @@ function install_docker() {
 }
 
 function install_letsencrypt() {
-	echo -e "${BLUE}## LETS ENCRYPT ##${NC}"
+	echo -e "${BLUE}### LETS ENCRYPT ###${NC}"
 	LEDIR="/opt/letsencrypt"
 	if [[ ! -d "$LEDIR" ]]; then
 		echo "	* Lets'Encrypt is not installed. It will be installed"
@@ -146,7 +146,7 @@ function install_letsencrypt() {
 }
 
 function choose_services() {
-	echo -e "${BLUE}## SERVICES ##${NC}"
+	echo -e "${BLUE}### SERVICES ###${NC}"
 	echo -e "${BWHITE}Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !${NC}"
 	echo "--> Choose wich services you want to add (default set to no) : "
 	read -p "	* Plex and PlexPy ? (y/n) : " PLEXINSTALL
@@ -176,7 +176,7 @@ function choose_services() {
 }
 
 function define_parameters() {
-	echo -e "${BLUE}## USER INFORMATIONS ##${NC}"
+	echo -e "${BLUE}### USER INFORMATIONS ###${NC}"
 	read -p "	* Choose user wich run dockers (default $USER). If user doesn't exist, it will be added : " CURRUSER
 	if [[ $CURRUSER == "" ]]; then
 		USERID=$(id -u $USER)
@@ -235,7 +235,7 @@ function replace_parameters() {
 }
 
 function docker_compose() {
-	echo -e "${BLUE}## DOCKERCOMPOSE ##${NC}"
+	echo -e "${BLUE}### DOCKERCOMPOSE ###${NC}"
 	echo "	* Starting docker..."
 	service docker restart
 	echo "	* Docker-composing"
@@ -285,7 +285,7 @@ function add_user() {
 }
 
 function create_reverse() {
-	echo -e "${BLUE}## REVERSE PROXY ##${NC}"
+	echo -e "${BLUE}### REVERSE PROXY ###${NC}"
 	SITEFOLDER="/dockers/nginx/sites-enabled/"
 	REVERSEFOLDER="includes/nginxproxy/"
 	CONFFOLDER="includes/nginxproxy"
@@ -302,9 +302,9 @@ function create_reverse() {
 
 function delete_dockers() {
 	DOCKERFOLDER="/dockers/"
-	echo -e "${BLUE}##########################${NC}"
-	echo -e "${BLUE}## CLEANING DOCKER APPS ##${NC}"
-	echo -e "${BLUE}##########################${NC}"
+	echo -e "${BLUE}##########################################${NC}"
+	echo -e "${BLUE}###        CLEANING DOCKER APPS        ###${NC}"
+	echo -e "${BLUE}##########################################${NC}"
 	echo " * Stopping dockers..."
 	docker stop $(docker ps) > /dev/null 2>&1
 	echo " * Removing dockers..."
@@ -348,9 +348,9 @@ function restart_docker_apps() {
 function resuming_seedbox() {
 	echo ""
 	echo ""
-	echo -e "${BLUE}##############################${NC}"
-	echo -e "${BLUE}## RESUMING SEEDBOX INSTALL ##${NC}"
-	echo -e "${BLUE}##############################${NC}"
+	echo -e "${BLUE}##########################################${NC}"
+	echo -e "${BLUE}###       RESUMING SEEDBOX INSTALL     ###${NC}"
+	echo -e "${BLUE}##########################################${NC}"
 	echo ""
 	echo -e "	${BWHITE}* Access apps from these URL :${NC}"
 	echo "		--> Your Web server is available on $DOMAIN"
@@ -382,9 +382,9 @@ function backup_docker_conf() {
 	BACKUPNAME="backup-seedboxcompose-"
 	CONFDIR="/dockers/"
 	BACKUP="$BACKUPNAME$BACKUPDATE.tar.gz"
-	echo -e "${BLUE}##############################${NC}"
-	echo -e "${BLUE}##    BACKUP DOCKER CONF    ##${NC}"
-	echo -e "${BLUE}##############################${NC}"
+	echo -e "${BLUE}##########################################${NC}"
+	echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"
+	echo -e "${BLUE}##########################################${NC}"
 	if [[ -d "$CONFDIR" ]]; then
 		mkdir -p $BACKUPDIR$BACKUPNAME$BACKUPDATE
 		tar cvpzf $BACKUP $CONFDIR > /dev/null 2>&1
