@@ -27,28 +27,32 @@ if [ $USER = "root" ] ; then
   script_option
   case $SCRIPT in
 	"INSTALL")
-	    ## Upgrading system
-	    upgrade_system
-	    ## Check for docker on system
-	    install_docker
-	    ## Installing base packages
-	    base_packages
-	    ## Check for LetsEncrypt packages on system
-	    install_letsencrypt
-	    ## Choose wich services install
-	    choose_services
-	    ## Update docker-compose file
-	    install_services
-	    ## Defines parameters for dockers : password, domains and replace it in docker-compose file
-	    define_parameters
-	    ## Generate dockers apps running in background
-	    docker_compose
-	    ## Create reverse proxy for each apps
-	    create_reverse
-	    ## Validating Htpasswd
-	    valid_htpasswd
-	    ## Write a log file for the next script launching
-	    already_installed
+	    if [[ -f "/etc/seedboxcompose/seedboxcompose.txt" ]]; then
+	    	## Upgrading system
+		upgrade_system
+		    ## Check for docker on system
+		    install_docker
+		    ## Installing base packages
+		    base_packages
+		    ## Check for LetsEncrypt packages on system
+		    install_letsencrypt
+		    ## Choose wich services install
+		    choose_services
+		    ## Update docker-compose file
+		    install_services
+		    ## Defines parameters for dockers : password, domains and replace it in docker-compose file
+		    define_parameters
+		    ## Generate dockers apps running in background
+		    docker_compose
+		    ## Create reverse proxy for each apps
+		    create_reverse
+		    ## Validating Htpasswd
+		    valid_htpasswd
+		    ## Write a log file for the next script launching
+		    already_installed
+	    else
+	    	exit 1
+	    fi
 	  ;;
 	"ADDUSER")
 	    add_user_htpasswd	
