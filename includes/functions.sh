@@ -274,14 +274,14 @@ function add_user() {
 
 function create_reverse() {
 	echo -e "${BLUE}## REVERSE PROXY ##${NC}"
-	SITEFOLDER="/dockers/nginx/sites-enabled"
-	REVERSEFOLDER="includes/nginxproxy"
+	SITEFOLDER="/dockers/nginx/sites-enabled/"
+	REVERSEFOLDER="includes/nginxproxy/"
 	CONFFOLDER="includes/nginxproxy"
 	for file in $CONFFOLDER/*.conf
 	do
 		FILE=$(echo $file | grep nginxproxy | cut -d\/ -f6)
 		echo "	* Creating reverse for $FILE"
-		cat $REVERSEFOLDER/$FILE >> $SITEFOLDER/$FILE
+		cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 	done
 	echo "	* Restarting Nginx..."
 	docker restart nginx > /dev/null 2>&1
