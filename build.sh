@@ -11,9 +11,13 @@ BLUE='\e[0;36m'
 YELLOW='\e[0;33m'
 BWHITE='\e[1;37m'
 NC='\033[0m'
+CONFDIR="/etc/seedboxcompose"
 DATE=`date +%d/%m/%Y-%H:%M:%S`
 BACKUPDATE=`date +%d-%m-%Y-%H-%M-%S`
 DOCKERLIST="/etc/apt/sources.list.d/docker.list"
+FIRSTPORT="5050"
+LASTPORT="8080"
+FILEPORTPATH="/etc/seedboxcompose/ports.pt"
 
 if [ $USER = "root" ] ; then
   ## Display script infos 
@@ -30,8 +34,6 @@ if [ $USER = "root" ] ; then
 	    base_packages
 	    ## Check for LetsEncrypt packages on system
 	    install_letsencrypt
-	    ## Choose wich services will be installed
-	    choose_services
 	    ## Defines parameters for dockers : password, domains and replace it in docker-compose file
 	    define_parameters
 	    ## Generate dockers apps running in background
