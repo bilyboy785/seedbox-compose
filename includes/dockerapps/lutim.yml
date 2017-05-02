@@ -11,7 +11,7 @@ lutim:
     - CONTACT=%LUFI_LUTIM_CONTACT%
     - MAX_FILE_SIZE=250000000
   ports:
-    - 9090:8181
+    - %PORT%:8181
   volumes:
     - ./dockers/lutim/data:/data
     - ./dockers/lutim/files:/lutim/files

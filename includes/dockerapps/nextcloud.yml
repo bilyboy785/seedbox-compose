@@ -34,7 +34,7 @@ nextcloud:
   links:
     - dbnextcloud:dbnextcloud
   ports:
-    - 8181:8888
+    - %PORT%:8888
   volumes:
     - ./dockers/nextcloud/data:/data
     - ./dockers/nextcloud/config:/config

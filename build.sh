@@ -19,6 +19,7 @@ FIRSTPORT="5050"
 LASTPORT="8080"
 SERVICES="includes/services"
 FILEPORTPATH="/etc/seedboxcompose/ports.pt"
+DOCKERCOMPOSEFILE="docker-compose.yml"
 
 if [ $USER = "root" ] ; then
 	## Display script infos 
@@ -38,10 +39,10 @@ if [ $USER = "root" ] ; then
 			    install_letsencrypt
 			    ## Choose wich services install
 			    choose_services
-			    ## Update docker-compose file
-			    install_services
 			    ## Defines parameters for dockers : password, domains and replace it in docker-compose file
 			    define_parameters
+			    ## Update docker-compose file
+			    install_services
 			    ## Generate dockers apps running in background
 			    docker_compose
 			    ## Create reverse proxy for each apps

@@ -4,7 +4,7 @@ ui-for-docker:
   image: uifd/ui-for-docker
   container_name: ui-for-docker
   ports:
-    - %DOCKERUI_PORT%:9000
+    - %PORT%:9000
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
   privileged: true

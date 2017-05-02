@@ -7,7 +7,7 @@ rutorrent:
     - USR_ID=%UID%
     - GRP_ID=%GID%
   ports:
-    - "%RUTORRENT_PORT%:80"
+    - "%PORT%:80"
     - "49160:49160/udp"
     - "49161:49161"
   volumes:

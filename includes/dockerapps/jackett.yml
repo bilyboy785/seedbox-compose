@@ -8,7 +8,7 @@ jackett:
     - PUID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - %JACKETT_PORT%:9117
+    - %PORT%:9117
   volumes:
     - /etc/localtime:/etc/locatime:ro
     - /dockers/jackett/downloads:/downloads

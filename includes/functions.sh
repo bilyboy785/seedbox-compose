@@ -88,6 +88,9 @@ function upgrade_system() {
 		fi
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo " * Creating docker.list for $SYSTEM"
+		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
+		apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main' > /dev/null 2>&1
+		apt-get update > /dev/null 2>&1
 	fi
 	echo " * Updating sources and upgrading system"
 	apt-get update > /dev/null 2>&1
@@ -188,16 +191,6 @@ function choose_services() {
 	echo ""
 }
 
-function install_services() {
-	DOCKERCOMPOSEFILE="docker-compose.yml"
-	touch $DOCKERCOMPOSEFILE
-	for line in $(cat $SERVICES);
-	do
-		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
-	done
-	echo ""
-}
-
 function define_parameters() {
 	echo -e "${BLUE}### USER INFORMATIONS ###${NC}"
 	read -p "	* Choose user wich run dockers (default $USER). If user doesn't exist, it will be added : " CURRUSER
@@ -229,11 +222,32 @@ function define_parameters() {
 	echo -e "${BLUE}## GENERAL INFORMATIONS ##${NC}"
 	read -p "	* Please enter an email address : " CONTACTEMAIL
 	read -p "	* Enter your domain name : " DOMAIN
-	echo ""
 	add_user_htpasswd
-	## Function to replace parameters in docker-compose file
 	echo ""
-	replace_parameters $TIMEZONE $USERID $GRPID $CONTACTEMAIL $DOMAIN # $MARIADBROOTPASSWD $MARIADBNEXTCLOUDPASSWD $NEXTCLOUDADMIN $NEXTCLOUDADMINPASSWD $MAXUPLOADSIZENEXTCLOUD
+}
+
+function install_services() {
+	touch $DOCKERCOMPOSEFILE
+	if [[ -f "$FILEPORTPATH" ]]; then
+		declare -i PORT=$(cat $FILEPORTPATH | tail -1)
+	else
+		declare -i PORT=$FIRSTPORT
+	fi
+	echo "Le premier port est $PORT"
+	for line in $(cat $SERVICES);
+	do
+		NGINXPROXYFILE="includes/nginxproxy/$line.conf"
+		NGINXFINALPROXY="/dockers/nginx/sites-enabled/$line.conf"
+		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
+		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
+		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
+		sed -i "s|%GID%|$GRPID|g" $DOCKERCOMPOSEFILE
+		sed -i "s|%PORT%|$PORT|g" $DOCKERCOMPOSEFILE
+		sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE
+		sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE
+		PORT=$PORT+1
+	done
+	echo ""
 }
 
 function replace_parameters() {

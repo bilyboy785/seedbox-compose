@@ -8,7 +8,7 @@ radarr:
     - PGID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - %RADARR_PORT%:7878
+    - %PORT%:7878
   links:
     - rutorrent:rutorrent
   volumes:
