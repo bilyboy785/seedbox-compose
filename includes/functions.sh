@@ -86,7 +86,7 @@ function upgrade_system() {
 function base_packages() {
 	echo -e "${BLUE}## ZSH-OhMyZSH ##${NC}"
 	echo -e "	* Installing ZSH & Git-core"
-	apt-get install zsh git-core > /dev/null 2>&1
+	apt-get install -y zsh git-core > /dev/null 2>&1
 	echo -e "	* Cloning Oh-My-ZSH"
 	wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh > /dev/null 2>&1
 	sed -i -e 's/^\ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"bira\"/g' ~/.zshrc > /dev/null 2>&1
@@ -100,7 +100,7 @@ function install_docker() {
   	if [ $? != 0 ]; then
 		echo "Docker is not installed, it will be installed !"
 		echo "	* Installing docker"
-		apt-get install docker-engine > /dev/null 2>&1
+		apt-get install -y docker-engine > /dev/null 2>&1
 		service docker start > /dev/null 2>&1
 		echo "	* Installing docker-compose"
 		curl -L --fail https://github.com/docker/compose/releases/download/1.12.0/run.sh > /usr/local/bin/docker-compose > /dev/null 2>&1
