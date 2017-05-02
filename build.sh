@@ -47,6 +47,8 @@ if [ $USER = "root" ] ; then
 	    create_reverse
 	    ## Validating Htpasswd
 	    valid_htpasswd
+	    ## Write a log file for the next script launching
+	    already_installed
 	  ;;
 	"ADDUSER")
 	    add_user_htpasswd	
