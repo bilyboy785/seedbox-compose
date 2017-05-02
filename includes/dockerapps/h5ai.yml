@@ -6,5 +6,5 @@ h5ai:
   ports:
     - %PORT%:80
   volumes:
-    - /media:/var/www
+    - /multimedia:/var/www
     

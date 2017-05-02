@@ -338,9 +338,10 @@ function create_reverse() {
 	CONFFOLDER="includes/nginxproxy"
 	H5AI="h5ai.conf"
 	if [[ -f "$REVERSEFOLDER$H5AI" ]]; then
-		ROOTFOLDER="/media/"
+		ROOTFOLDER="/multimedia/"
 		MOVIEDIR="/movies/"
 		TVDIR="/tv/"
+		mkdir -p $ROOTFOLDER
 		ln -s $MOVIEDIR $ROOTFOLDER
 		ln -s $TVDIR $ROOTFOLDER
 	fi
