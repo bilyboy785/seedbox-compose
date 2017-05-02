@@ -17,6 +17,7 @@ BACKUPDATE=`date +%d-%m-%Y-%H-%M-%S`
 DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 FIRSTPORT="5050"
 LASTPORT="8080"
+SERVICES="includes/services"
 FILEPORTPATH="/etc/seedboxcompose/ports.pt"
 
 if [ $USER = "root" ] ; then
