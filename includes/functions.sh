@@ -60,15 +60,20 @@ function upgrade_system() {
 	UBUNTUSOURCES="includes/sources.list.ubuntu"
 	DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 	SOURCESFOLDER="/etc/apt/sources.list"
+	echo ""
 	echo -e "${BLUE}## UPGRADING ##${NC}"
 	echo "	* Installing gawk, curl & apt transport https"
-	apt-get install -y gawk apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
+	apt-get install -y gawk apache2-utils apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
+	if [[ $? > 0 ]]; then
+		echo "		--> Packages installation done !"
+	fi
 	echo "	* Checking system OS release"
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
+	echo "		--> System detected : $SYSTEM"
 	echo "	* Removing default sources.list"
 	#mv $SOURCESFOLDER $SOURCESFOLDER\.bak > /dev/null 2>&1
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
-		echo "	* Creating new sources.list for Debian"
+		echo "	* Creating new sources.list for $SYSTEM"
 		#mv $SOURCESFOLDER $SOURCESFOLDER.bak
 		#cat $DEBIANSOURCES >> $SOURCESFOLDER
 		#wget -q -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add - | > /dev/null 2>&1
@@ -76,12 +81,15 @@ function upgrade_system() {
 		echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
 		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
-		echo "	* Creating new sources.list for Ubuntu"
-		cat $UBUNTUSOURCES >> $SOURCESFOLDER
+		echo "	* Creating new sources.list for $SYSTEM"
+		#cat $UBUNTUSOURCES >> $SOURCESFOLDER
 	fi
 	echo "	* Updating sources and upgrading system"
 	apt-get update > /dev/null 2>&1
 	apt-get upgrade -y > /dev/null 2>&1
+	if [[ $? > 0 ]]; then
+		echo "		--> System upgraded successfully !"
+	fi
 	echo ""
 }
 
