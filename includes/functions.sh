@@ -87,7 +87,8 @@ function upgrade_system() {
 
 function base_packages() {
 	echo -e "${BLUE}## ZSH-OhMyZSH ##${NC}"
-	if [[ ! -d "/usr/share/zsh" ]]; then
+	ZSHDIR="/usr/share/zsh"
+	if [ ! -d "$ZSHDIR" ]; then
 		echo -e "	* Installing ZSH & Git-core"
 		apt-get install -y zsh git-core > /dev/null 2>&1
 		echo -e "	* Cloning Oh-My-ZSH"
@@ -120,7 +121,8 @@ function install_docker() {
 
 function install_letsencrypt() {
 	echo -e "${BLUE}## LETS ENCRYPT ##${NC}"
-	if [[ ! -d "/etc/letsencrypt" ]]; then
+	LEDIR="/etc/letsencrypt"
+	if [ ! -d "$LEDIR" ]; then
 		echo "	* Lets'Encrypt is not installed. It will be installed"
 		apt install -y git-core > /dev/null 2>&1
 		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
