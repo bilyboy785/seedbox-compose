@@ -1,7 +1,7 @@
 #!/bin/bash
 function intro() {
 	echo ""
-	echo -e "${RED}########################################################"
+	echo -e "${BLUE}########################################################"
 	echo -e "###                                                  ###"
 	echo -e "###                  SEEDBOX-COMPOSE                 ###"
 	echo -e "###   Deploy a complete Seedbox with Docker easily   ###"
