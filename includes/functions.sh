@@ -385,7 +385,6 @@ function backup_docker_conf() {
 	echo -e "${BLUE}##############################${NC}"
 	echo -e "${BLUE}##    BACKUP DOCKER CONF    ##${NC}"
 	echo -e "${BLUE}##############################${NC}"
-	echo ""
 	if [[ -d "$CONFDIR" ]]; then
 		mkdir -p $BACKUPDIR$BACKUPNAME$BACKUPDATE
 		tar cvpzf $BACKUP $CONFDIR > /dev/null 2>&1
@@ -393,4 +392,5 @@ function backup_docker_conf() {
 	else
 		echo " * Please launch the script to install Seedbox before make a Backup !"
 	fi
+	echo ""
 }
