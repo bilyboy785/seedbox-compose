@@ -279,7 +279,7 @@ function create_reverse() {
 	CONFFOLDER="includes/nginxproxy"
 	for file in $CONFFOLDER/*.conf
 	do
-		FILE=$(echo $file | grep nginxproxy | cut -d\/ -f6)
+		FILE=$(echo $file | cut -d\/ -f3)
 		echo "	* Creating reverse for $FILE"
 		cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 	done
