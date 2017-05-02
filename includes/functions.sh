@@ -389,9 +389,9 @@ function backup_docker_conf() {
 	if [[ -d "$CONFDIR" ]]; then
 		mkdir -p $BACKUPDIR
 		tar cvpzf $BACKUP $CONFDIR > /dev/null 2>&1
-		echo " * Your backup was successfully created in /var/archives"
+		echo " ${BWHITE}--> Your backup was successfully created in /var/archives${NC}"
 	else
-		echo " * Please launch the script to install Seedbox before make a Backup !"
+		echo " ${BWHITE}--> Please launch the script to install Seedbox before make a Backup !${NC}"
 	fi
 	echo ""
 }
