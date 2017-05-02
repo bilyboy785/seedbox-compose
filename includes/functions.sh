@@ -420,6 +420,7 @@ function backup_docker_conf() {
 	BACKUPDIR="/var/archives/"
 	BACKUPNAME="backup-seedboxcompose-"
 	CONFDIR="/dockers/"
+	echo ""
 	BACKUP="$BACKUPDIR$BACKUPNAME$BACKUPDATE.tar.gz"
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"

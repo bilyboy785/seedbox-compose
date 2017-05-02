@@ -9,7 +9,7 @@ dbnextcloud:
     - MYSQL_USER=dbnextcloud
     - MYSQL_PASSWORD=%MYSQL_NEXTCLOUD_PASSWD%
   volumes:
-    - ./dockers/mariadb/db/nextcloud:/var/lib/mysql
+    - /dockers/mariadb/db/nextcloud:/var/lib/mysql
     
 #Nextcloud
 nextcloud:
@@ -36,8 +36,8 @@ nextcloud:
   ports:
     - %PORT%:8888
   volumes:
-    - ./dockers/nextcloud/data:/data
-    - ./dockers/nextcloud/config:/config
-    - ./dockers/nextcloud/apps:/apps
-    - ./dockers/nextcloud/themes:/nextcloud/themes
+    - /dockers/nextcloud/data:/data
+    - /dockers/nextcloud/config:/config
+    - /dockers/nextcloud/apps:/apps
+    - /dockers/nextcloud/themes:/nextcloud/themes
     

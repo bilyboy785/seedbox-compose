@@ -17,6 +17,6 @@ plex:
     - 5353:5353/udp
     - 1900:1900/udp
   volumes:
-    - ./dockers/plex/config:/config
+    - /dockers/plex/config:/config
     - /tv:/data/tvshows
     - /movies:/data/movies

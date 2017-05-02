@@ -13,5 +13,5 @@ lutim:
   ports:
     - %PORT%:8181
   volumes:
-    - ./dockers/lutim/data:/data
-    - ./dockers/lutim/files:/lutim/files
+    - /dockers/lutim/data:/data
+    - /dockers/lutim/files:/lutim/files
