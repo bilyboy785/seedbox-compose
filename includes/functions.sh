@@ -276,7 +276,8 @@ function docker_compose() {
 	echo "	* Starting docker..."
 	service docker restart
 	echo "	* Docker-composing"
-	docker-compose up -d > /dev/null 2>&1
+	docker-compose up -d
+	# > /dev/null 2>&1
 	echo ""
 }
 
