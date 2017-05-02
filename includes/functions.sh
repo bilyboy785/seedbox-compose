@@ -238,7 +238,7 @@ function define_parameters() {
 }
 
 function replace_parameters() {
-	DOCKERCOMPOSE='docker-compose-base.yml'
+	DOCKERCOMPOSE='docker-compose.yml'
 	NGINXPROXY='includes/nginxproxy'
 	CLOUDDOMAIN="cloud.$5"
 	JACKETDOMAIN="jackett.$5"
