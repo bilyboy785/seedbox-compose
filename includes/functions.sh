@@ -235,7 +235,7 @@ function docker_compose() {
 	echo "	* Starting docker..."
 	service docker restart
 	echo "	* Docker-composing"
-	echo "		" && docker-compose up -d
+	docker-compose up -d > /dev/null 2>&1
 	echo ""
 }
 
@@ -370,7 +370,15 @@ function resuming_seedbox() {
 }
 
 function backup_docker_conf() {
+	BACKUPDIR="/var/archives/"
+	BACKUPNAME="backup-seedboxcompose-"
+	CONFDIR="/dockers/"
+	BACKUP="BACKUPNAME$BACKUPDATE.tar.gz"
 	echo -e "${BLUE}##############################${NC}"
 	echo -e "${BLUE}##    BACKUP DOCKER CONF    ##${NC}"
 	echo -e "${BLUE}##############################${NC}"
+	echo ""
+	mkdir -p $BACKUPDIR$BACKUPNAME$BACKUPDATE
+	tar cvpzf $BACKUP $CONFDIR > /dev/null 2>&1
+	echo ""
 }
