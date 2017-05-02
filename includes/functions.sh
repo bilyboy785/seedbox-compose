@@ -181,7 +181,7 @@ function install_services() {
 	for LINE in $(cat $SERVICES);
 	do
 		echo $LINE
-		cat "$LINE.yml" >> $DOCKERCOMPOSEFILE
+		cat "includes/$LINE.yml" >> $DOCKERCOMPOSEFILE
 	done
 	exit 1
 }
