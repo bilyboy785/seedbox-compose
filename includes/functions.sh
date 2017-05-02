@@ -179,7 +179,7 @@ function choose_services() {
 function install_services() {
 	for line in $(cat $SERVICES);
 	do
-		echo $LINE
+		echo $line
 	done
 	exit 1
 }
