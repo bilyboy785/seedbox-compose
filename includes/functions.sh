@@ -276,7 +276,7 @@ function create_reverse() {
 	echo -e "${BLUE}## REVERSE PROXY ##${NC}"
 	SITEFOLDER="/dockers/nginx/sites-enabled"
 	REVERSEFOLDER="includes/nginxproxy"
-	CONFFOLDER="./includes/nginxproxy"
+	CONFFOLDER="includes/nginxproxy"
 	for file in $CONFFOLDER/*.conf
 	do
 		FILE=$(echo $file | grep nginxproxy | cut -d\/ -f6)
