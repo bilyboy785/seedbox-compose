@@ -73,11 +73,14 @@ function upgrade_system() {
 	fi
 	echo " * Checking system OS release"
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
-	echo "		--> System detected : $SYSTEM"
+	echo -e "		--> System detected : ${BWHITE}$SYSTEM${NC}"
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
 		echo " * Creating docker.list for $SYSTEM"
 		echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
 		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
+		if [[ $? = 0 ]]; then
+			echo "		--> Docker.list Successfully created !" 
+		fi
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo " * Creating docker.list for $SYSTEM"
 	fi
