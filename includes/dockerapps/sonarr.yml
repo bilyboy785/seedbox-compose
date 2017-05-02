@@ -8,7 +8,7 @@ sonarr:
     - PGID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - %SPORT%:8989
+    - %PORT%:8989
   links:
     - rutorrent:rutorrent
   volumes:

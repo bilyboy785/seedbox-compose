@@ -247,7 +247,6 @@ function install_services() {
 		PORT=$PORT+1
 	done
 	echo $PORT >> $FILEPORTPATH
-	echo ""
 }
 
 function replace_parameters() {
@@ -330,6 +329,7 @@ function create_reverse() {
 	for line in $(cat $SERVICES);
 	do
 		FILE=$line.conf
+		echo $FILE
 		echo "	* Creating reverse for $FILE"
 		cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 	done
