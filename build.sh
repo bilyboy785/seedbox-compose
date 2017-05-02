@@ -27,7 +27,6 @@ if [ $USER = "root" ] ; then
   script_option
   case $SCRIPT in
 	"INSTALL")
-	    install_services
 	    ## Upgrading system
 	    upgrade_system
 	    ## Check for docker on system
@@ -38,6 +37,8 @@ if [ $USER = "root" ] ; then
 	    install_letsencrypt
 	    ## Choose wich services install
 	    choose_services
+	    ## Update docker-compose file
+	    install_services
 	    ## Defines parameters for dockers : password, domains and replace it in docker-compose file
 	    define_parameters
 	    ## Generate dockers apps running in background
