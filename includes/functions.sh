@@ -176,6 +176,14 @@ function choose_services() {
 	echo ""
 }
 
+function install_services() {
+	for line in $(cat $SERVICES);
+	do
+		echo $LINE
+	done
+	exit 1
+}
+
 function define_parameters() {
 	echo -e "${BLUE}### USER INFORMATIONS ###${NC}"
 	read -p "	* Choose user wich run dockers (default $USER). If user doesn't exist, it will be added : " CURRUSER
