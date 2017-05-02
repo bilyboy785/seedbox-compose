@@ -58,6 +58,7 @@ function script_option() {
 function upgrade_system() {
 	DEBIANSOURCES="includes/sources.list.debian"
 	UBUNTUSOURCES="includes/sources.list.ubuntu"
+	DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 	SOURCESFOLDER="/etc/apt/sources.list"
 	echo -e "${BLUE}## UPGRADING ##${NC}"
 	echo "	* Installing gawk, curl & apt transport https"
@@ -72,7 +73,8 @@ function upgrade_system() {
 		#cat $DEBIANSOURCES >> $SOURCESFOLDER
 		#wget -q -O- https://www.dotdeb.org/dotdeb.gpg | apt-key add - | > /dev/null 2>&1
 		#wget -q -O- http://nginx.org/keys/nginx_signing.key | apt-key add - | > /dev/null 2>&1
-		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
+		echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
+		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo "	* Creating new sources.list for Ubuntu"
 		cat $UBUNTUSOURCES >> $SOURCESFOLDER
@@ -104,7 +106,7 @@ function install_docker() {
   	if [ $? != 0 ]; then
 		echo "Docker is not installed, it will be installed !"
 		echo "	* Installing docker"
-		apt-get install -y docker.io > /dev/null 2>&1
+		apt-get install -y docker docker-engine > /dev/null 2>&1
 		service docker start > /dev/null 2>&1
 		echo "	* Installing docker-compose"
 		curl -L --fail https://github.com/docker/compose/releases/download/1.12.0/run.sh > /usr/local/bin/docker-compose > /dev/null 2>&1
