@@ -146,7 +146,7 @@ function install_letsencrypt() {
 	if [[ ! -d "$LEDIR" ]]; then
 		echo " * Installing Lets'Encrypt"
 		apt install -y git-core > /dev/null 2>&1
-		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
+		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt > /dev/null 2>&1
 		echo ""
 	else
 		echo " * Let's Encrypt is already installed !"
