@@ -28,8 +28,9 @@ Nextcloud              | Optional    |  cloud.domain.tld
 
 ## Installation
  * First, you need to create DNS entry type A for each service you want to install : **service.domain.tld** (look at the services table)
- * Second, clone this repo into a fresh Debian/Ubuntu server :
+ * Second, install git and clone this repo into a fresh Debian/Ubuntu server :
 ```shell
+apt install git
 git clone https://github.com/bilyboy785/seedbox-compose.git /root/seedbox-compose
 ```
  * Launch the script :
