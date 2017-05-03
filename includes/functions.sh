@@ -73,7 +73,13 @@ function upgrade_system() {
 	echo ""
 	echo -e "${BLUE}### UPGRADING ###${NC}"
 	echo " * Installing gawk, curl, gnup2, apache2-utils, unzip & apt-transport-https"
-	apt-get install -y gawk apache2-utils unzip apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
+	DEBIANVERSION=$(cat /etc/debian_version)
+	if [[ "$DEBIANVERSION" -lt "8" ]]; then
+		sed -ri 's/cdrom/#cdrom/g' /etc/apt/sources.list
+		apt-get update > /dev/null 2>&1
+	fi
+	exit 1
+	apt-get install -y gawk apache2-utils unzip git apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 	if [[ $? = 0 ]]; then
 		echo -e "	${BWHITE}--> Packages installation done !${NC}"
 	else
@@ -145,7 +151,6 @@ function install_letsencrypt() {
 	LEDIR="/opt/letsencrypt"
 	if [[ ! -d "$LEDIR" ]]; then
 		echo " * Installing Lets'Encrypt"
-		apt install -y git-core > /dev/null 2>&1
 		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt > /dev/null 2>&1
 		echo ""
 	else
