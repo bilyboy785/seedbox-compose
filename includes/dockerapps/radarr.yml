@@ -12,6 +12,6 @@ radarr:
   links:
     - rutorrent:rutorrent
   volumes:
-    - /dockers/radarr/config:/config
-    - /movies-downloads:/downloads
-    - /movies:/movies
+    - /home/%USER%/dockers/radarr/config:/config
+    - /home/%USER%/downloads/movies:/downloads
+    - /home/%USER%/downloads/medias/movies:/movies
