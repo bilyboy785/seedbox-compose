@@ -214,7 +214,13 @@ function define_parameters() {
 		read -s -p "	* Enter password : " PASSWORD
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 		useradd -m -p $PASS $SEEDUSER > /dev/null 2>&1
-		[ $? -eq 0 ] && echo "User has been added to system !" || echo "Failed to add a user !"
+		if [[ $? -eq 0 ]]; then 
+			echo "User has been added to system !"
+		else
+			echo "Failed to add a user !"
+		fi
+		#mkdir -p /home/$SEEDUSER
+		#chown -R $SEEDUSER: /home/$SEEDUSER
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
 	fi
@@ -245,9 +251,9 @@ function add_user_htpasswd() {
 		HTPASSWORD=$2
 	fi
 	if [[ ! -f $HTFOLDER$HTFILE ]]; then
-		htpasswd -c -b $HTTEMPFOLDER$HTFILE $HTUSER $HTPASSWORD
+		htpasswd -c -b $HTTEMPFOLDER$HTFILE $HTUSER $HTPASSWORD > /dev/null 2>&1
 	else
-		htpasswd -b $HTFOLDER$HTFILE $HTUSER $HTPASSWORD
+		htpasswd -b $HTFOLDER$HTFILE $HTUSER $HTPASSWORD > /dev/null 2>&1
 	fi
 }
 
@@ -303,7 +309,7 @@ function docker_compose() {
 	echo "	* Starting docker..."
 	service docker restart
 	echo "	* Docker-composing"
-	docker-compose up -d ## > /dev/null 2>&1
+	docker-compose up -d > /dev/null 2>&1
 	echo ""
 }
 
@@ -347,7 +353,7 @@ function create_reverse() {
 	echo "	* Restarting Nginx..."
 	docker restart nginx > /dev/null 2>&1
 	USERDIR="/home/$SEEDUSER"
-	chown $CURRUSER: $USERDIR/downloads/{medias,movies,tv} -R
+	chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R
 	chmod 775 $USERDIR/downloads/{medias,movies,tv} -R
 	resuming_seedbox
 }
