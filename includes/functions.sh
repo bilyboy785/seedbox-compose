@@ -75,7 +75,7 @@ function upgrade_system() {
 	echo " * Installing gawk, curl, gnup2, apache2-utils, unzip & apt-transport-https"
 	DEBIANVERSION=$(cat /etc/debian_version | cut -d \. -f1)
 	if [[ "$DEBIANVERSION" -lt "8" ]]; then
-		sed -ri 's/cdrom/#cdrom/g' /etc/apt/sources.list
+		sed -ri 's/deb\ cdrom/#deb\ cdrom/g' /etc/apt/sources.list
 		apt-get update > /dev/null 2>&1
 	fi
 	exit 1
