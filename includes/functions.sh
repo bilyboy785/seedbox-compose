@@ -113,7 +113,7 @@ function base_packages() {
 		echo -e " * Installing ZSH & Git-core"
 		apt-get install -y zsh git-core > /dev/null 2>&1
 		echo -e " * Cloning Oh-My-ZSH"
-		wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh > /dev/null 2>&1
+		wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
 		sed -i -e 's/^\ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"bira\"/g' ~/.zshrc > /dev/null 2>&1
 		sed -i -e 's/^\# DISABLE_AUTO_UPDATE=\"true\"/DISABLE_AUTO_UPDATE=\"true\"/g' ~root/.zshrc > /dev/null 2>&1
 	else
@@ -131,7 +131,7 @@ function install_docker() {
 		apt-get install -y docker-engine > /dev/null 2>&1
 		service docker start > /dev/null 2>&1
 		echo " * Installing Docker-compose"
-		curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose > /dev/null 2>&1
+		curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 		chmod +x /usr/local/bin/docker-compose
 		echo ""
 	else
@@ -226,8 +226,6 @@ function define_parameters() {
 	else
 		TIMEZONE=$TIMEZONEDEF
 	fi
-	echo ""
-	echo -e "${BLUE}## GENERAL INFORMATIONS ##${NC}"
 	read -p "	* Please enter an email address : " CONTACTEMAIL
 	read -p "	* Enter your domain name : " DOMAIN
 	echo ""
@@ -370,7 +368,7 @@ function delete_dockers() {
 		DOCKERFOLDER="/home/$SEEDUSER/dockers/"
 		if [[ -d "$DOCKERFOLDER" ]]; then
 			echo "	* Deleting files..."
-			rm /dockers -R
+			rm $DOCKERFOLDER -R
 		fi
 	fi
 	echo ""
