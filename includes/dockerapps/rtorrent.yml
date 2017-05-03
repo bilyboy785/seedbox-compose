@@ -6,9 +6,10 @@ rutorrent:
   environment:
     - USR_ID=%UID%
     - GRP_ID=%GID%
+    - PHP_MEM=1024M
   ports:
     - "%PORT%:80"
     - "49160:49160/udp"
     - "49161:49161"
   volumes:
-    - /downloads:/downloads
+    - /home/%USER%/downloads:/downloads
