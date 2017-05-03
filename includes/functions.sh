@@ -15,7 +15,6 @@ function intro() {
 }
 function script_option() {
 	echo -e "${BLUE}### WELCOME TO SEEDBOX-COMPOSE ###${NC}"
-	mkdir $CONFDIR
 	echo "This script will help you to make a complete seedbox with Rutorrent, Sonarr, Radarr and Jacket, based on Docker !"
 	echo "Choose an option to launch the script (1, 2...) : "
 	echo ""
@@ -58,6 +57,12 @@ function script_option() {
 	  ;;
 	esac
 	
+}
+
+function conf_dir() {
+	if [[ ! -d "$CONFDIR" ]]; then
+		mkdir $CONFDIR > /dev/null 2>&1
+	fi
 }
 
 function upgrade_system() {
