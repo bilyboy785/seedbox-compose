@@ -211,7 +211,7 @@ function define_parameters() {
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
 	else
-		read -s -p "	Enter password : " PASSWORD
+		read -s -p "	* Enter password : " PASSWORD
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 		useradd -m -p $PASS $SEEDUSER > /dev/null 2>&1
 		[ $? -eq 0 ] && echo "User has been added to system !" || echo "Failed to add a user !"
@@ -305,8 +305,7 @@ function docker_compose() {
 	echo "	* Starting docker..."
 	service docker restart
 	echo "	* Docker-composing"
-	docker-compose up -d
-	# > /dev/null 2>&1
+	docker-compose up -d > /dev/null 2>&1
 	echo ""
 }
 
@@ -339,10 +338,8 @@ function add_user() {
 
 function create_reverse() {
 	echo -e "${BLUE}### REVERSE PROXY ###${NC}"
-	SITEFOLDER="/dockers/nginx/sites-enabled/"
+	SITEFOLDER="/home/$SEEDUSER/dockers/nginx/sites-enabled/"
 	REVERSEFOLDER="includes/nginxproxy/"
-	CONFFOLDER="includes/nginxproxy"
-	H5AI="h5ai.conf"
 	for line in $(cat $SERVICES);
 	do
 		FILE=$line.conf
@@ -352,8 +349,8 @@ function create_reverse() {
 	echo "	* Restarting Nginx..."
 	docker restart nginx > /dev/null 2>&1
 	USERDIR="/home/$SEEDUSER"
-	chown $CURRUSER: $USERDIR/downloads/{medias,movies,tv,incoming} -R
-	chmod 775 $USERDIR/downloads/{medias,movies,tv,incoming} -R
+	chown $CURRUSER: $USERDIR/downloads/{medias,movies,tv} -R
+	chmod 775 $USERDIR/downloads/{medias,movies,tv} -R
 	resuming_seedbox
 }
 
