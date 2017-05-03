@@ -310,7 +310,7 @@ function docker_compose() {
 }
 
 function valid_htpasswd() {
-	HTFOLDER="/dockers/nginx/conf/"
+	HTFOLDER="/home/$SEEDUSER/dockers/nginx/conf/"
 	HTTEMPFOLDER="/tmp/"
 	HTFILE=".htpasswd"
 	cat $HTTEMPFOLDER$HTFILE >> $HTFOLDER$HTFILE
