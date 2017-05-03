@@ -204,6 +204,7 @@ function define_parameters() {
 	if [[ $CURRUSER == "" ]]; then
 		USERID=$(id -u $USER)
 		GRPID=$(id -g $USER)
+		add_user_htpasswd
 	else
 		egrep "^$CURRUSER" /etc/passwd >/dev/null
 		if [ $? -eq 0 ]; then
@@ -217,6 +218,7 @@ function define_parameters() {
 			USERID=$(id -u $CURRUSER)
 			GRPID=$(id -g $CURRUSER)
 		fi
+		add_user_htpasswd $CURRUSER $PASSWORD
 	fi
 	CURRTIMEZONE=$(cat /etc/timezone)
 	read -p "	* Please specify your Timezone (default $CURRTIMEZONE) : " TIMEZONEDEF
@@ -229,8 +231,27 @@ function define_parameters() {
 	echo -e "${BLUE}## GENERAL INFORMATIONS ##${NC}"
 	read -p "	* Please enter an email address : " CONTACTEMAIL
 	read -p "	* Enter your domain name : " DOMAIN
-	add_user_htpasswd
 	echo ""
+}
+
+function add_user_htpasswd() {
+	HTFOLDER="/dockers/nginx/conf/"
+	HTTEMPFOLDER="/tmp/"
+	HTFILE=".htpasswd"
+	if [[ $1 == "" ]]; then
+		echo ""
+		echo -e "${BLUE}## HTPASSWD MANAGER ##${NC}"
+		read -p "	* Enter an username for HTACCESS : " HTUSER
+		read -s -p "	* Enter password : " HTPASSWORD
+	else
+		HTUSER=$1
+		HTPASSWORD=$2
+	fi
+	if [[ ! -f $HTFOLDER$HTFILE ]]; then
+		htpasswd -c -b $HTTEMPFOLDER$HTFILE $HTUSER $HTPASSWORD
+	else
+		htpasswd -b $HTFOLDER$HTFILE $HTUSER $HTPASSWORD
+	fi
 }
 
 function install_services() {
@@ -287,21 +308,6 @@ function docker_compose() {
 	docker-compose up -d
 	# > /dev/null 2>&1
 	echo ""
-}
-
-function add_user_htpasswd() {
-	HTFOLDER="/dockers/nginx/conf/"
-	HTTEMPFOLDER="/tmp/"
-	HTFILE=".htpasswd"
-	echo ""
-	echo -e "${BLUE}## HTPASSWD MANAGER ##${NC}"
-	read -p "	* Enter an username for HTACCESS : " HTUSER
-	read -s -p "	* Enter password : " HTPASSWORD
-	if [[ ! -f $HTFOLDER$HTFILE ]]; then
-		htpasswd -c -b $HTTEMPFOLDER$HTFILE $HTUSER $HTPASSWORD
-	else
-		htpasswd -b $HTFOLDER$HTFILE $HTUSER $HTPASSWORD
-	fi
 }
 
 function valid_htpasswd() {
