@@ -436,27 +436,16 @@ function backup_docker_conf() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
-	declare -i j=1
-	read -p " * Do you want to backup your Dockers conf ? (y/n) : " BACKUPCONF
 	read -p " * Enter username for the desired User to backup : " USERBACKUP
 	DOCKERCONFDIR="/home/$USERBACKUP/dockers/"
-	case $BACKUPCONF in
-	"y")
-		if [[ -d "$DOCKERCONFDIR" ]]; then
-			mkdir -p $BACKUPDIR
-			echo -e " * Backing up Dockers conf..."
-			tar cvpzf $BACKUP $DOCKERCONFDIR > /dev/null 2>&1
-			echo -e "	--> Backup successfully created in ${BWHITE}$BACKUP${NC}"
-		else
-			echo -e " ${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
-		fi
-	  ;;
-	"n")
-	  exit 1
-	  ;;
-	*)
-	  exit 1
-	esac
+	if [[ -d "$DOCKERCONFDIR" ]]; then
+		mkdir -p $BACKUPDIR
+		echo -e " * Backing up Dockers conf..."
+		tar cvpzf $BACKUP $DOCKERCONFDIR > /dev/null 2>&1
+		echo -e "	--> Backup successfully created in ${BWHITE}$BACKUP${NC}"
+	else
+		echo -e " ${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
+	fi
 	echo ""
 }
 
