@@ -153,13 +153,13 @@ function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
 	echo -e "${BWHITE}Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !${NC}"
 	echo "--> Choose wich services you want to add (default set to no) : "
-	read -p "	* H5ai Index ? (y/n) : " H5AIINSTALL
-	if [[ $H5AIINSTALL == "y" ]]; then
-		echo -e "		${GREEN}H5ai will be installed${NC}"
-		echo "h5ai" >> "includes/services"
-	else
-		echo -e "		${RED}H5ai will no be installed${NC}"
-	fi
+	#read -p "	* H5ai Index ? (y/n) : " H5AIINSTALL
+	#if [[ $H5AIINSTALL == "y" ]]; then
+	#	echo -e "		${GREEN}H5ai will be installed${NC}"
+	#	echo "h5ai" >> "includes/services"
+	#else
+	#	echo -e "		${RED}H5ai will no be installed${NC}"
+	#fi
 	read -p "	* Plex ? (y/n) : " PLEXINSTALL
 	if [[ $PLEXINSTALL == "y" ]]; then
 		echo -e "		${GREEN}Plex will be installed${NC}"
@@ -270,12 +270,16 @@ function install_services() {
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%GID%|$GRPID|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%PORT%|$PORT|g" $DOCKERCOMPOSEFILE
+		sed -i "s|%USER%|$CURRUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE
 		sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE
 		PORT=$PORT+1
 	done
 	echo $PORT >> $FILEPORTPATH
+	USERDIR="/home/$USER"
+	chown $CURRUSER: $USERDIR/downloads/{medias,movies,tv,incoming} -R
+	chmod 775 $USERDIR/downloads/{medias,movies,tv,incoming} -R
 }
 
 function replace_parameters() {
