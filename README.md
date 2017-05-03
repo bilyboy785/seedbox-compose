@@ -1,6 +1,9 @@
 # Seedbox-Compose
 A docker-compose file to deploy complete Seedbox based only Docker. Install a fresh Debian / Ubuntu Server, install git git-core and docker and use this **Docker-compose.yml** to deploy your Seedbox.
 
+### Tested on ###
+ * [x] Debian 8.7
+ 
 ## Services availables in this docker-compose
 
 Service                | Port               | Status      |   Access
