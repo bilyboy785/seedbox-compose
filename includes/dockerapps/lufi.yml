@@ -13,5 +13,5 @@ lufi:
   ports:
     - %PORT%:8080
   volumes:
-    - /dockers/lufi/data:/data
-    - /dockers/lufi/files:/files
+    - /home/%USER%/dockers/lufi/data:/data
+    - /home/%USER%/dockers/lufi/files:/files
