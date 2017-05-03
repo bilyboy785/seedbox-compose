@@ -11,4 +11,4 @@ jackett:
     - %PORT%:9117
   volumes:
     - /etc/localtime:/etc/locatime:ro
-    - /home/martinbouillaud/dockers/jackett/downloads:/downloads:rw
+    - /home/%USER%/dockers/jackett/downloads:/downloads:rw
