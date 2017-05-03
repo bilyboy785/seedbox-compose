@@ -40,4 +40,4 @@ cd /root/seedbox-compose
 ## Services configuration
 
 ## Sources
- * [https://hub.docker.com/r/linuxserver/plexrequests/](Linuxserver/PlexRequests)
+ * [Linuxserver/PlexRequests](https://hub.docker.com/r/linuxserver/plexrequests/)
