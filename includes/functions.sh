@@ -109,9 +109,9 @@ function upgrade_system() {
 function base_packages() {
 	echo -e "${BLUE}### ZSH-OhMyZSH ###${NC}"
 	ZSHDIR="/usr/share/zsh"
+	echo -e " * Installing ZSH & Oh-My-ZSH"
+	apt-get install -y zsh git-core > /dev/null 2>&1
 	if [[ ! -d "$ZSHDIR" ]]; then
-		echo -e " * Installing ZSH & Git-core"
-		apt-get install -y zsh git-core > /dev/null 2>&1
 		echo -e " * Cloning Oh-My-ZSH"
 		wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
 		sed -i -e 's/^\ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"bira\"/g' ~/.zshrc > /dev/null 2>&1
@@ -424,17 +424,7 @@ function resuming_seedbox() {
 	echo -e "		--> Username : ${YELLOW}$HTUSER${NC}"
 	echo -e "		--> Password : ${YELLOW}$HTPASSWORD${NC}"
 	echo ""
-	read -p "	* Do you want to backup your Dockers conf ? (y/n) : " BACKUPCONF
-	case $BACKUPCONF in
-	"y")
-	  backup_docker_conf
-	  ;;
-	"n")
-	  exit 1
-	  ;;
-	*)
-	  exit 1
-	esac
+	backup_docker_conf
 	echo ""
 }
 
@@ -447,14 +437,24 @@ function backup_docker_conf() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
-	if [[ -d "$CONFDIR" ]]; then
-		mkdir -p $BACKUPDIR
-		echo -e " * Backing up Dockers conf..."
-		tar cvpzf $BACKUP $CONFDIR > /dev/null 2>&1
-		echo -e "	--> Your backup was successfully created in ${BWHITE}$BACKUP${NC}"
-	else
-		echo -e " ${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
-	fi
+	read -p "	* Do you want to backup your Dockers conf ? (y/n) : " BACKUPCONF
+	case $BACKUPCONF in
+	"y")
+		if [[ -d "$CONFDIR" ]]; then
+			mkdir -p $BACKUPDIR
+			echo -e " * Backing up Dockers conf..."
+			tar cvpzf $BACKUP $CONFDIR > /dev/null 2>&1
+			echo -e "	--> Backup successfully created in ${BWHITE}$BACKUP${NC}"
+		else
+			echo -e " ${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
+		fi
+	  ;;
+	"n")
+	  exit 1
+	  ;;
+	*)
+	  exit 1
+	esac
 	echo ""
 }
 
