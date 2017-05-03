@@ -10,5 +10,5 @@ plexpy:
   ports:
     - %PORT%:8181
   volumes:
-    - /dockers/plexpy/config:/config
-    - /dockers/plexply/logs:/logs:ro
+    - /home/%USER%/dockers/plexpy/config:/config
+    - /home/%USER%/dockers/plexply/logs:/logs:ro
