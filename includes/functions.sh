@@ -205,7 +205,7 @@ function choose_services() {
 
 function define_parameters() {
 	echo -e "${BLUE}### USER INFORMATIONS ###${NC}"
-	read -p "	* Create a new user to run dockers and store your files : " SEEDUSER
+	read -p "	* Create new user : " SEEDUSER
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
 		USERID=$(id -u $SEEDUSER)
