@@ -13,6 +13,6 @@ sonarr:
     - rutorrent:rutorrent
   volumes:
     - /etc/localtime:/etc/localtime:ro
-    - /dockers/sonarr/config:/config
-    - /tv-downloads:/downloads
-    - /tv:/tv
+    - /home/%USER%/dockers/sonarr/config:/config
+    - /home/%USER%/downloads/tv:/downloads
+    - /home/%USER%/downloads/medias/tv:/tv
