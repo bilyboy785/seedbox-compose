@@ -3,6 +3,8 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
 
 ### Tested on ###
  * [x] Debian 8.7
+ * [ ] Debian 7
+ * [ ] Ubuntu 16.04
  
 ## Services availables in this docker-compose
 
