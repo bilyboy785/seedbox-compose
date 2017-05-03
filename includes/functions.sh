@@ -186,20 +186,20 @@ function choose_services() {
 	else
 		echo -e "		${RED}Zerobin will no be installed${NC}"
 	fi
-	read -p "	* Lufi  ? (y/n) : " LUFIINSTALL
-	if [[ $LUFIINSTALL == "y" ]]; then
-		echo -e "		${GREEN}Lufi will be installed${NC}"
-		echo "lufi" >> "includes/services"
-	else
-		echo -e "		${RED}Lufi will no be installed${NC}"
-	fi
-	read -p "	* Lutim ? (y/n) : " LUTIMINSTALL
-	if [[ $LUTIMINSTALL == "y" ]]; then
-		echo -e "		${GREEN}Lutim will be installed${NC}"
-		echo "lutim" >> "includes/services"
-	else
-		echo -e "		${RED}Lutim will no be installed${NC}"
-	fi
+	# read -p "	* Lufi  ? (y/n) : " LUFIINSTALL
+	#if [[ $LUFIINSTALL == "y" ]]; then
+	#	echo -e "		${GREEN}Lufi will be installed${NC}"
+	#	echo "lufi" >> "includes/services"
+	#else
+	#	echo -e "		${RED}Lufi will no be installed${NC}"
+	#fi
+	#read -p "	* Lutim ? (y/n) : " LUTIMINSTALL
+	#if [[ $LUTIMINSTALL == "y" ]]; then
+	#	echo -e "		${GREEN}Lutim will be installed${NC}"
+	#	echo "lutim" >> "includes/services"
+	#else
+	#	echo -e "		${RED}Lutim will no be installed${NC}"
+	#fi
 	echo ""
 }
 
@@ -444,7 +444,7 @@ function backup_docker_conf() {
 		tar cvpzf $BACKUP $DOCKERCONFDIR > /dev/null 2>&1
 		echo -e "	--> Backup successfully created in ${BWHITE}$BACKUP${NC}"
 	else
-		echo -e " ${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
+		echo -e "	${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
 	fi
 	echo ""
 }
