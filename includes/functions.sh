@@ -200,26 +200,20 @@ function choose_services() {
 
 function define_parameters() {
 	echo -e "${BLUE}### USER INFORMATIONS ###${NC}"
-	read -p "	* Choose user wich run dockers (default $USER). If user doesn't exist, it will be added : " CURRUSER
-	if [[ $CURRUSER == "" ]]; then
-		USERID=$(id -u $USER)
-		GRPID=$(id -g $USER)
-		add_user_htpasswd
+	read -p "	* Create a new user to run dockers and store your files : " SEEDUSER
+	egrep "^$SEEDUSER" /etc/passwd >/dev/null
+	if [ $? -eq 0 ]; then
+		USERID=$(id -u $SEEDUSER)
+		GRPID=$(id -g $SEEDUSER)
 	else
-		egrep "^$CURRUSER" /etc/passwd >/dev/null
-		if [ $? -eq 0 ]; then
-			USERID=$(id -u $CURRUSER)
-			GRPID=$(id -g $CURRUSER)
-		else
-			read -s -p "	Enter password : " PASSWORD
-			PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
-			useradd -m -p $PASS $CURRUSER > /dev/null 2>&1
-			[ $? -eq 0 ] && echo "User has been added to system !" || echo "Failed to add a user !"
-			USERID=$(id -u $CURRUSER)
-			GRPID=$(id -g $CURRUSER)
-		fi
-		add_user_htpasswd $CURRUSER $PASSWORD
+		read -s -p "	Enter password : " PASSWORD
+		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
+		useradd -m -p $PASS $SEEDUSER > /dev/null 2>&1
+		[ $? -eq 0 ] && echo "User has been added to system !" || echo "Failed to add a user !"
+		USERID=$(id -u $SEEDUSER)
+		GRPID=$(id -g $SEEDUSER)
 	fi
+	add_user_htpasswd $SEEDUSER $PASSWORD
 	CURRTIMEZONE=$(cat /etc/timezone)
 	read -p "	* Please specify your Timezone (default $CURRTIMEZONE) : " TIMEZONEDEF
 	if [[ $TIMEZONEDEF == "" ]]; then
@@ -270,7 +264,7 @@ function install_services() {
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%GID%|$GRPID|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%PORT%|$PORT|g" $DOCKERCOMPOSEFILE
-		sed -i "s|%USER%|$CURRUSER|g" $DOCKERCOMPOSEFILE
+		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE
 		sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE
