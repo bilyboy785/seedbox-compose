@@ -52,7 +52,7 @@ if [ $USER = "root" ] ; then
 			## Validating Htpasswd
 			valid_htpasswd
 			## Write a log file for the next script launching
-			already_installed
+			## already_installed
 	    	else
 	    		exit 1
 	    	fi

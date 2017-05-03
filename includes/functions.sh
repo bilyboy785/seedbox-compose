@@ -258,7 +258,9 @@ function add_user_htpasswd() {
 }
 
 function install_services() {
+	INSTALLEDFILE="/etc/seedboxcompose/installed.ok"
 	touch $DOCKERCOMPOSEFILE
+	touch $INSTALLEDFILE
 	if [[ -f "$FILEPORTPATH" ]]; then
 		declare -i PORT=$(cat $FILEPORTPATH | tail -1)
 	else
@@ -277,6 +279,7 @@ function install_services() {
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE
 		sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE
+		echo "$line - $PORT" >> $INSTALLEDFILE
 		PORT=$PORT+1
 	done
 	echo $PORT >> $FILEPORTPATH
@@ -447,9 +450,4 @@ function backup_docker_conf() {
 		echo -e "	${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
 	fi
 	echo ""
-}
-
-function already_installed() {
-	INSTALLEDFILE="/etc/seedboxcompose/installed.ok"
-	touch $INSTALLEDFILE
 }
