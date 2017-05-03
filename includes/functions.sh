@@ -77,8 +77,9 @@ function upgrade_system() {
 	if [[ "$DEBIANVERSION" -lt "8" ]]; then
 		sed -ri 's/deb\ cdrom/#deb\ cdrom/g' /etc/apt/sources.list
 		apt-get update > /dev/null 2>&1
+		apt-get install python-software-properties > /dev/null 2>&1
+		exit 1
 	fi
-	exit 1
 	apt-get install -y gawk apache2-utils unzip git apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 	if [[ $? = 0 ]]; then
 		echo -e "	${BWHITE}--> Packages installation done !${NC}"
