@@ -271,9 +271,6 @@ function install_services() {
 		PORT=$PORT+1
 	done
 	echo $PORT >> $FILEPORTPATH
-	USERDIR="/home/$USER"
-	chown $CURRUSER: $USERDIR/downloads/{medias,movies,tv,incoming} -R
-	chmod 775 $USERDIR/downloads/{medias,movies,tv,incoming} -R
 }
 
 function replace_parameters() {
@@ -341,14 +338,6 @@ function create_reverse() {
 	REVERSEFOLDER="includes/nginxproxy/"
 	CONFFOLDER="includes/nginxproxy"
 	H5AI="h5ai.conf"
-	if [[ -f "$REVERSEFOLDER$H5AI" ]]; then
-		ROOTFOLDER="/multimedia"
-		MOVIEDIR="/movies"
-		TVDIR="/tv"
-		mkdir -p $ROOTFOLDER
-		ln -s $MOVIEDIR $ROOTFOLDER$MOVIEDIR
-		ln -s $TVDIR $ROOTFOLDER$TVDIR
-	fi
 	for line in $(cat $SERVICES);
 	do
 		FILE=$line.conf
@@ -357,6 +346,9 @@ function create_reverse() {
 	done
 	echo "	* Restarting Nginx..."
 	docker restart nginx > /dev/null 2>&1
+	USERDIR="/home/$SEEDUSER"
+	chown $CURRUSER: $USERDIR/downloads/{medias,movies,tv,incoming} -R
+	chmod 775 $USERDIR/downloads/{medias,movies,tv,incoming} -R
 	resuming_seedbox
 }
 
