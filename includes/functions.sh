@@ -104,7 +104,7 @@ function upgrade_system() {
 function base_packages() {
 	echo -e "${BLUE}### ZSH-OhMyZSH ###${NC}"
 	ZSHDIR="/usr/share/zsh"
-	if [ ! -d "$ZSHDIR" ]; then
+	if [[ ! -d "$ZSHDIR" ]]; then
 		echo -e " * Installing ZSH & Git-core"
 		apt-get install -y zsh git-core > /dev/null 2>&1
 		echo -e " * Cloning Oh-My-ZSH"
