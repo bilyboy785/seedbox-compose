@@ -24,33 +24,35 @@ DOCKERCOMPOSEFILE="docker-compose.yml"
 if [ $USER = "root" ] ; then
 	## Display script infos 
 	intro
+	## Create conf directory
+	conf_dir
 	## Check option for script lauching
 	script_option
 	case $SCRIPT in
 		"INSTALL")
 	    	if [[ ! -f "/etc/seedboxcompose/seedboxcompose.txt" ]]; then
 		    	## Upgrading system
-				upgrade_system
-			    ## Check for docker on system
-			    install_docker
-			    ## Installing base packages
-			    base_packages
-			    ## Check for LetsEncrypt packages on system
-			    install_letsencrypt
-			    ## Choose wich services install
-			    choose_services
-			    ## Defines parameters for dockers : password, domains and replace it in docker-compose file
-			    define_parameters
-			    ## Update docker-compose file
-			    install_services
-			    ## Generate dockers apps running in background
-			    docker_compose
-			    ## Create reverse proxy for each apps
-			    create_reverse
-			    ## Validating Htpasswd
-			    valid_htpasswd
-			    ## Write a log file for the next script launching
-			    already_installed
+			upgrade_system
+			## Check for docker on system
+			install_docker
+			## Installing base packages
+			base_packages
+			## Check for LetsEncrypt packages on system
+			install_letsencrypt
+			## Choose wich services install
+			choose_services
+			## Defines parameters for dockers : password, domains and replace it in docker-compose file
+			define_parameters
+			## Update docker-compose file
+			install_services
+			## Generate dockers apps running in background
+			docker_compose
+			## Create reverse proxy for each apps
+			create_reverse
+			## Validating Htpasswd
+			valid_htpasswd
+			## Write a log file for the next script launching
+			already_installed
 	    	else
 	    		exit 1
 	    	fi
