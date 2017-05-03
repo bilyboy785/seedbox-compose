@@ -109,9 +109,9 @@ function upgrade_system() {
 function base_packages() {
 	echo -e "${BLUE}### ZSH-OhMyZSH ###${NC}"
 	ZSHDIR="/usr/share/zsh"
-	echo -e " * Installing ZSH & Oh-My-ZSH"
-	apt-get install -y zsh git-core > /dev/null 2>&1
-	if [[ ! -d "$ZSHDIR" ]]; then
+	if [[ ! -f "$ZSHDIR" ]]; then	
+		echo -e " * Installing ZSH"
+		apt-get install -y zsh > /dev/null 2>&1
 		echo -e " * Cloning Oh-My-ZSH"
 		wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh
 		sed -i -e 's/^\ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"bira\"/g' ~/.zshrc > /dev/null 2>&1
