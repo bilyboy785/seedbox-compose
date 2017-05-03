@@ -21,8 +21,6 @@ UI for Docker          | Installed   |  docker.domain.tld
 PlexMediaServer        | Optional    |  plex.domain.tld                 
 PlexPy                 | Optional    |  plexpy.domain.tld                 
 Zerobin                | Optional    |  zerobin.domain.tld                 
-Lufi                   | Optional    |  lufi.domain.tld                 
-Lutim                  | Optional    |  lutim.domain.tld
 MariaDB                | Optional    |  ---                 
 Nextcloud              | Optional    |  cloud.domain.tld                   
 
