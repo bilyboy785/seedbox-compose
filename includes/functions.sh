@@ -354,7 +354,7 @@ function create_reverse() {
 	docker restart nginx > /dev/null 2>&1
 	USERDIR="/home/$SEEDUSER"
 	chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R
-	chmod 775 $USERDIR/downloads/{medias,movies,tv} -R
+	chmod 777 $USERDIR/downloads/{medias,movies,tv} -R
 	resuming_seedbox
 }
 
@@ -459,6 +459,6 @@ function backup_docker_conf() {
 }
 
 function already_installed() {
-	INSTALLEDFILE="$CONFDIR/seedboxcompose"
+	INSTALLEDFILE="/etc/seedboxcompose/installed.ok"
 	touch $INSTALLEDFILE
 }
