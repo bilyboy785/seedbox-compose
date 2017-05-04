@@ -126,8 +126,8 @@ function upgrade_system() {
 function base_packages() {
 	echo -e "${BLUE}### ZSH-OhMyZSH ###${NC}"
 	ZSHDIR="/usr/share/zsh"
-	OHMYZSHDIR="~/.zshrc"
-	if [[ ! -f "$OHMYZSHDIR" ]]; then	
+	OHMYZSHDIR="/root/.oh-my-zsh/"
+	if [[ ! -d "$OHMYZSHDIR" ]]; then	
 		echo -e " * Installing ZSH"
 		apt-get install -y zsh > /dev/null 2>&1
 		echo -e " * Cloning Oh-My-ZSH"
