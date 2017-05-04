@@ -398,10 +398,10 @@ function create_reverse() {
 			echo -e "		${BWHITE}--> Generating LE certificate files, please wait...${NC}"
 			case $LESSL in
 			"y")
-				./$CERTBOT certonly --quiet --standalone --no-bootstrap --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
+				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
 			;;
 			"")
-				./$CERTBOT certonly --quiet --standalone --no-bootstrap --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
+				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
 			;;
 			esac
 			echo -e "		${BWHITE}--> Linking certs files in Nginx Docker directory${NC}"
