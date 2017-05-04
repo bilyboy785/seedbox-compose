@@ -1,7 +1,7 @@
 #!/bin/bash
 function intro() {
 	echo ""
-	echo -e "${BLUE}########################################################"
+	echo -e "${BLUE}###############################################################"
 	echo -e "###                                                         ###"
 	echo -e "###                     SEEDBOX-COMPOSE                     ###"
 	echo -e "###       Deploy a complete Seedbox with Docker easily      ###"
@@ -10,7 +10,7 @@ function intro() {
 	echo -e "###         Publication date : 2017-03-26                   ###"
 	echo -e "###            Update date : 2017-03-27                     ###"
 	echo -e "###                                                         ###"
-	echo -e "##########################################################${NC}"
+	echo -e "###############################################################${NC}"
 	echo -e ""
 }
 function script_option() {
