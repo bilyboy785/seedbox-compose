@@ -418,8 +418,8 @@ function delete_dockers() {
 	docker rm $(docker ps -a) > /dev/null 2>&1
 	read -p " * Do you want to delete all docker's configuration files ? [y/n] " DELETECONF
 	if [[ "$DELETECONF" == "y" ]]; then
-		if [[ $SEEDUSER == "" ]]; then
-			read -p " * Specify user to delete all his conf files : " USERCONFDIR
+		if [[ "$SEEDUSER" == "" ]]; then
+			read -p "	-->Specify user to delete all his conf files : " USERCONFDIR
 		fi
 		USERCONFDIR=$SEEDUSER
 		DOCKERFOLDER="/home/$USERCONFDIR/dockers/"
