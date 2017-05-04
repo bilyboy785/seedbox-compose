@@ -430,7 +430,7 @@ function deletee_dockers() {
 	echo ""
 }
 
-function deletee_dockers() {
+function delete_dockers() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###        CLEANING DOCKER APPS        ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
