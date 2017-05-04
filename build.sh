@@ -54,8 +54,8 @@ if [ $USER = "root" ] ; then
 			create_reverse
 			## Validating Htpasswd
 			valid_htpasswd
-			## Write a log file for the next script launching
-			## already_installed
+			## Resuming seedbox-compose installation
+			resume_seedbox
 	    	else
 	    		exit 1
 	    	fi
