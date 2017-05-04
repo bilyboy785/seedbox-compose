@@ -233,6 +233,7 @@ function define_parameters() {
 	read -p " * Create new user : " SEEDUSER
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
+		read -s -p " * Enter password : " PASSWORD
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
 	else
@@ -394,7 +395,7 @@ function create_reverse() {
 			FILE=$line.conf
 			echo "	--> [$line] - Creating reverse"
 			cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
-			echo "		--> Generating LE certificate files, please wait..."
+			echo -e "		${BWHITE}--> Generating LE certificate files, please wait...${NC}"
 			case $LESSL in
 			"y")
 				./$CERTBOT certonly --quiet --standalone --no-bootstrap --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
@@ -403,7 +404,7 @@ function create_reverse() {
 				./$CERTBOT certonly --quiet --standalone --no-bootstrap --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
 			;;
 			esac
-			echo -e "		--> Linking certs files in Nginx Docker directory"
+			echo -e "		${BWHITE}--> Linking certs files in Nginx Docker directory${NC}"
 			cp -R "$LEDIR/$line.$DOMAIN" "$CERTDIR"
 		done
 		echo -e "	--> ${BWHITE}Starting Nginx...${NC}"
@@ -499,7 +500,11 @@ function backup_docker_conf() {
 	echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	if [[ "$SEEDUSER" != "" ]]; then
-		read -p " * Do you want backup configuration for $SEEDUSER (default yes) [y/n] ? : " USERBACKUP
+		read -p " * Do you want backup configuration for $SEEDUSER [y/n] ? : " BACKUPCONFUSER
+		if [[ "$BACKUPCONFUSER" == "y" ]]; then
+			exit 1
+		fi
+		USERBACKUP=$SEEDUSER
 	else
 		read -p " * Enter username to backup configuration : " USERBACKUP
 	fi
