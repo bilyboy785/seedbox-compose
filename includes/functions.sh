@@ -405,8 +405,8 @@ function create_reverse() {
 			echo -e "		--> Linking certs files in Nginx Docker directory"
 			cp -R "$LEDIR/$line.$DOMAIN" "$CERTDIR"
 		done
-		echo -e "	--> ${BWHITE}Restarting Nginx...${NC}"
-		docker restart nginx > /dev/null 2>&1
+		echo -e "	--> ${BWHITE}Starting Nginx...${NC}"
+		docker start nginx > /dev/null 2>&1
 	fi
 	USERDIR="/home/$SEEDUSER"
 	chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R
