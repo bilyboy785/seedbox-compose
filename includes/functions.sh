@@ -242,8 +242,6 @@ function define_parameters() {
 		else
 			echo "Failed to add a user !"
 		fi
-		#mkdir -p /home/$SEEDUSER
-		#chown -R $SEEDUSER: /home/$SEEDUSER
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
 	fi
@@ -287,7 +285,6 @@ function add_user_htpasswd() {
 
 function install_services() {
 	INSTALLEDFILE="/etc/seedboxcompose/installed.ok"
-	#touch $DOCKERCOMPOSEFILE
 	touch $INSTALLEDFILE
 	if [[ -f "$FILEPORTPATH" ]]; then
 		declare -i PORT=$(cat $FILEPORTPATH | tail -1)
@@ -361,7 +358,6 @@ function valid_htpasswd() {
 }
 
 function add_user() {
-	# Script to add a user to Linux system
 	if [ $(id -u) -eq 0 ]; then
 		read -p "Enter username : " USERNAME
 		read -s -p "Enter password : " PASSWORD
@@ -397,7 +393,7 @@ function create_reverse() {
 			FILE=$line.conf
 			echo "	--> [$line] - Creating reverse"
 			cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
-			echo "		--> Generating LE certificate files"
+			echo "		--> Generating LE certificate files, please wait..."
 			case $LESSL in
 			"y")
 				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
