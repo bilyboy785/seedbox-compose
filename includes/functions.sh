@@ -395,9 +395,9 @@ function create_reverse() {
 		for line in $(cat $SERVICES);
 		do
 			FILE=$line.conf
-			echo "	--> Creating reverse for $FILE"
+			echo "	--> [$line] - Creating reverse"
 			cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
-			echo "	--> Generating LE certificate files for $FILE"
+			echo "		--> Generating LE certificate files"
 			case $LESSL in
 			"y")
 				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
@@ -406,7 +406,7 @@ function create_reverse() {
 				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
 			;;
 			esac
-			echo -e "	--> Linking certs files in Nginx Docker directory"
+			echo -e "		--> Linking certs files in Nginx Docker directory"
 			cp -R "$LEDIR/$line.$DOMAIN" "$CERTDIR"
 		done
 		echo -e "	--> ${BWHITE}Restarting Nginx...${NC}"
