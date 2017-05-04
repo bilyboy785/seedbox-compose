@@ -19,10 +19,10 @@ function script_option() {
 	echo "Choose an option to launch the script (1, 2...) : "
 	echo ""
 	echo -e "	${BWHITE}[1] - ${GREEN}Install the Seedbox${NC}"
-	echo -e "	${BWHITE}[2] - ${GREEN}Add an user to the Htaccess${NC}"
+	echo -e "	${BWHITE}[2] - ${GREEN}Add htaccess user${NC}"
 	echo -e "	${BWHITE}[3] - ${GREEN}Add a docker App${NC}"
-	echo -e "	${BWHITE}[4] - ${GREEN}Restart docker machines${NC}"
-	echo -e "	${BWHITE}[5] - ${GREEN}Backup dockers conf${NC}"
+	echo -e "	${BWHITE}[4] - ${GREEN}Restart all Dockers Apps${NC}"
+	echo -e "	${BWHITE}[5] - ${GREEN}Backup Dockers conf${NC}"
 	echo -e "	${BWHITE}[6] - ${GREEN}Delete and clean all Dockers${NC}"
 	echo ""
 	read -p "	Your choice : " CHOICE
@@ -305,6 +305,7 @@ function install_services() {
 		echo "$line - $PORT" >> $INSTALLEDFILE
 		PORT=$PORT+1
 	done
+	cat $SERVER >> $CONFDIR/services.it
 	echo $PORT >> $FILEPORTPATH
 }
 
@@ -332,9 +333,11 @@ function replace_parameters() {
 
 function docker_compose() {
 	echo -e "${BLUE}### DOCKERCOMPOSE ###${NC}"
-	echo "	* Starting docker..."
+	echo " * Backing up docker-compose file to $CONFDIR"
+	cat $DOCKERCOMPOSE >> $CONFDIR/docker-compose.yml
+	echo " * Starting docker..."
 	service docker restart
-	echo "	* Docker-composing"
+	echo " * Docker-composing"
 	docker-compose up -d > /dev/null 2>&1
 	echo ""
 }
