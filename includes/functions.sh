@@ -282,7 +282,7 @@ function add_user_htpasswd() {
 
 function install_services() {
 	INSTALLEDFILE="/etc/seedboxcompose/installed.ok"
-	touch $DOCKERCOMPOSEFILE
+	#touch $DOCKERCOMPOSEFILE
 	touch $INSTALLEDFILE
 	if [[ -f "$FILEPORTPATH" ]]; then
 		declare -i PORT=$(cat $FILEPORTPATH | tail -1)
@@ -334,7 +334,8 @@ function replace_parameters() {
 function docker_compose() {
 	echo -e "${BLUE}### DOCKERCOMPOSE ###${NC}"
 	echo " * Backing up docker-compose file to $CONFDIR"
-	touch $CONFDIR/docker-compose.yml && cat $DOCKERCOMPOSE >> $CONFDIR/docker-compose.yml
+	touch $CONFDIR/docker-compose.yml
+	cat $DOCKERCOMPOSE >> $CONFDIR/docker-compose.yml
 	echo " * Starting docker..."
 	service docker restart
 	echo " * Docker-composing"
