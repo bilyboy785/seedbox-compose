@@ -228,6 +228,8 @@ function choose_services() {
 
 function define_parameters() {
 	echo -e "${BLUE}### USER INFORMATIONS ###${NC}"
+	USEDOMAIN="y"
+	CURRTIMEZONE=$(cat /etc/timezone)
 	read -p " * Create new user : " SEEDUSER
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
@@ -246,7 +248,6 @@ function define_parameters() {
 		GRPID=$(id -g $SEEDUSER)
 	fi
 	add_user_htpasswd $SEEDUSER $PASSWORD
-	CURRTIMEZONE=$(cat /etc/timezone)
 	read -p " * Please specify your Timezone (default $CURRTIMEZONE) : " TIMEZONEDEF
 	if [[ $TIMEZONEDEF == "" ]]; then
 		TIMEZONE=$CURRTIMEZONE
@@ -344,7 +345,7 @@ function docker_compose() {
 	cat $DOCKERCOMPOSEFILE >> $DOCKERCOMPOSEBACKUP
 	echo " * Starting docker..."
 	service docker restart
-	echo " * Docker-composing"
+	echo " * Docker-composing, it may take a long..."
 	docker-compose up -d > /dev/null 2>&1
 	echo -e "	${BWHITE}--> Docker-compose ok !${NC}"
 	echo ""
@@ -396,10 +397,10 @@ function create_reverse() {
 			echo "		--> Generating LE certificate files, please wait..."
 			case $LESSL in
 			"y")
-				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
+				./$CERTBOT certonly --quiet --standalone --no-bootstrap --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
 			;;
 			"")
-				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
+				./$CERTBOT certonly --quiet --standalone --no-bootstrap --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
 			;;
 			esac
 			echo -e "		--> Linking certs files in Nginx Docker directory"
