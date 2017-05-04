@@ -258,7 +258,7 @@ function define_parameters() {
 	read -p " * Please enter an email address : " CONTACTEMAIL
 	read -p " * Do you want to use a domain to access services ? (default yes) [y/n] : " USEDOMAIN
 	if [[ "$USEDOMAIN" == "y" ]]; then
-		read -p "	${BWHITE}--> Enter your domain name :${NC} " DOMAIN
+		read -p "	--> Enter your domain name : " DOMAIN
 	else
 		DOMAIN="localhost"
 	fi
