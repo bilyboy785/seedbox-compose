@@ -382,7 +382,7 @@ function create_reverse() {
 		echo " * Creating reverse for $FILE"
 		cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 	done
-	echo "	* ${BWHITE}Restarting Nginx...${NC}"
+	echo -e "	--> ${BWHITE}Restarting Nginx...${NC}"
 	docker restart nginx > /dev/null 2>&1
 	USERDIR="/home/$SEEDUSER"
 	chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R
