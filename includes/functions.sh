@@ -349,6 +349,7 @@ function docker_compose() {
 	service docker restart
 	echo " * Docker-composing"
 	docker-compose up -d > /dev/null 2>&1
+	echo -e "	${BWHITE}--> Docker-compose ok !${NC}"
 	echo ""
 }
 
@@ -393,11 +394,9 @@ function create_reverse() {
 		echo -e "	--> ${BWHITE}Restarting Nginx...${NC}"
 		docker restart nginx > /dev/null 2>&1
 	fi
-	echo -e "${BLUE}### CHMOD DIRECTORIES ###${NC}"
 	USERDIR="/home/$SEEDUSER"
 	chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R
 	chmod 777 $USERDIR/downloads/{medias,movies,tv} -R
-	resuming_seedbox
 }
 
 function delete_dockers() {
@@ -448,19 +447,27 @@ function restart_docker_apps() {
 	esac
 }
 
-function resuming_seedbox() {
+function resume_seedbox() {
 	echo ""
 	echo ""
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###       RESUMING SEEDBOX INSTALL     ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	echo ""
-	echo -e "	${BWHITE}* Access apps from these URL :${NC}"
-	echo -e "		--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
-	for line in $(cat $SERVICES);
-	do
-		echo -e "		--> $line from ${YELLOW}$line.$DOMAIN${NC}"
-	done
+	if [[ "$DOMAIN" != "localhost ]]; then
+		echo -e "	${BWHITE}* Access apps from these URL :${NC}"
+		echo -e "		--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
+		for line in $(cat $SERVICES);
+		do
+			echo -e "		--> $line from ${YELLOW}$line.$DOMAIN${NC}"
+		done
+	else
+		echo -e "	${BWHITE}* Access apps from these URL :${NC}"
+		for line in $(cat $INSTALLEDFILE);
+		do
+			echo -e "		--> $line from ${YELLOW}$line:${NC}"
+		done
+	fi
 	echo ""
 	echo -e "	${BWHITE}* Here is your IDs :${NC}"
 	echo -e "		--> Username : ${YELLOW}$HTUSER${NC}"
