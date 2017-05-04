@@ -483,13 +483,17 @@ function backup_docker_conf() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
-	read -p " * Enter username for the desired User to backup : " USERBACKUP
+	if [[ "$SEEDUSER" != "" ]]; then
+		read -p " * Do you want backup configuration for $SEEDUSER ? (default yes) [y/n] ? : " USERBACKUP
+	else
+		read -p " * Enter username for the desired User to backup : " USERBACKUP
+	fi
 	DOCKERCONFDIR="/home/$USERBACKUP/dockers/"
 	if [[ -d "$DOCKERCONFDIR" ]]; then
 		mkdir -p $BACKUPDIR
 		echo -e " * Backing up Dockers conf..."
 		tar cvpzf $BACKUP $DOCKERCONFDIR > /dev/null 2>&1
-		echo -e "	--> Backup successfully created in ${BWHITE}$BACKUP${NC}"
+		echo -e "	${BWHITE}--> Backup successfully created in $BACKUP${NC}"
 	else
 		echo -e "	${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
 	fi
