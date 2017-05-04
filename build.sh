@@ -20,6 +20,7 @@ LASTPORT="8080"
 SERVICES="includes/services"
 FILEPORTPATH="/etc/seedboxcompose/ports.pt"
 DOCKERCOMPOSEFILE="docker-compose.yml"
+clear
 
 if [ $USER = "root" ] ; then
 	## Display script infos 
