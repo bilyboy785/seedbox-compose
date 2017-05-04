@@ -334,7 +334,7 @@ function replace_parameters() {
 function docker_compose() {
 	echo -e "${BLUE}### DOCKERCOMPOSE ###${NC}"
 	echo " * Backing up docker-compose file to $CONFDIR"
-	cat $DOCKERCOMPOSE >> $CONFDIR/docker-compose.yml
+	touch $CONFDIR/docker-compose.yml && cat $DOCKERCOMPOSE >> $CONFDIR/docker-compose.yml
 	echo " * Starting docker..."
 	service docker restart
 	echo " * Docker-composing"
