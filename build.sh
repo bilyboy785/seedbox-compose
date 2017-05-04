@@ -15,6 +15,7 @@ CONFDIR="/etc/seedboxcompose"
 DATE=`date +%d/%m/%Y-%H:%M:%S`
 BACKUPDATE=`date +%d-%m-%Y-%H-%M-%S`
 DOCKERLIST="/etc/apt/sources.list.d/docker.list"
+IPADDRESS=$(ip a | grep eth0 | awk '/inet /{print substr($2,1)}' | cut -d\/ -f1)
 FIRSTPORT="5050"
 LASTPORT="8080"
 SERVICES="includes/services"
