@@ -397,10 +397,10 @@ function create_reverse() {
 			cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 			case $LESSL in
 			"y")
-				./$CERTBOT --standalone --standalone-supported-challenges http-01 --email $CONTACTEMAIL -d $line.$DOMAIN
+				./$CERTBOT certonly --standalone --standalone-supported-challenges http-01 --email $CONTACTEMAIL -d $line.$DOMAIN
 			;;
 			"")
-				./$CERTBOT --standalone --standalone-supported-challenges http-01 --email $CONTACTEMAIL -d $line.$DOMAIN
+				./$CERTBOT certonly --standalone --standalone-supported-challenges http-01 --email $CONTACTEMAIL -d $line.$DOMAIN
 			;;
 			esac
 		done
