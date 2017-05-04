@@ -376,7 +376,7 @@ function add_user() {
 		fi
 	else
 		echo "Only root may add a user to the system"
-		exit 2
+		exit 1
 	fi
 }
 
@@ -388,17 +388,21 @@ function create_reverse() {
 		REVERSEFOLDER="includes/nginxproxy/"
 		CERTBOTDIR="includes/certbot/"
 		CERTBOT="includes/certbot/certbot-auto"
+		echo " * Stopping Nginx docker ..."
 		read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
 		for line in $(cat $SERVICES);
 		do
 			FILE=$line.conf
 			echo " * Creating reverse for $FILE"
 			cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
-			if [[ "$LESSL" == "y" ]] || [[ "$LESSL" == "" ]]; then
+			case $LESSL in
+			"y")
 				./$CERTBOT --standalone --standalone-supported-challenges http-01 --email $CONTACTEMAIL -d $line.$DOMAIN
-			else
-
-			fi
+			;;
+			"")
+				./$CERTBOT --standalone --standalone-supported-challenges http-01 --email $CONTACTEMAIL -d $line.$DOMAIN
+			;;
+			esac
 		done
 		echo -e "	--> ${BWHITE}Restarting Nginx...${NC}"
 		docker restart nginx > /dev/null 2>&1
