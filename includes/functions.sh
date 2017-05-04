@@ -228,13 +228,13 @@ function choose_services() {
 
 function define_parameters() {
 	echo -e "${BLUE}### USER INFORMATIONS ###${NC}"
-	read -p "	* Create new user : " SEEDUSER
+	read -p " * Create new user : " SEEDUSER
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
 	else
-		read -s -p "	* Enter password : " PASSWORD
+		read -s -p " * Enter password : " PASSWORD
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 		useradd -m -p $PASS $SEEDUSER > /dev/null 2>&1
 		if [[ $? -eq 0 ]]; then 
@@ -249,14 +249,19 @@ function define_parameters() {
 	fi
 	add_user_htpasswd $SEEDUSER $PASSWORD
 	CURRTIMEZONE=$(cat /etc/timezone)
-	read -p "	* Please specify your Timezone (default $CURRTIMEZONE) : " TIMEZONEDEF
+	read -p " * Please specify your Timezone (default $CURRTIMEZONE) : " TIMEZONEDEF
 	if [[ $TIMEZONEDEF == "" ]]; then
 		TIMEZONE=$CURRTIMEZONE
 	else
 		TIMEZONE=$TIMEZONEDEF
 	fi
-	read -p "	* Please enter an email address : " CONTACTEMAIL
-	read -p "	* Enter your domain name : " DOMAIN
+	read -p " * Please enter an email address : " CONTACTEMAIL
+	read -p " * Do you want to use a domain to access services ? (default yes) [y/n] : " USEDOMAIN
+	if [[ "$USEDOMAIN" == "y" ]]; then
+		read -p "	${BWHITE}--> Enter your domain name :${NC} " DOMAIN
+	else
+		DOMAIN="localhost"
+	fi
 	echo ""
 }
 
@@ -300,8 +305,10 @@ function install_services() {
 		sed -i "s|%PORT%|$PORT|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
-		sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE
-		sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE
+		if [[ "$DOMAIN" != "localhost" ]]; then
+			sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE
+			sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE
+		fi
 		echo "$line - $PORT" >> $INSTALLEDFILE
 		PORT=$PORT+1
 	done
@@ -373,17 +380,20 @@ function add_user() {
 }
 
 function create_reverse() {
-	echo -e "${BLUE}### REVERSE PROXY ###${NC}"
-	SITEFOLDER="/home/$SEEDUSER/dockers/nginx/sites-enabled/"
-	REVERSEFOLDER="includes/nginxproxy/"
-	for line in $(cat $SERVICES);
-	do
-		FILE=$line.conf
-		echo " * Creating reverse for $FILE"
-		cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
-	done
-	echo -e "	--> ${BWHITE}Restarting Nginx...${NC}"
-	docker restart nginx > /dev/null 2>&1
+	if [[ "$DOMAIN" != "localhost" ]]; then
+		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
+		SITEFOLDER="/home/$SEEDUSER/dockers/nginx/sites-enabled/"
+		REVERSEFOLDER="includes/nginxproxy/"
+		for line in $(cat $SERVICES);
+		do
+			FILE=$line.conf
+			echo " * Creating reverse for $FILE"
+			cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
+		done
+		echo -e "	--> ${BWHITE}Restarting Nginx...${NC}"
+		docker restart nginx > /dev/null 2>&1
+	fi
+	echo -e "${BLUE}### CHMOD DIRECTORIES ###${NC}"
 	USERDIR="/home/$SEEDUSER"
 	chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R
 	chmod 777 $USERDIR/downloads/{medias,movies,tv} -R
