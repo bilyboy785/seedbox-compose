@@ -309,7 +309,7 @@ function install_services() {
 			sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE
 			sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE
 		fi
-		echo "$line - $PORT" >> $INSTALLEDFILE
+		echo "$line-$PORT" >> $INSTALLEDFILE
 		PORT=$PORT+1
 	done
 	touch $CONFDIR/services.it && cat $SERVICES >> $CONFDIR/services.it
@@ -465,8 +465,8 @@ function resume_seedbox() {
 		echo -e "	${BWHITE}* Access apps from these URL :${NC}"
 		for line in $(cat $INSTALLEDFILE);
 		do
-			SERVICEINSTALLED=$(cat /etc/seedboxcompose/installed.ok | cut -d\- -f1)
-			PORTINSTALLED=$(cat /etc/seedboxcompose/installed.ok | cut -d\- -f2 | sed 's! !!g')
+			SERVICEINSTALLED=$(echo $line | cut -d\- -f1)
+			PORTINSTALLED=$(echo $line | cut -d\- -f2 | sed 's! !!g')
 			echo -e "	--> $SERVICEINSTALLED from ${YELLOW}$IPADDRESS:$PORTINSTALLED${NC}"
 		done
 	fi
@@ -474,9 +474,6 @@ function resume_seedbox() {
 	echo -e " ${BWHITE}* Here is your IDs :${NC}"
 	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
 	echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
-	echo ""
-	backup_docker_conf
-	echo ""
 }
 
 function backup_docker_conf() {
