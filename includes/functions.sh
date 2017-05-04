@@ -305,7 +305,7 @@ function install_services() {
 		echo "$line - $PORT" >> $INSTALLEDFILE
 		PORT=$PORT+1
 	done
-	cat $SERVER >> $CONFDIR/services.it
+	touch $CONFDIR/services.it && cat $SERVICES >> $CONFDIR/services.it
 	echo $PORT >> $FILEPORTPATH
 }
 
