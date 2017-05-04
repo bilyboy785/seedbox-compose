@@ -385,10 +385,12 @@ function create_reverse() {
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
 		SITEFOLDER="/home/$SEEDUSER/dockers/nginx/sites-enabled/"
 		CERTDIR="/home/$SEEDUSER/dockers/nginx/certs/"
+		LEDIR="/etc/letsencrypt/live/"
 		REVERSEFOLDER="includes/nginxproxy/"
 		CERTBOTDIR="includes/certbot/"
 		CERTBOT="includes/certbot/certbot-auto"
 		echo " * Stopping Nginx docker ..."
+		docker stop nginx > /dev/null 2>&1
 		read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
 		for line in $(cat $SERVICES);
 		do
@@ -397,12 +399,15 @@ function create_reverse() {
 			cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 			case $LESSL in
 			"y")
-				./$CERTBOT certonly --quiet --standalone --standalone-supported-challenges http-01 --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
+				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
 			;;
 			"")
-				./$CERTBOT certonly --quiet --standalone --standalone-supported-challenges http-01 --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
+				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
 			;;
 			esac
+			echo -e "	--> Linking certs files in Nginx Docker directory"
+			cp -R 
+		/home/martinbouillaud/dockers/nginx/certs/%DOMAIN%/fullchain.pem;
 		done
 		echo -e "	--> ${BWHITE}Restarting Nginx...${NC}"
 		docker restart nginx > /dev/null 2>&1
