@@ -455,23 +455,25 @@ function resume_seedbox() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo ""
 	if [[ "$DOMAIN" != "localhost" ]]; then
-		echo -e "	${BWHITE}* Access apps from these URL :${NC}"
-		echo -e "		--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
+		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
+		echo -e "	--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
 		for line in $(cat $SERVICES);
 		do
-			echo -e "		--> $line from ${YELLOW}$line.$DOMAIN${NC}"
+			echo -e "	--> $line from ${YELLOW}$line.$DOMAIN${NC}"
 		done
 	else
 		echo -e "	${BWHITE}* Access apps from these URL :${NC}"
 		for line in $(cat $INSTALLEDFILE);
 		do
-			echo -e "		--> $line from ${YELLOW}$line:${NC}"
+			SERVICEINSTALLED=$(cat /etc/seedboxcompose/installed.ok | cut -d\- -f1)
+			PORTINSTALLED=$(cat /etc/seedboxcompose/installed.ok | cut -d\- -f2 | sed 's! !!g')
+			echo -e "	--> $SERVICEINSTALLED from ${YELLOW}$IPADDRESS:$PORTINSTALLED${NC}"
 		done
 	fi
 	echo ""
-	echo -e "	${BWHITE}* Here is your IDs :${NC}"
-	echo -e "		--> Username : ${YELLOW}$HTUSER${NC}"
-	echo -e "		--> Password : ${YELLOW}$HTPASSWORD${NC}"
+	echo -e " ${BWHITE}* Here is your IDs :${NC}"
+	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
+	echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
 	echo ""
 	backup_docker_conf
 	echo ""
