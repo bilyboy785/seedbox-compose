@@ -431,9 +431,9 @@ function deletee_dockers() {
 }
 
 function delete_dockers() {
-	echo -e "${BLUE}##########################################${NC}"
-	echo -e "${BLUE}###        CLEANING DOCKER APPS        ###${NC}"
-	echo -e "${BLUE}##########################################${NC}"
+	echo -e "${BLUE}################################################"
+	echo -e "###             CLEANING DOCKER APPS          ###"
+	echo -e "#################################################${NC}"
 }
 
 function restart_docker_apps() {
