@@ -97,12 +97,16 @@ function upgrade_system() {
 			exit 1
 		fi
 		echo " * Creating docker.list"
-		echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
-		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
-		if [[ $? = 0 ]]; then
-			echo -e "	${BWHITE}--> Docker.list successfully created !${NC}"
+		if [[ ! -f "$DOCKERLIST" ]]; then
+			echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
+			apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
+			if [[ $? = 0 ]]; then
+				echo -e "	${BWHITE}--> Docker.list successfully created !${NC}"
+			else
+				echo -e "	${RED}--> Error adding the Key P80.POOL.SKS for Docker's Repo${NC}" 	
+			fi
 		else
-			echo -e "	${RED}--> Error adding the Key P80.POOL.SKS for Docker's Repo${NC}" 	
+			echo -e "	${BWHITE}--> Docker.list already exist !${NC}"
 		fi
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo " * Creating docker.list"
