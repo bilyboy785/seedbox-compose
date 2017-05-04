@@ -65,32 +65,38 @@ function conf_dir() {
 	fi
 }
 
-function upgrade_system() {
-	DEBIANSOURCES="includes/sources.list.debian"
-	UBUNTUSOURCES="includes/sources.list.ubuntu"
-	DOCKERLIST="/etc/apt/sources.list.d/docker.list"
-	SOURCESFOLDER="/etc/apt/sources.list"
+function install_base_packages() {
 	echo ""
-	echo -e "${BLUE}### UPGRADING ###${NC}"
-	echo " * Installing gawk, curl, gnup2, apache2-utils, unzip & apt-transport-https"
-	DEBIANVERSION=$(cat /etc/debian_version | cut -d \. -f1)
-	if [[ "$DEBIANVERSION" -lt "8" ]]; then
-		sed -ri 's/deb\ cdrom/#deb\ cdrom/g' /etc/apt/sources.list
-		apt-get update > /dev/null 2>&1
-		apt-get install python-software-properties > /dev/null 2>&1
-		exit 1
-	fi
+	echo -e "${BLUE}### INSTALL BASE PACKAGES ###${NC}"
+	echo " * Installing apache2-utils, unzip, git, curl ..."
 	apt-get install -y gawk apache2-utils unzip git apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 	if [[ $? = 0 ]]; then
 		echo -e "	${BWHITE}--> Packages installation done !${NC}"
 	else
 		echo -e "	${RED}--> Error while installing packages, please see logs${NC}"
 	fi
-	echo " * Checking system OS release"
+}
+
+function upgrade_system() {
+	DEBIANSOURCES="includes/sources.list.debian"
+	UBUNTUSOURCES="includes/sources.list.ubuntu"
+	DOCKERLIST="/etc/apt/sources.list.d/docker.list"
+	SOURCESFOLDER="/etc/apt/sources.list"
+	DEBIANVERSION=$(cat /etc/debian_version | cut -d \. -f1)
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
+	echo ""
+	echo -e "${BLUE}### UPGRADING ###${NC}"
+	echo " * Checking system OS release"
 	echo -e "	${BWHITE}--> System detected : $SYSTEM${NC}"
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
-		echo " * Creating docker.list for $SYSTEM"
+		echo -e "	${BWHITE}--> $YSTEM version : $DEBIANVERSION{NC}"
+		if [[ "$DEBIANVERSION" -lt "8" ]]; then
+			sed -ri 's/deb\ cdrom/#deb\ cdrom/g' /etc/apt/sources.list
+			apt-get update > /dev/null 2>&1
+			apt-get install python-software-properties > /dev/null 2>&1
+			exit 1
+		fi
+		echo " * Creating docker.list"
 		echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
 		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
 		if [[ $? = 0 ]]; then
@@ -99,7 +105,7 @@ function upgrade_system() {
 			echo -e "	${RED}--> Error adding the Key P80.POOL.SKS for Docker's Repo${NC}" 	
 		fi
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
-		echo " * Creating docker.list for $SYSTEM"
+		echo " * Creating docker.list"
 		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
 		apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main' > /dev/null 2>&1
 		apt-get update > /dev/null 2>&1
