@@ -57,6 +57,8 @@ if [ $USER = "root" ] ; then
 			valid_htpasswd
 			## Resuming seedbox-compose installation
 			resume_seedbox
+			## Backup dockers app Configuration
+			backup_docker_conf
 	    	else
 	    		exit 1
 	    	fi
