@@ -381,19 +381,16 @@ function add_user() {
 function create_reverse() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
-		SITEFOLDER="/home/$SEEDUSER/dockers/nginx/sites-enabled/"
-		CERTDIR="/home/$SEEDUSER/dockers/nginx/certs"
-		LEDIR="/etc/letsencrypt/archive"
+		SITEFOLDER="/etc/nginx/sites-enabled/"
 		REVERSEFOLDER="includes/nginxproxy/"
-		CERTBOTDIR="includes/certbot/"
 		CERTBOT="includes/certbot/certbot-auto"
-		echo " * Stopping Nginx docker ..."
-		docker stop nginx > /dev/null 2>&1
+		echo " * Installing Nginx"
+		apt-get install nginx -y > /dev/null 2>&1
+		service nginx stop > /dev/null 2>&1
 		read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
 		for line in $(cat $SERVICES);
 		do
 			FILE=$line.conf
-			CERTAPPDIR="$CERTDIR/$line.$DOMAIN"
 			echo "	--> [$line] - Creating reverse"
 			cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 			echo -e "		${BWHITE}--> Generating LE certificate files, please wait...${NC}"
@@ -405,13 +402,9 @@ function create_reverse() {
 				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
 			;;
 			esac
-			echo -e "		${BWHITE}--> Linking certs files in Nginx Docker directory${NC}"
-			mkdir $CERTAPPDIR -p
-			cp -R "$LEDIR/$line.$DOMAIN/fullchain1.pem" "$CERTAPPDIR/fullchain.pem"
-			cp -R "$LEDIR/$line.$DOMAIN/privkey1.pem" "$CERTAPPDIR/privkey.pem"
 		done
 		echo -e "	--> ${BWHITE}Starting Nginx...${NC}"
-		docker start nginx > /dev/null 2>&1
+		service nginx restart > /dev/null 2>&1
 	fi
 	USERDIR="/home/$SEEDUSER"
 	chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R
@@ -433,7 +426,7 @@ function delete_dockers() {
 		fi
 		DOCKERFOLDER="/home/$SEEDUSER/dockers/"
 		if [[ -d "$DOCKERFOLDER" ]]; then
-			echo "	* Deleting files..."
+			echo " * Deleting files..."
 			rm $DOCKERFOLDER -R
 		fi
 	fi
