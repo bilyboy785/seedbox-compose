@@ -335,9 +335,9 @@ function docker_compose() {
 	echo -e "${BLUE}### DOCKERCOMPOSE ###${NC}"
 	echo " * Backing up docker-compose file to $CONFDIR"
 	DOCKERCOMPOSEBACKUP="/etc/seedboxcompose/docker-compose.yml"
-	echo $DOCKERCOMPOSEBACKUP
+	DOCKERCOMPOSEFILE="docker-compose.yml"
 	touch $DOCKERCOMPOSEBACKUP
-	cat $DOCKERCOMPOSE >> $DOCKERCOMPOSEBACKUP
+	cat $DOCKERCOMPOSEFILE >> $DOCKERCOMPOSEBACKUP
 	echo " * Starting docker..."
 	service docker restart
 	echo " * Docker-composing"
