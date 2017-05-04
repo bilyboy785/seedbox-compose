@@ -379,10 +379,10 @@ function create_reverse() {
 	for line in $(cat $SERVICES);
 	do
 		FILE=$line.conf
-		echo "	* Creating reverse for $FILE"
+		echo " * Creating reverse for $FILE"
 		cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 	done
-	echo "	* Restarting Nginx..."
+	echo "	* ${BWHITE}Restarting Nginx...${NC}"
 	docker restart nginx > /dev/null 2>&1
 	USERDIR="/home/$SEEDUSER"
 	chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R
