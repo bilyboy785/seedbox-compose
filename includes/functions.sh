@@ -383,7 +383,7 @@ function create_reverse() {
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
 		SITEFOLDER="/home/$SEEDUSER/dockers/nginx/sites-enabled/"
 		CERTDIR="/home/$SEEDUSER/dockers/nginx/certs/"
-		LEDIR="/etc/letsencrypt/live"
+		LEDIR="/etc/letsencrypt/archive"
 		REVERSEFOLDER="includes/nginxproxy/"
 		CERTBOTDIR="includes/certbot/"
 		CERTBOT="includes/certbot/certbot-auto"
@@ -405,7 +405,7 @@ function create_reverse() {
 			;;
 			esac
 			echo -e "		${BWHITE}--> Linking certs files in Nginx Docker directory${NC}"
-			cp -R "$LEDIR/$line.$DOMAIN" "$CERTDIR"
+			cp -R "$LEDIR/$line.$DOMAIN/*" "$CERTDIR"
 		done
 		echo -e "	--> ${BWHITE}Starting Nginx...${NC}"
 		docker start nginx > /dev/null 2>&1
@@ -501,7 +501,7 @@ function backup_docker_conf() {
 	echo -e "${BLUE}##########################################${NC}"
 	if [[ "$SEEDUSER" != "" ]]; then
 		read -p " * Do you want backup configuration for $SEEDUSER [y/n] ? : " BACKUPCONFUSER
-		if [[ "$BACKUPCONFUSER" == "y" ]]; then
+		if [[ "$BACKUPCONFUSER" != "y" ]]; then
 			exit 1
 		fi
 		USERBACKUP=$SEEDUSER
