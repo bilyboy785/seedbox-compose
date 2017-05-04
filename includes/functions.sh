@@ -382,7 +382,7 @@ function create_reverse() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
 		SITEFOLDER="/home/$SEEDUSER/dockers/nginx/sites-enabled/"
-		CERTDIR="/home/$SEEDUSER/dockers/nginx/certs/"
+		CERTDIR="/home/$SEEDUSER/dockers/nginx/certs"
 		LEDIR="/etc/letsencrypt/archive"
 		REVERSEFOLDER="includes/nginxproxy/"
 		CERTBOTDIR="includes/certbot/"
@@ -393,6 +393,7 @@ function create_reverse() {
 		for line in $(cat $SERVICES);
 		do
 			FILE=$line.conf
+			CERTAPPDIR="$CERTDIR/$line.$DOMAIN"
 			echo "	--> [$line] - Creating reverse"
 			cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 			echo -e "		${BWHITE}--> Generating LE certificate files, please wait...${NC}"
@@ -405,7 +406,9 @@ function create_reverse() {
 			;;
 			esac
 			echo -e "		${BWHITE}--> Linking certs files in Nginx Docker directory${NC}"
-			cp -R "$LEDIR/$line.$DOMAIN/*" "$CERTDIR"
+			mkdir $CERTAPPDIR -p
+			cp -R "$LEDIR/$line.$DOMAIN/fullchain1.pem" "$CERTAPPDIR/fullchain.pem"
+			cp -R "$LEDIR/$line.$DOMAIN/privkey1.pem" "$CERTAPPDIR/privkey.pem"
 		done
 		echo -e "	--> ${BWHITE}Starting Nginx...${NC}"
 		docker start nginx > /dev/null 2>&1
