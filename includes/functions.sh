@@ -454,7 +454,7 @@ function resume_seedbox() {
 	echo -e "${BLUE}###       RESUMING SEEDBOX INSTALL     ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	echo ""
-	if [[ "$DOMAIN" != "localhost ]]; then
+	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e "	${BWHITE}* Access apps from these URL :${NC}"
 		echo -e "		--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
 		for line in $(cat $SERVICES);
