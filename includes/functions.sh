@@ -423,7 +423,7 @@ function delete_dockers() {
 	read -p " * Do you want to delete all docker's configuration files ? [y/n] " DELETECONF
 	if [[ "$DELETECONF" == "y" ]]; then
 		if [[ "$SEEDUSER" == "" ]]; then
-			read -p "	-->Specify user to delete all his conf files : " SEEDUSER
+			read -p "	${BWHITE}--> Specify user to delete all his conf files : ${NC}" SEEDUSER
 		fi
 		DOCKERFOLDER="/home/$SEEDUSER/dockers/"
 		if [[ -d "$DOCKERFOLDER" ]]; then
