@@ -449,7 +449,6 @@ function restart_docker_apps() {
 
 function resume_seedbox() {
 	echo ""
-	echo ""
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###       RESUMING SEEDBOX INSTALL     ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
@@ -462,7 +461,7 @@ function resume_seedbox() {
 			echo -e "	--> $line from ${YELLOW}$line.$DOMAIN${NC}"
 		done
 	else
-		echo -e "	${BWHITE}* Access apps from these URL :${NC}"
+		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 		for line in $(cat $INSTALLEDFILE);
 		do
 			SERVICEINSTALLED=$(echo $line | cut -d\- -f1)
