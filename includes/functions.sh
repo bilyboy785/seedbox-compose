@@ -60,8 +60,12 @@ function script_option() {
 }
 
 function conf_dir() {
+	echo -e "${BLUE}### CHECKING SEEDBOX-COMPOSE INSTALL ###${NC}"
 	if [[ ! -d "$CONFDIR" ]]; then
+		echo -e "	${BWHITE}--> Seedbox-Compose not detected : Let's get started !${NC}"
 		mkdir $CONFDIR > /dev/null 2>&1
+	else
+		echo -e "	${BWHITE}--> Seedbox-Compose installation detected !${NC}"
 	fi
 }
 
