@@ -124,7 +124,7 @@ function upgrade_system() {
 }
 
 function base_packages() {
-	echo -e "${BLUE}### ZSH-OhMyZSH ###${NC}"
+	echo -e "${BLUE}### ZSH-OHMYZSH ###${NC}"
 	ZSHDIR="/usr/share/zsh"
 	OHMYZSHDIR="/root/.oh-my-zsh/"
 	if [[ ! -d "$OHMYZSHDIR" ]]; then	
