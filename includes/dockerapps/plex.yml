@@ -24,7 +24,7 @@ plex:
 plexrequests:
   image: linuxserver/plexrequests
   container_name: plexrequests
-  environnement:
+  environment:
     - PUID=%UID%
     - PGID=%GID%
     - URL_BASE=/
