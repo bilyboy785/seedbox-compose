@@ -384,12 +384,21 @@ function create_reverse() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
 		SITEFOLDER="/home/$SEEDUSER/dockers/nginx/sites-enabled/"
+		CERTDIR="/home/$SEEDUSER/dockers/nginx/certs/"
 		REVERSEFOLDER="includes/nginxproxy/"
+		CERTBOTDIR="includes/certbot/"
+		CERTBOT="includes/certbot/certbot-auto"
+		read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
 		for line in $(cat $SERVICES);
 		do
 			FILE=$line.conf
 			echo " * Creating reverse for $FILE"
 			cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
+			if [[ "$LESSL" == "y" ]] || [[ "$LESSL" == "" ]]; then
+				./$CERTBOT --standalone --standalone-supported-challenges http-01 --email $CONTACTEMAIL -d $line.$DOMAIN
+			else
+
+			fi
 		done
 		echo -e "	--> ${BWHITE}Restarting Nginx...${NC}"
 		docker restart nginx > /dev/null 2>&1
