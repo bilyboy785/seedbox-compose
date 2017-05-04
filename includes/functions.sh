@@ -416,12 +416,13 @@ function delete_dockers() {
 	docker stop $(docker ps) > /dev/null 2>&1
 	echo " * Removing dockers..."
 	docker rm $(docker ps -a) > /dev/null 2>&1
-	read -p " * Do you want to delete all docker's configuration files ? (y/n) " DELETECONF
-	if [[ $DELETECONF == "y" ]]; then
+	read -p " * Do you want to delete all docker's configuration files ? [y/n] " DELETECONF
+	if [[ "$DELETECONF" == "y" ]]; then
 		if [[ $SEEDUSER == "" ]]; then
-			read -p " * Specify user to delete all his conf files : " SEEDUSER
+			read -p " * Specify user to delete all his conf files : " USERCONFDIR
 		fi
-		DOCKERFOLDER="/home/$SEEDUSER/dockers/"
+		USERCONFDIR=$SEEDUSER
+		DOCKERFOLDER="/home/$USERCONFDIR/dockers/"
 		if [[ -d "$DOCKERFOLDER" ]]; then
 			echo "	* Deleting files..."
 			rm $DOCKERFOLDER -R
@@ -493,9 +494,9 @@ function backup_docker_conf() {
 	echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	if [[ "$SEEDUSER" != "" ]]; then
-		read -p " * Do you want backup configuration for $SEEDUSER ? (default yes) [y/n] ? : " USERBACKUP
+		read -p " * Do you want backup configuration for $SEEDUSER (default yes) [y/n] ? : " USERBACKUP
 	else
-		read -p " * Enter username for the desired User to backup : " USERBACKUP
+		read -p " * Enter username to backup configuration : " USERBACKUP
 	fi
 	DOCKERCONFDIR="/home/$USERBACKUP/dockers/"
 	if [[ -d "$DOCKERCONFDIR" ]]; then
