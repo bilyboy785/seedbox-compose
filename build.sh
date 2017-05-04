@@ -31,6 +31,8 @@ if [ $USER = "root" ] ; then
 	case $SCRIPT in
 		"INSTALL")
 	    	if [[ ! -f "/etc/seedboxcompose/seedboxcompose.txt" ]]; then
+			## Install base packages
+			install_base_packages
 		    	## Upgrading system
 			upgrade_system
 			## Check for docker on system
