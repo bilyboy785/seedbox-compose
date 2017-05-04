@@ -334,10 +334,10 @@ function replace_parameters() {
 function docker_compose() {
 	echo -e "${BLUE}### DOCKERCOMPOSE ###${NC}"
 	echo " * Backing up docker-compose file to $CONFDIR"
-	DOCKERCOMPOSEBACKUP="$CONFDIR/docker-compose.yml"
+	DOCKERCOMPOSEBACKUP="/etc/seedboxcompose/docker-compose.yml"
 	echo $DOCKERCOMPOSEBACKUP
 	touch $DOCKERCOMPOSEBACKUP
-	cat $DOCKERCOMPOSE >> DOCKERCOMPOSEBACKUP
+	cat $DOCKERCOMPOSE >> $DOCKERCOMPOSEBACKUP
 	echo " * Starting docker..."
 	service docker restart
 	echo " * Docker-composing"
