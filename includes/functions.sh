@@ -408,7 +408,7 @@ function create_reverse() {
 	chmod 777 $USERDIR/downloads/{medias,movies,tv} -R
 }
 
-function delete_dockers() {
+function deletee_dockers() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###        CLEANING DOCKER APPS        ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
@@ -428,6 +428,12 @@ function delete_dockers() {
 		fi
 	fi
 	echo ""
+}
+
+function deletee_dockers() {
+	echo -e "${BLUE}##########################################${NC}"
+	echo -e "${BLUE}###        CLEANING DOCKER APPS        ###${NC}"
+	echo -e "${BLUE}##########################################${NC}"
 }
 
 function restart_docker_apps() {
