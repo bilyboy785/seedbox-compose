@@ -89,7 +89,7 @@ function upgrade_system() {
 	echo " * Checking system OS release"
 	echo -e "	${BWHITE}--> System detected : $SYSTEM${NC}"
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
-		echo -e "	${BWHITE}--> $YSTEM version : $DEBIANVERSION{NC}"
+		echo -e "	${BWHITE}--> $YSTEM version : $DEBIANVERSION${NC}"
 		if [[ "$DEBIANVERSION" -lt "8" ]]; then
 			sed -ri 's/deb\ cdrom/#deb\ cdrom/g' /etc/apt/sources.list
 			apt-get update > /dev/null 2>&1
