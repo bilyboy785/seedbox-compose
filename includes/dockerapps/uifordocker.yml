@@ -1,6 +1,7 @@
 
 #UI For Docker
 ui-for-docker:
+  restart: always
   image: uifd/ui-for-docker
   container_name: ui-for-docker
   ports:
