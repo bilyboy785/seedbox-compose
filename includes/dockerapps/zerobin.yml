@@ -1,6 +1,7 @@
 
 #Zerobin
 zerobin:
+  restart: always
   image: wonderfall/zerobin
   container_name: zerobin
   environment:
