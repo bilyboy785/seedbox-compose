@@ -1,6 +1,7 @@
 
 #PlexPy
 plexpy:
+  restart: always
   image: linuxserver/plexpy
   container_name: plexpy
   environment:
