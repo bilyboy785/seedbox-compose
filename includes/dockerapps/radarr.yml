@@ -1,6 +1,7 @@
 
 #Radarr
 radarr:
+  restart: always
   image: hotio/radarr
   container_name: radarr
   environment:
