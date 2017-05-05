@@ -242,6 +242,7 @@ function define_parameters() {
 		TIMEZONE=$TIMEZONEDEF
 	fi
 	read -p " * Please enter an email address : " CONTACTEMAIL
+	echo $CONTACTEMAIL
 	read -p " * Do you want to use a domain to access services ? (default yes) [y/n] : " USEDOMAIN
 	if [[ "$USEDOMAIN" == "y" ]]; then
 		read -p "	--> Enter your domain name : " DOMAIN
