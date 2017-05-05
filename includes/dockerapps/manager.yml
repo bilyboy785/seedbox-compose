@@ -1,0 +1,13 @@
+
+#Manager
+manager:
+  image: linuxserver/htpcmanager
+  container_name: manager
+  environment:
+    - PGID=%GID%
+    - PUID=%UID%
+    - TZ=%TIMEZONE%
+  ports:
+    - %PORT%:8085
+  volumes:
+    - /home/%USER%/dockers/manager/config:/config:rw
