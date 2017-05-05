@@ -1,5 +1,6 @@
 #Nginx
 nginx:
+  restart: always
   image: wonderfall/boring-nginx
   container_name: nginx
   ports:
