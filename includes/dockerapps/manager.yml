@@ -1,6 +1,7 @@
 
 #Manager
 manager:
+  restart: always
   image: linuxserver/htpcmanager
   container_name: manager
   environment:
