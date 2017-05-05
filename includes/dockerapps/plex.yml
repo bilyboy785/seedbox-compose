@@ -1,6 +1,7 @@
 
 #Plex
 plex:
+  restart: always
   image: linuxserver/plex
   container_name: plex
   environment:
@@ -22,6 +23,7 @@ plex:
 
 #PlexRequests
 plexrequests:
+  restart: always
   image: linuxserver/plexrequests
   container_name: plexrequests
   environment:
@@ -33,3 +35,4 @@ plexrequests:
   volumes:
     - /etc/localtime:/etc/localtime:ro
     - /home/%USER%/dockers/plexrequests/config:/config
+    
