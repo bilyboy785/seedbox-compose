@@ -1,6 +1,7 @@
 
 #Lufi
 lufi:
+  restart: always
   image: xataz/lufi
   container_name: lufi
   environment:
