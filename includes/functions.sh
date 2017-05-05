@@ -181,48 +181,34 @@ function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
 	echo -e "${BWHITE}Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !${NC}"
 	echo "--> Choose wich services you want to add (default set to no) : "
-	#read -p "	* H5ai Index ? (y/n) : " H5AIINSTALL
-	#if [[ $H5AIINSTALL == "y" ]]; then
-	#	echo -e "		${GREEN}H5ai will be installed${NC}"
-	#	echo "h5ai" >> "includes/services"
-	#else
-	#	echo -e "		${RED}H5ai will no be installed${NC}"
-	#fi
+	read -p "	* HTPCManager ? (y/n) : " MANAGERINSTALL
+	if [[ $MANAGERINSTALL == "y" ]]; then
+		echo -e "		${GREEN}HTPCManager will be installed${NC}"
+		echo "manager" >> "includes/services"
+	else
+		echo -e "		${RED}HTPCManager will not be installed${NC}"
+	fi
 	read -p "	* Plex ? (y/n) : " PLEXINSTALL
 	if [[ $PLEXINSTALL == "y" ]]; then
 		echo -e "		${GREEN}Plex will be installed${NC}"
 		echo "plex" >> "includes/services"
 	else
-		echo -e "		${RED}Plex will no be installed${NC}"
+		echo -e "		${RED}Plex will not be installed${NC}"
 	fi
 	read -p "	* PlexPy ? (y/n) : " PLEXPYINSTALL
 	if [[ $PLEXPYINSTALL == "y" ]]; then
 		echo -e "		${GREEN}PlexPy will be installed${NC}"
 		echo "plexpy" >> "includes/services"
 	else
-		echo -e "		${RED}PlexPy will no be installed${NC}"
+		echo -e "		${RED}PlexPy will not be installed${NC}"
 	fi
 	read -p "	* ZeroBin ? (y/n) : " ZEROBININSTALL
 	if [[ $ZEROBININSTALL == "y" ]]; then
 		echo -e "		${GREEN}Zerobin will be installed${NC}"
 		echo "zerobin" >> "includes/services"
 	else
-		echo -e "		${RED}Zerobin will no be installed${NC}"
+		echo -e "		${RED}Zerobin will not be installed${NC}"
 	fi
-	# read -p "	* Lufi  ? (y/n) : " LUFIINSTALL
-	#if [[ $LUFIINSTALL == "y" ]]; then
-	#	echo -e "		${GREEN}Lufi will be installed${NC}"
-	#	echo "lufi" >> "includes/services"
-	#else
-	#	echo -e "		${RED}Lufi will no be installed${NC}"
-	#fi
-	#read -p "	* Lutim ? (y/n) : " LUTIMINSTALL
-	#if [[ $LUTIMINSTALL == "y" ]]; then
-	#	echo -e "		${GREEN}Lutim will be installed${NC}"
-	#	echo "lutim" >> "includes/services"
-	#else
-	#	echo -e "		${RED}Lutim will no be installed${NC}"
-	#fi
 	echo ""
 }
 
