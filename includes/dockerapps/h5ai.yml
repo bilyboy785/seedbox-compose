@@ -1,6 +1,7 @@
 
 #H5AI
 h5ai:
+  restart: always
   image: clue/h5ai
   container_name: h5ai
   ports:
