@@ -1,6 +1,7 @@
 
 #RuTorrent-rTorrent
 rutorrent:
+  restart: always
   image: diameter/rtorrent-rutorrent
   container_name: rutorrent
   environment:
