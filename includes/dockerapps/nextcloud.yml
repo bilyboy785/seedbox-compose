@@ -1,6 +1,7 @@
 
 #DBNextcloud
 dbnextcloud:
+  restart: always
   image: mariadb:latest
   container_name: dbnextcloud
   environment:
@@ -13,6 +14,7 @@ dbnextcloud:
     
 #Nextcloud
 nextcloud:
+  restart: always
   image: wonderfall/nextcloud:latest
   container_name: nextcloud
   environment:
