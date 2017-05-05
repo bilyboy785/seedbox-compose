@@ -1,6 +1,7 @@
 
 #Lutim
 lutim:
+  restart: always
   image: xataz/lutim
   container_name: lutim
   environment:
