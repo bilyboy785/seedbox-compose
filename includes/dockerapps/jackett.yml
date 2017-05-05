@@ -1,6 +1,7 @@
 
 #Jackett
 jackett:
+  restart: always
   image : linuxserver/jackett
   container_name: jackett
   environment:
