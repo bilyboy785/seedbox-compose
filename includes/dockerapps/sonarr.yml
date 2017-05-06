@@ -12,6 +12,7 @@ sonarr:
     - %PORT%:8989
   links:
     - rutorrent:rutorrent
+    - jackett:jackett
   volumes:
     - /etc/localtime:/etc/localtime:ro
     - /home/%USER%/dockers/sonarr/config:/config
