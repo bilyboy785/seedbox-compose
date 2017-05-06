@@ -1,0 +1,14 @@
+
+#PlexRequests
+plexrequests:
+  restart: always
+  image: linuxserver/plexrequests
+  container_name: plexrequests
+  environment:
+    - PGID=%GID%
+    - PUID=%UID%
+  ports:
+    - %PORT%:3000
+  volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - /home/%USER%/dockers/plexrequests/config:/config

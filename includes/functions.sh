@@ -434,6 +434,7 @@ function resume_seedbox() {
 	echo -e "${BLUE}###       RESUMING SEEDBOX INSTALL     ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	echo ""
+	access_token_ts
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 		echo -e "	--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
@@ -454,6 +455,12 @@ function resume_seedbox() {
 	echo -e " ${BWHITE}* Here is your IDs :${NC}"
 	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
 	echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
+	if [[ -d $TSIDFILE ]]; then
+		echo -e " ${BWHITE}* Your Teamspeak IDs :${NC}"
+		echo -e "	--> Server admin : ${YELLOW}serveradmin{NC}"
+		echo -e "	--> Admin password : ${YELLOW}$SERVERADMINPASSWORD${NC}"
+		echo -e "	--> Token : ${YELLOW}$TOKEN${NC}"
+	fi
 }
 
 function backup_docker_conf() {
@@ -483,4 +490,17 @@ function backup_docker_conf() {
 		echo -e "	${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
 	fi
 	echo ""
+}
+
+function access_token_ts() {
+	grep -R "teamspeak" "$SERVICES"
+	if [[ "$?" == "0" ]]; then
+		TSIDFILE="/home/$SEEDUSER/dockers/teamspeak/id.txt"
+		TOUCH $TSIDFILE
+		SERVERADMINPASSWORD=$(docker logs teamspeak 2>&1 | grep password | cut -d\= -f 3 | tr --delete '"')
+		TOKEN=$(docker logs teamspeak 2>&1 | grep token | cut -d\= -f2)
+		echo "Admin Username : serveradmin" >> $TSIDFILE
+		echo "Admin password : $SERVERADMINPASSWORD" >> $TSIDFILE
+		echo "Token : $TOKEN" >> $TSIDFILE
+	fi
 }

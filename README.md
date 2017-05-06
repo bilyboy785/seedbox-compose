@@ -37,6 +37,13 @@ cd /root/seedbox-compose
 ```
 
 ## Services configuration
+### Teamspeak
+To access and configure Teamspeak, you need to have the Token Access and ServerAdmin password. There are stored in logs of TS docker. You can access it with :
+```shell
+docker logs teamspeak
+```
+
+During docker-compose action, i stored your IDs in your **/home/user/dockers/teamspeak/id.txt**. Check this file before launching Teamspeak.
 
 ## Sources
  * [Linuxserver/PlexRequests](https://hub.docker.com/r/linuxserver/plexrequests/)
