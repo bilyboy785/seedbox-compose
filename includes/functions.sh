@@ -181,9 +181,10 @@ function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
 	echo -e "${BWHITE}Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !${NC}"
 	echo "--> Choose wich services you want to add (default set to no) : "
-	for service in $(cat $SERVICESAVAILABLE);
+	for app in $(cat includes/config/services-available);
 	do
-		echo $service
+		echo $app
+	done
 	echo ""
 }
 
