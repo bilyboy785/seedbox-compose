@@ -1,0 +1,13 @@
+
+#TeamSpeak
+teamspeak:
+  restart: always
+  image: linuxserver/gsm-ts3
+  container_name: teamspeak
+  net: host
+  environment:
+    - PGID=%GID%
+    - PUID=%UID%
+  volumes:
+    - /etc/localtime:/etc/localtime:ro
+    - /home/%USER%/dockers/teamspeak/config:/config
