@@ -46,4 +46,21 @@ docker logs teamspeak
 During docker-compose action, i stored your IDs in your **/home/user/dockers/teamspeak/id.txt**. Check this file before launching Teamspeak.
 
 ## Sources
+ * [uifd/ui-for-docker](https://hub.docker.com/r/uifd/ui-for-docker/)
+ * [linuxserver/gsm-ts3](https://hub.docker.com/r/linuxserver/gsm-ts3/)
+ * [linuxserver/sonarr](https://hub.docker.com/r/linuxserver/sonarr/)
+ * [diameter/rtorrent-rutorrent](https://hub.docker.com/r/diameter/rtorrent-rutorrent/)
+ * [hotio/radarr](https://hub.docker.com/r/hotio/radarr/)
+ * [linuxserver/plexrequests](https://hub.docker.com/r/linuxserver/plexrequests/)
+ * [linuxserver/plexpy](https://hub.docker.com/r/linuxserver/plexpy/)
+ * [linuxserver/plex](https://hub.docker.com/r/linuxserver/plex/)
+ * [wonderfall/boring-nginx](https://hub.docker.com/r/wonderfall/boring-nginx/)
+ * [linuxserver/nextcloud](https://hub.docker.com/r/linuxserver/nextcloud/)
+ * [xataz/lutim](https://hub.docker.com/r/xataz/lutim/)
+ * [xataz/lufi](https://hub.docker.com/r/xataz/lufi/)
+ * [linuxserver/jackett](https://hub.docker.com/r/linuxserver/jackett/)
+ * [linuxserver/htpcmanager](https://hub.docker.com/r/linuxserver/htpcmanager/)
+ * [linuxserver/headphones](https://hub.docker.com/r/linuxserver/headphones/)
+ * [clue/h5ai](https://hub.docker.com/r/clue/h5ai/)
+ * [Wonderfall/zerobin](https://hub.docker.com/r/Wonderfall/zerobin/)
  * [Linuxserver/PlexRequests](https://hub.docker.com/r/linuxserver/plexrequests/)
