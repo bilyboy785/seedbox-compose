@@ -191,7 +191,6 @@ function choose_services() {
 			echo -e "		${RED}$service will not be installed${NC}"
 		fi
 	done
-	cat $SERVICES
 	echo ""
 }
 
@@ -265,7 +264,7 @@ function install_services() {
 	for line in $(cat $SERVICES);
 	do
 		NGINXPROXYFILE="includes/nginxproxy/$line.conf"
-		NGINXFINALPROXY="/dockers/nginx/sites-enabled/$line.conf"
+		# NGINXFINALPROXY="/dockers/nginx/sites-enabled/$line.conf"
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
@@ -273,7 +272,7 @@ function install_services() {
 		sed -i "s|%PORT%|$PORT|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
-		if [[ "$DOMAIN" != "localhost" ]]; then
+		if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
 			sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE
 			sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE
 		fi
@@ -359,18 +358,20 @@ function create_reverse() {
 		read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
 		for line in $(cat $SERVICES);
 		do
-			FILE=$line.conf
-			echo "	--> [$line] - Creating reverse"
-			cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
-			echo -e "		${BWHITE}--> Generating LE certificate files, please wait...${NC}"
-			case $LESSL in
-			"y")
-				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
-			;;
-			"")
-				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
-			;;
-			esac
+			if [[ "$line" != "teamspeak" ]]; then
+				FILE=$line.conf
+				echo "	--> [$line] - Creating reverse"
+				cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
+				echo -e "		${BWHITE}--> Generating LE certificate files, please wait...${NC}"
+				case $LESSL in
+				"y")
+					./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
+				;;
+				"")
+					./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
+				;;
+				esac
+			fi
 		done
 		echo -e "	--> ${BWHITE}Starting Nginx...${NC}"
 		service nginx restart > /dev/null 2>&1
