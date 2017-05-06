@@ -183,8 +183,15 @@ function choose_services() {
 	echo "--> Choose wich services you want to add (default set to no) : "
 	for app in $(cat includes/config/services-available);
 	do
-		echo $app
+		read -p "	* $app ? (y/n) : " SERVICEINSTALL
+		if [[ $SERVICEINSTALL == "y" ]]; then
+			echo -e "		${GREEN}$service will be installed${NC}"
+			echo "${app,,}" >> "$SERVICES"
+		else
+			echo -e "		${RED}$service will not be installed${NC}"
+		fi
 	done
+	cat $SERVICES
 	echo ""
 }
 
