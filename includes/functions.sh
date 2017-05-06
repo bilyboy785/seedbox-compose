@@ -365,10 +365,10 @@ function create_reverse() {
 			echo -e "		${BWHITE}--> Generating LE certificate files, please wait...${NC}"
 			case $LESSL in
 			"y")
-				./$CERTBOT certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
+				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
 			;;
 			"")
-				./$CERTBOT certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
+				./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
 			;;
 			esac
 		done
