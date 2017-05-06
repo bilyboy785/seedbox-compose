@@ -1,45 +1,14 @@
 
-#DBNextcloud
-dbnextcloud:
-  restart: always
-  image: mariadb:latest
-  container_name: dbnextcloud
-  environment:
-    - MYSQL_ROOT_PASSWORD=%MYSQL_ROOT_PASSWD%
-    - MYSQL_DATABASE=dbnextcloud
-    - MYSQL_USER=dbnextcloud
-    - MYSQL_PASSWORD=%MYSQL_NEXTCLOUD_PASSWD%
-  volumes:
-    - /home/%USER%/dockers/mariadb/db/nextcloud:/var/lib/mysql
-    
 #Nextcloud
 nextcloud:
   restart: always
-  image: wonderfall/nextcloud:latest
+  image: linuxserver/nextcloud
   container_name: nextcloud
   environment:
-    - UID=%UID%
-    - GID=%GID%
-    - UPLOAD_MAX_SIZE=%UPLOAD_NEXTCLOUD%
-    - APC_SHM_SIZE=128M
-    - OPCACHE_MEM_SIZE=128
-    - CRON_PERIOD=15m
-    - TZ=%TIMEZONE%
-    - ADMIN_USER=%NEXTCLOUD_ADMIN_USER%
-    - ADMIN_PASSWORD=%NEXTCLOUD_ADMIN_PASSWD%
-    - DOMAIN=%CLOUD_DOMAIN%
-    - DB_TYPE=mysql
-    - DB_NAME=dbnextcloud
-    - DB_USER=dbnextcloud
-    - DB_PASSWORD=%MYSQL_NEXTCLOUD_PASSWD%
-    - DB_HOST=dbnextcloud
-  links:
-    - dbnextcloud:dbnextcloud
+    - PUID=%UID%
+    - PGID=%GID%
   ports:
-    - %PORT%:8888
+    - %PORT%:443
   volumes:
-    - /home/%USER%/dockers/nextcloud/data:/data
     - /home/%USER%/dockers/nextcloud/config:/config
-    - /home/%USER%/dockers/nextcloud/apps:/apps
-    - /home/%USER%/dockers/nextcloud/themes:/nextcloud/themes
-    
+    - /home/%USER%/dockers/nextcloud/data:/data

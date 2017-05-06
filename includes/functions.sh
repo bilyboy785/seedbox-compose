@@ -186,7 +186,7 @@ function choose_services() {
 		read -p "	* $service ? (y/n) : " SERVICEINSTALL
 		if [[ $SERVICEINSTALL == "y" ]]; then
 			echo -e "		${GREEN}$service will be installed${NC}"
-			echo $(echo $service | awk '{print tolower($0)}') >> $SERVICES
+			echo "${service,,}" >> "$SERVICES"
 		else
 			echo -e "		${RED}$service will not be installed${NC}"
 		fi
