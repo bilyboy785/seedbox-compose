@@ -16,7 +16,8 @@ Jackett                | Installed   |  jackett.domain.tld
 Radarr                 | Installed   |  radarr.domain.tld                  
 Sonarr                 | Installed   |  sonarr.domain.tld                 
 UI for Docker          | Installed   |  docker.domain.tld                  
-PlexMediaServer        | Optional    |  plex.domain.tld                 
+PlexMediaServer        | Optional    |  plex.domain.tld
+Headphones.            | Optional    |  headphones.domain.tld                  
 PlexPy                 | Optional    |  plexpy.domain.tld                 
 Zerobin                | Optional    |  zerobin.domain.tld                 
 MariaDB                | Optional    |  ---                 

@@ -1,0 +1,16 @@
+
+#Headphones
+headphones:
+  restart: always
+  image: linuxserver/headphones
+  container_name: headphones
+  environment: 
+    - PGID=%GID%
+    - PUID=%UID%
+    - TZ=%TIMEZONE%
+  ports:
+    - %PORT%:8181
+  volumes:
+    - /home/%USER%dockers/headphones/config:/config:rw
+    - /home/%USER%/downloads/music:/downloads
+    - /home/%USER/downloads/medias/music:/music

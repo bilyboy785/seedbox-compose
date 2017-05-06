@@ -181,34 +181,15 @@ function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
 	echo -e "${BWHITE}Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !${NC}"
 	echo "--> Choose wich services you want to add (default set to no) : "
-	read -p "	* HTPCManager ? (y/n) : " MANAGERINSTALL
-	if [[ $MANAGERINSTALL == "y" ]]; then
-		echo -e "		${GREEN}HTPCManager will be installed${NC}"
-		echo "manager" >> "includes/services"
-	else
-		echo -e "		${RED}HTPCManager will not be installed${NC}"
-	fi
-	read -p "	* Plex ? (y/n) : " PLEXINSTALL
-	if [[ $PLEXINSTALL == "y" ]]; then
-		echo -e "		${GREEN}Plex will be installed${NC}"
-		echo "plex" >> "includes/services"
-	else
-		echo -e "		${RED}Plex will not be installed${NC}"
-	fi
-	read -p "	* PlexPy ? (y/n) : " PLEXPYINSTALL
-	if [[ $PLEXPYINSTALL == "y" ]]; then
-		echo -e "		${GREEN}PlexPy will be installed${NC}"
-		echo "plexpy" >> "includes/services"
-	else
-		echo -e "		${RED}PlexPy will not be installed${NC}"
-	fi
-	read -p "	* ZeroBin ? (y/n) : " ZEROBININSTALL
-	if [[ $ZEROBININSTALL == "y" ]]; then
-		echo -e "		${GREEN}Zerobin will be installed${NC}"
-		echo "zerobin" >> "includes/services"
-	else
-		echo -e "		${RED}Zerobin will not be installed${NC}"
-	fi
+	for service in $(cat $SERVICESAVAILABLE);
+	do
+		read -p "	* $service ? (y/n) : " SERVICEINSTALL
+		if [[ $SERVICEINSTALL == "y" ]]; then
+			echo -e "		${GREEN}$service will be installed${NC}"
+			echo $(echo $service | awk '{print tolower($0)}') >> $SERVICES
+		else
+			echo -e "		${RED}$service will not be installed${NC}"
+		fi
 	echo ""
 }
 
@@ -273,7 +254,6 @@ function add_user_htpasswd() {
 }
 
 function install_services() {
-	INSTALLEDFILE="/etc/seedboxcompose/installed.ok"
 	touch $INSTALLEDFILE
 	if [[ -f "$FILEPORTPATH" ]]; then
 		declare -i PORT=$(cat $FILEPORTPATH | tail -1)
