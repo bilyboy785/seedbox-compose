@@ -183,13 +183,7 @@ function choose_services() {
 	echo "--> Choose wich services you want to add (default set to no) : "
 	for service in $(cat $SERVICESAVAILABLE);
 	do
-		read -p "	* $service ? (y/n) : " SERVICEINSTALL
-		if [[ $SERVICEINSTALL == "y" ]]; then
-			echo -e "		${GREEN}$service will be installed${NC}"
-			echo "${service,,}" >> "$SERVICES"
-		else
-			echo -e "		${RED}$service will not be installed${NC}"
-		fi
+		echo $service
 	echo ""
 }
 
