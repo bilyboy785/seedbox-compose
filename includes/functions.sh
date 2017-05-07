@@ -224,7 +224,6 @@ function define_parameters() {
 		TIMEZONE=$TIMEZONEDEF
 	fi
 	read -p " * Please enter an email address : " CONTACTEMAIL
-	echo $CONTACTEMAIL
 	read -p " * Do you want to use a domain to access services ? (default yes) [y/n] : " USEDOMAIN
 	if [[ "$USEDOMAIN" == "y" ]]; then
 		read -p "	--> Enter your domain name : " DOMAIN
@@ -264,7 +263,6 @@ function install_services() {
 	for line in $(cat $SERVICES);
 	do
 		NGINXPROXYFILE="includes/nginxproxy/$line.conf"
-		# NGINXFINALPROXY="/dockers/nginx/sites-enabled/$line.conf"
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
@@ -281,28 +279,6 @@ function install_services() {
 	done
 	touch $CONFDIR/services.it && cat $SERVICES >> $CONFDIR/services.it
 	echo $PORT >> $FILEPORTPATH
-}
-
-function replace_parameters() {
-	DOCKERCOMPOSE='docker-compose.yml'
-	NGINXPROXY='includes/nginxproxy'
-	CLOUDDOMAIN="cloud.$5"
-	JACKETDOMAIN="jackett.$5"
-	RADARRDOMAIN="radarr.$5"
-	SONARRDOMAIN="sonarr.$5"
-	UIDOCKERDOMAIN="dockerui.$5"
-	RUTORRENTDOMAIN="rutorrent.$5"
-	SECRET=$(date +%s | md5sum | head -c 32)
-	touch $FILEPORTPATH
-	sed -i "s|%TIMEZONE%|$1|g" $DOCKERCOMPOSE
-	sed -i "s|%UID%|$2|g" $DOCKERCOMPOSE
-	sed -i "s|%GID%|$3|g" $DOCKERCOMPOSE
-	sed -i "s|%JACKETT_DOMAIN%|$JACKETDOMAIN|g" $NGINXPROXY/jackett.conf
-	sed -i "s|%RADARR_DOMAIN%|$RADARRDOMAIN|g" $NGINXPROXY/radarr.conf
-	sed -i "s|%SONARR_DOMAIN%|$SONARRDOMAIN|g" $NGINXPROXY/uifordocker.conf
-	sed -i "s|%DOCKERUI_DOMAIN%|$UIDOCKERDOMAIN|g" $NGINXPROXY/sonarr.conf
-	sed -i "s|%RUTORRENT_DOMAIN%|$RUTORRENTDOMAIN|g" $NGINXPROXY/rutorrent.conf
-	cp $DOCKERCOMPOSE docker-compose.yml
 }
 
 function docker_compose() {
@@ -360,15 +336,26 @@ function create_reverse() {
 		do
 			if [[ "$line" != "teamspeak" ]]; then
 				FILE=$line.conf
+				SITEENABLED="$SITEFOLDER$line.conf"
 				echo "	--> [$line] - Creating reverse"
 				cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
+				read -p " * Specify a different subdomain for ${YELLOW}$line${NC} ? (default $line.$DOMAIN) : " SUBDOMAINVAR
 				echo -e "		${BWHITE}--> Generating LE certificate files, please wait...${NC}"
 				case $LESSL in
 				"y")
-					./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
+					if [[ "$SUBDOMAINVAR" == "" ]]; then
+						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
+					else
+						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $SUBDOMAINVAR.$DOMAIN > /dev/null 2>&1
+						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
+					fi
 				;;
 				"")
-					./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
+					if [[ "$SUBDOMAINVAR" == "" ]]; then
+						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
+					else
+						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $SUBDOMAINVAR.$DOMAIN > /dev/null 2>&1
+					fi
 				;;
 				esac
 			fi
