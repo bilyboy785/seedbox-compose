@@ -355,6 +355,7 @@ function create_reverse() {
 						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
 					else
 						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $SUBDOMAINVAR.$DOMAIN > /dev/null 2>&1
+						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
 					fi
 				;;
 				esac
