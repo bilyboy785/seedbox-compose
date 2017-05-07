@@ -339,28 +339,48 @@ function create_reverse() {
 				SITEENABLED="$SITEFOLDER$line.conf"
 				echo " --> [$line] - Creating reverse"
 				cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
-				read -p "	* Specify a different subdomain for ${YELLOW}$line${NC} ? (default $line.$DOMAIN) : " SUBDOMAINVAR
+				read -p "	* Specify a different subdomain for $line ? (default $line.$DOMAIN) : " SUBDOMAINVAR
 				case $LESSL in
 				"y")
 					if [[ "$SUBDOMAINVAR" == "" ]]; then
 						echo -e "		${BWHITE}--> Generating LE certificate files for $line.$DOMAIN, please wait...${NC}"
 						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
+						if [[ "$?" == "0" ]]; then
+							echo -e "	${GREEN}* Certificate generation OK !${NC}"
+						else
+							echo -e "	${RED}* Certificate generation failed !${NC}"
+						fi
 					else
 						echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
 						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $SUBDOMAINVAR.$DOMAIN
 						echo -e "		${BWHITE}--> Replacing domain name in sites-enabled...${NC}"
 						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
+						if [[ "$?" == "0" ]]; then
+							echo -e "	${GREEN}* Certificate generation OK !${NC}"
+						else
+							echo -e "	${RED}* Certificate generation failed !${NC}"
+						fi
 					fi
 				;;
 				"")
 					if [[ "$SUBDOMAINVAR" == "" ]]; then
 						echo -e "		${BWHITE}--> Generating LE certificate files for $line.$DOMAIN, please wait...${NC}"
 						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
+						if [[ "$?" == "0" ]]; then
+							echo -e "	${GREEN}* Certificate generation OK !${NC}"
+						else
+							echo -e "	${RED}* Certificate generation failed !${NC}"
+						fi
 					else
 						echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
 						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $SUBDOMAINVAR.$DOMAIN
 						echo -e "		${BWHITE}--> Replacing domain name in sites-enabled...${NC}"
 						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
+						if [[ "$?" == "0" ]]; then
+							echo -e "	${GREEN}* Certificate generation OK !${NC}"
+						else
+							echo -e "	${RED}* Certificate generation failed !${NC}"
+						fi
 					fi
 				;;
 				esac
