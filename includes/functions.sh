@@ -18,12 +18,16 @@ function script_option() {
 	echo "This script will help you to make a complete seedbox with Rutorrent, Sonarr, Radarr and Jacket, based on Docker !"
 	echo "Choose an option to launch the script (1, 2...) : "
 	echo ""
-	echo -e "	${BWHITE}[1] - ${GREEN}Install the Seedbox${NC}"
-	echo -e "	${BWHITE}[2] - ${GREEN}Add htaccess user${NC}"
-	echo -e "	${BWHITE}[3] - ${GREEN}Add a docker App${NC}"
-	echo -e "	${BWHITE}[4] - ${GREEN}Restart all Dockers Apps${NC}"
-	echo -e "	${BWHITE}[5] - ${GREEN}Backup Dockers conf${NC}"
-	echo -e "	${BWHITE}[6] - ${GREEN}Delete and clean all Dockers${NC}"
+	if [[ ! -d "$CONFDIR" ]]; then
+		echo -e "	${BWHITE}[1] - ${GREEN}Install the Seedbox${NC}"
+		echo -e "	${BWHITE}[2] - ${GREEN}Add htaccess user${NC}"
+		echo -e "	${BWHITE}[3] - ${GREEN}Add a docker App${NC}"
+		echo -e "	${BWHITE}[4] - ${GREEN}Restart all Dockers Apps${NC}"
+		echo -e "	${BWHITE}[5] - ${GREEN}Backup Dockers conf${NC}"
+		echo -e "	${BWHITE}[6] - ${GREEN}Delete and clean all Dockers${NC}"
+	else
+		echo -e "	${BWHITE}[1] - ${GREEN}Install the Seedbox${NC}"
+	fi
 	echo ""
 	read -p "	Your choice : " CHOICE
 	echo ""
