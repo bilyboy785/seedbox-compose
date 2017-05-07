@@ -337,24 +337,29 @@ function create_reverse() {
 			if [[ "$line" != "teamspeak" ]]; then
 				FILE=$line.conf
 				SITEENABLED="$SITEFOLDER$line.conf"
-				echo "	--> [$line] - Creating reverse"
+				echo " --> [$line] - Creating reverse"
 				cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
-				read -p " * Specify a different subdomain for ${YELLOW}$line${NC} ? (default $line.$DOMAIN) : " SUBDOMAINVAR
-				echo -e "		${BWHITE}--> Generating LE certificate files, please wait...${NC}"
+				read -p "	* Specify a different subdomain for ${YELLOW}$line${NC} ? (default $line.$DOMAIN) : " SUBDOMAINVAR
 				case $LESSL in
 				"y")
 					if [[ "$SUBDOMAINVAR" == "" ]]; then
-						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
+						echo -e "		${BWHITE}--> Generating LE certificate files for $line.$DOMAIN, please wait...${NC}"
+						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
 					else
-						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $SUBDOMAINVAR.$DOMAIN > /dev/null 2>&1
+						echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
+						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $SUBDOMAINVAR.$DOMAIN
+						echo -e "		${BWHITE}--> Replacing domain name in sites-enabled...${NC}"
 						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
 					fi
 				;;
 				"")
 					if [[ "$SUBDOMAINVAR" == "" ]]; then
-						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN > /dev/null 2>&1
+						echo -e "		${BWHITE}--> Generating LE certificate files for $line.$DOMAIN, please wait...${NC}"
+						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
 					else
-						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $SUBDOMAINVAR.$DOMAIN > /dev/null 2>&1
+						echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
+						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $SUBDOMAINVAR.$DOMAIN
+						echo -e "		${BWHITE}--> Replacing domain name in sites-enabled...${NC}"
 						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
 					fi
 				;;
