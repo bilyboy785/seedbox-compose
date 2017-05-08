@@ -26,8 +26,6 @@ INSTALLEDFILE="/etc/seedboxcompose/installed.ok"
 DOCKERCOMPOSEFILE="docker-compose.yml"
 INFOLOGS="/var/log/seedboxcompose.info.log"
 ERRORLOGS="/var/log/seedboxcompose.error.log"
-#exec 1>$INFOLOGS
-#exec 2>$ERRORLOGS
 
 clear
 

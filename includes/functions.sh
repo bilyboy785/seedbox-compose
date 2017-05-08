@@ -69,7 +69,7 @@ function conf_dir() {
 		echo -e "	${BWHITE}--> Seedbox-Compose not detected : Let's get started !${NC}"
 		mkdir $CONFDIR > /dev/null 2>&1
 		touch $SERVICESOK
-		cat $SERVICES >> $SERVICESOK > /dev/null 2>&1
+		cat $SERVICES >> $SERVICESOK
 		echo ""
 	else
 		echo -e "	${BWHITE}--> Seedbox-Compose installation detected !${NC}"
@@ -192,7 +192,7 @@ function choose_services() {
 		read -p "	* $app ? (y/n) : " SERVICEINSTALL
 		if [[ $SERVICEINSTALL == "y" ]]; then
 			echo -e "		${GREEN}$service will be installed${NC}"
-			echo "${app,,}" >> "$SERVICESOK"
+			echo "${app,,}" >> $SERVICESOK
 		else
 			echo -e "		${RED}$service will not be installed${NC}"
 		fi
@@ -484,7 +484,6 @@ function resume_seedbox() {
 	echo -e " ${BWHITE}* Found logs here :${NC}"
 	echo -e "	--> Info Logs : ${YELLOW}$INFOLOGS${NC}"
 	echo -e "	--> Error Logs : ${YELLOW}$ERRORLOGS${NC}"
-
 	mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
 	mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
 }
@@ -519,10 +518,10 @@ function backup_docker_conf() {
 }
 
 function access_token_ts() {
-	grep -R "teamspeak" "$SERVICESOK"
+	grep -R "teamspeak" "$SERVICESOK" > /dev/null
 	if [[ "$?" == "0" ]]; then
-		TSIDFILE="/home/$SEEDUSER/dockers/teamspeak/id.txt"
-		TOUCH $TSIDFILE
+		TSIDFILE="/home/$SEEDUSER/dockers/teamspeak/idteamspeak"
+		touch $TSIDFILE
 		SERVERADMINPASSWORD=$(docker logs teamspeak 2>&1 | grep password | cut -d\= -f 3 | tr --delete '"')
 		TOKEN=$(docker logs teamspeak 2>&1 | grep token | cut -d\= -f2)
 		echo "Admin Username : serveradmin" >> $TSIDFILE
