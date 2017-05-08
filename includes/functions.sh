@@ -124,6 +124,11 @@ function upgrade_system() {
 		echo " * Creating docker.list"
 		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
 		apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main' > /dev/null 2>&1
+		if [[ "$?" == "0" ]]; then
+			echo -e "		* ${GREEN}Docker.list successfully added !${NC}"
+		else
+			echo -e "		* ${RED}Error adding Key or repository !${NC}"
+		fi
 		apt-get update > /dev/null 2>&1
 	fi
 	echo " * Updating sources and upgrading system"
@@ -161,7 +166,7 @@ function install_docker() {
 		apt-get install -y docker-engine > /dev/null 2>&1
 		service docker start > /dev/null 2>&1
 		echo " * Installing Docker-compose"
-		curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+		curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose > /dev/null 2>&1
 		chmod +x /usr/local/bin/docker-compose
 		echo ""
 	else
@@ -266,9 +271,9 @@ function install_services() {
 	else
 		declare -i PORT=$FIRSTPORT
 	fi
+	read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
 	for line in $(cat $SERVICESOK);
 	do
-		NGINXPROXYFILE="includes/nginxproxy/$line.conf"
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
@@ -277,6 +282,11 @@ function install_services() {
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
+			if [[ "$LESSL" == "" -o "$LESSL" == "y" ]]; then
+				NGINXPROXYFILE="includes/nginxproxyssl/$line.conf"
+			else
+				NGINXPROXYFILE="includes/nginxproxy/$line.conf"
+			fi
 			sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE
 			sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE
 		fi
@@ -332,18 +342,21 @@ function create_reverse() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
 		SITEFOLDER="/etc/nginx/sites-enabled/"
-		REVERSEFOLDER="includes/nginxproxy/"
 		CERTBOT="includes/certbot/certbot-auto"
 		echo " * Installing Nginx"
 		apt-get install nginx -y > /dev/null 2>&1
 		service nginx stop > /dev/null 2>&1
-		read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
 		for line in $(cat $SERVICESOK);
 		do
 			if [[ "$line" != "teamspeak" ]]; then
 				FILE=$line.conf
 				SITEENABLED="$SITEFOLDER$line.conf"
 				echo " --> [$line] - Creating reverse"
+				if [[ "$LESSL" == "" -o "$LESSL" == "y" ]]; then
+					REVERSEFOLDER="includes/nginxproxyssl/"
+				else
+					REVERSEFOLDER="includes/nginxproxy/"
+				fi
 				cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 				read -p "	* Specify a different subdomain for $line ? (default $line.$DOMAIN) : " SUBDOMAINVAR
 				case $LESSL in
@@ -454,7 +467,6 @@ function resume_seedbox() {
 	echo -e "${BLUE}###       RESUMING SEEDBOX INSTALL     ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	echo ""
-	access_token_ts
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 		echo -e "	--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
@@ -475,12 +487,7 @@ function resume_seedbox() {
 	echo -e " ${BWHITE}* Here is your IDs :${NC}"
 	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
 	echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
-	if [[ -d $TSIDFILE ]]; then
-		echo -e " ${BWHITE}* Your Teamspeak IDs :${NC}"
-		echo -e "	--> Server admin : ${YELLOW}serveradmin{NC}"
-		echo -e "	--> Admin password : ${YELLOW}$SERVERADMINPASSWORD${NC}"
-		echo -e "	--> Token : ${YELLOW}$TOKEN${NC}"
-	fi
+	echo ""
 	echo -e " ${BWHITE}* Found logs here :${NC}"
 	echo -e "	--> Info Logs : ${YELLOW}$INFOLOGS${NC}"
 	echo -e "	--> Error Logs : ${YELLOW}$ERRORLOGS${NC}"
@@ -520,12 +527,18 @@ function backup_docker_conf() {
 function access_token_ts() {
 	grep -R "teamspeak" "$SERVICESOK" > /dev/null
 	if [[ "$?" == "0" ]]; then
-		TSIDFILE="/home/$SEEDUSER/dockers/teamspeak/idteamspeak"
-		touch $TSIDFILE
-		SERVERADMINPASSWORD=$(docker logs teamspeak 2>&1 | grep password | cut -d\= -f 3 | tr --delete '"')
-		TOKEN=$(docker logs teamspeak 2>&1 | grep token | cut -d\= -f2)
-		echo "Admin Username : serveradmin" >> $TSIDFILE
-		echo "Admin password : $SERVERADMINPASSWORD" >> $TSIDFILE
-		echo "Token : $TOKEN" >> $TSIDFILE
+		read -p " * Do you want create a file with your Teamspeak password and Token ? (default no) [y/n] : " SHOWTSTOKEN
+		if [[ "$SHOWTSTOKEN" == "y" ]]; then
+			TSIDFILE="/home/$SEEDUSER/dockers/teamspeak/idteamspeak"
+			touch $TSIDFILE
+			SERVERADMINPASSWORD=$(docker logs teamspeak 2>&1 | grep password | cut -d\= -f 3 | tr --delete '"')
+			TOKEN=$(docker logs teamspeak 2>&1 | grep token | cut -d\= -f2)
+			echo "Admin Username : serveradmin" >> $TSIDFILE
+			echo "Admin password : $SERVERADMINPASSWORD" >> $TSIDFILE
+			echo "Token : $TOKEN" >> $TSIDFILE
+			cat $TSIDFILE
+		else
+			echo -e "	--> Check teamspeak's Logs with ${BWHITE}docker logs teamspeak${NC}"
+		fi
 	fi
 }

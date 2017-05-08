@@ -65,6 +65,8 @@ if [ $USER = "root" ] ; then
 			resume_seedbox
 			## Backup dockers app Configuration
 			backup_docker_conf
+			## Display Teamspeak IDs
+			access_token_ts
 	    	else
 	    		exit 1
 	    	fi
