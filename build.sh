@@ -20,9 +20,15 @@ CONFDIR="/etc/seedboxcompose"
 DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 SERVICESAVAILABLE="includes/config/services-available"
 SERVICES="includes/config/services"
+SERVICESOK="/etc/seedboxcompose/services"
 FILEPORTPATH="/etc/seedboxcompose/ports.pt"
 INSTALLEDFILE="/etc/seedboxcompose/installed.ok"
 DOCKERCOMPOSEFILE="docker-compose.yml"
+INFOLOGS="/var/log/seedboxcompose.info.log"
+ERRORLOGS="/var/log/seedboxcompose.error.log"
+exec 1>$INFOLOGS
+exec 2>$ERRORLOGS
+
 clear
 
 if [ $USER = "root" ] ; then

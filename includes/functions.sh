@@ -68,6 +68,7 @@ function conf_dir() {
 	if [[ ! -d "$CONFDIR" ]]; then
 		echo -e "	${BWHITE}--> Seedbox-Compose not detected : Let's get started !${NC}"
 		mkdir $CONFDIR > /dev/null 2>&1
+		touch $SERVICESOK && cat $SERVICES >> $SERVICESOK > /dev/null 2>&1
 		echo ""
 	else
 		echo -e "	${BWHITE}--> Seedbox-Compose installation detected !${NC}"
@@ -183,14 +184,14 @@ function install_letsencrypt() {
 
 function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
-	echo -e "${BWHITE}Nginx, MariaDB, Nextcloud, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !${NC}"
+	echo -e "${BWHITE}Nginx, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !${NC}"
 	echo "--> Choose wich services you want to add (default set to no) : "
 	for app in $(cat includes/config/services-available);
 	do
 		read -p "	* $app ? (y/n) : " SERVICEINSTALL
 		if [[ $SERVICEINSTALL == "y" ]]; then
 			echo -e "		${GREEN}$service will be installed${NC}"
-			echo "${app,,}" >> "$SERVICES"
+			echo "${app,,}" >> "$SERVICESOK"
 		else
 			echo -e "		${RED}$service will not be installed${NC}"
 		fi
@@ -264,7 +265,7 @@ function install_services() {
 	else
 		declare -i PORT=$FIRSTPORT
 	fi
-	for line in $(cat $SERVICES);
+	for line in $(cat $SERVICESOK);
 	do
 		NGINXPROXYFILE="includes/nginxproxy/$line.conf"
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
@@ -281,7 +282,7 @@ function install_services() {
 		echo "$line-$PORT" >> $INSTALLEDFILE
 		PORT=$PORT+1
 	done
-	touch $CONFDIR/services.it && cat $SERVICES >> $CONFDIR/services.it
+	#touch $CONFDIR/services.it && cat $SERVICES >> $CONFDIR/services.it
 	echo $PORT >> $FILEPORTPATH
 }
 
@@ -336,7 +337,7 @@ function create_reverse() {
 		apt-get install nginx -y > /dev/null 2>&1
 		service nginx stop > /dev/null 2>&1
 		read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
-		for line in $(cat $SERVICES);
+		for line in $(cat $SERVICESOK);
 		do
 			if [[ "$line" != "teamspeak" ]]; then
 				FILE=$line.conf
@@ -456,7 +457,7 @@ function resume_seedbox() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 		echo -e "	--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
-		for line in $(cat $SERVICES);
+		for line in $(cat $SERVICESOK);
 		do
 			echo -e "	--> $line from ${YELLOW}$line.$DOMAIN${NC}"
 		done
@@ -479,6 +480,10 @@ function resume_seedbox() {
 		echo -e "	--> Admin password : ${YELLOW}$SERVERADMINPASSWORD${NC}"
 		echo -e "	--> Token : ${YELLOW}$TOKEN${NC}"
 	fi
+	echo -e " ${BWHITE}* Found logs here :${NC}"
+	echo -e "	--> Info Logs : ${YELLOW}$INFOLOGS${NC}"
+	echo -e "	--> Error Logs : ${YELLOW}$ERRORLOGS${NC}"
+
 	mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
 	mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
 }
@@ -513,7 +518,7 @@ function backup_docker_conf() {
 }
 
 function access_token_ts() {
-	grep -R "teamspeak" "$SERVICES"
+	grep -R "teamspeak" "$SERVICESOK"
 	if [[ "$?" == "0" ]]; then
 		TSIDFILE="/home/$SEEDUSER/dockers/teamspeak/id.txt"
 		TOUCH $TSIDFILE
