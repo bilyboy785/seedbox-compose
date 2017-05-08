@@ -350,9 +350,9 @@ function create_reverse() {
 						echo -e "		${BWHITE}--> Generating LE certificate files for $line.$DOMAIN, please wait...${NC}"
 						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
 						if [[ "$?" == "0" ]]; then
-							echo -e "	${GREEN}* Certificate generation OK !${NC}"
+							echo -e "		${GREEN}* Certificate generation OK !${NC}"
 						else
-							echo -e "	${RED}* Certificate generation failed !${NC}"
+							echo -e "		${RED}* Certificate generation failed !${NC}"
 						fi
 					else
 						echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
@@ -360,9 +360,9 @@ function create_reverse() {
 						echo -e "		${BWHITE}--> Replacing domain name in sites-enabled...${NC}"
 						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
 						if [[ "$?" == "0" ]]; then
-							echo -e "	${GREEN}* Certificate generation OK !${NC}"
+							echo -e "		${GREEN}* Certificate generation OK !${NC}"
 						else
-							echo -e "	${RED}* Certificate generation failed !${NC}"
+							echo -e "		${RED}* Certificate generation failed !${NC}"
 						fi
 					fi
 				;;
@@ -371,9 +371,9 @@ function create_reverse() {
 						echo -e "		${BWHITE}--> Generating LE certificate files for $line.$DOMAIN, please wait...${NC}"
 						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
 						if [[ "$?" == "0" ]]; then
-							echo -e "	${GREEN}* Certificate generation OK !${NC}"
+							echo -e "		${GREEN}* Certificate generation OK !${NC}"
 						else
-							echo -e "	${RED}* Certificate generation failed !${NC}"
+							echo -e "		${RED}* Certificate generation failed !${NC}"
 						fi
 					else
 						echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
@@ -381,9 +381,9 @@ function create_reverse() {
 						echo -e "		${BWHITE}--> Replacing domain name in sites-enabled...${NC}"
 						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
 						if [[ "$?" == "0" ]]; then
-							echo -e "	${GREEN}* Certificate generation OK !${NC}"
+							echo -e "		${GREEN}* Certificate generation OK !${NC}"
 						else
-							echo -e "	${RED}* Certificate generation failed !${NC}"
+							echo -e "		${RED}* Certificate generation failed !${NC}"
 						fi
 					fi
 				;;
