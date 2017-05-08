@@ -89,8 +89,8 @@ function install_base_packages() {
 }
 
 function upgrade_system() {
-	DEBIANSOURCES="includes/sources.list.debian"
-	UBUNTUSOURCES="includes/sources.list.ubuntu"
+	DEBIANSOURCES="includes/sources.list/sources.list.debian"
+	UBUNTUSOURCES="includes/sources.list/sources.list.ubuntu"
 	DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 	SOURCESFOLDER="/etc/apt/sources.list"
 	DEBIANVERSION=$(cat /etc/debian_version | cut -d \. -f1)
