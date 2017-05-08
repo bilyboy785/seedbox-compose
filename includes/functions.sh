@@ -166,7 +166,7 @@ function install_docker() {
 		apt-get install -y docker-engine > /dev/null 2>&1
 		service docker start > /dev/null 2>&1
 		echo " * Installing Docker-compose"
-		curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose > /dev/null 2>&1
+		curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 		chmod +x /usr/local/bin/docker-compose
 		echo ""
 	else
@@ -241,7 +241,6 @@ function define_parameters() {
 	else
 		DOMAIN="localhost"
 	fi
-	echo ""
 }
 
 function add_user_htpasswd() {
@@ -271,7 +270,9 @@ function install_services() {
 	else
 		declare -i PORT=$FIRSTPORT
 	fi
-	read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
+	if [[ "$DOMAIN" != "localhost" ]]; then
+		read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
+	fi
 	for line in $(cat $SERVICESOK);
 	do
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
@@ -295,6 +296,7 @@ function install_services() {
 	done
 	#touch $CONFDIR/services.it && cat $SERVICES >> $CONFDIR/services.it
 	echo $PORT >> $FILEPORTPATH
+	echo ""
 }
 
 function docker_compose() {
