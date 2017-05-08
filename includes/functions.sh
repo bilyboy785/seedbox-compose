@@ -479,6 +479,8 @@ function resume_seedbox() {
 		echo -e "	--> Admin password : ${YELLOW}$SERVERADMINPASSWORD${NC}"
 		echo -e "	--> Token : ${YELLOW}$TOKEN${NC}"
 	fi
+	mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
+	mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
 }
 
 function backup_docker_conf() {
