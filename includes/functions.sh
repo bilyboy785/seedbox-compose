@@ -282,7 +282,7 @@ function install_services() {
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
-			if [[ "$LESSL" == "" -o "$LESSL" == "y" ]]; then
+			if [[ "$LESSL" == "" ]] || [[ "$LESSL" == "y" ]]; then
 				NGINXPROXYFILE="includes/nginxproxyssl/$line.conf"
 			else
 				NGINXPROXYFILE="includes/nginxproxy/$line.conf"
