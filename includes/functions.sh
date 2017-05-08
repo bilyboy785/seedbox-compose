@@ -68,7 +68,8 @@ function conf_dir() {
 	if [[ ! -d "$CONFDIR" ]]; then
 		echo -e "	${BWHITE}--> Seedbox-Compose not detected : Let's get started !${NC}"
 		mkdir $CONFDIR > /dev/null 2>&1
-		touch $SERVICESOK && cat $SERVICES >> $SERVICESOK > /dev/null 2>&1
+		touch $SERVICESOK
+		cat $SERVICES >> $SERVICESOK > /dev/null 2>&1
 		echo ""
 	else
 		echo -e "	${BWHITE}--> Seedbox-Compose installation detected !${NC}"
