@@ -67,7 +67,7 @@ During docker-compose action, i stored your IDs in your **/home/user/dockers/tea
  * [diameter/rtorrent-rutorrent](https://hub.docker.com/r/diameter/rtorrent-rutorrent/)
  * [hotio/radarr](https://hub.docker.com/r/hotio/radarr/)
  * [wonderfall/boring-nginx](https://hub.docker.com/r/wonderfall/boring-nginx/)
+ * [wonderfall/zerobin](https://hub.docker.com/r/Wonderfall/zerobin/)
  * [xataz/lutim](https://hub.docker.com/r/xataz/lutim/)
  * [xataz/lufi](https://hub.docker.com/r/xataz/lufi/)
  * [clue/h5ai](https://hub.docker.com/r/clue/h5ai/)
- * [Wonderfall/zerobin](https://hub.docker.com/r/Wonderfall/zerobin/)
