@@ -18,7 +18,7 @@ function script_option() {
 	echo "This script will help you to make a complete seedbox with Rutorrent, Sonarr, Radarr and Jacket, based on Docker !"
 	echo "Choose an option to launch the script (1, 2...) : "
 	echo ""
-	if [[ ! -d "$CONFDIR" ]]; then
+	if [[ ! -d $CONFDIR ]]; then
 		echo -e "	${BWHITE}[1] - ${GREEN}Install the Seedbox${NC}"
 		echo -e "	${BWHITE}[2] - ${GREEN}Add htaccess user${NC}"
 		echo -e "	${BWHITE}[3] - ${GREEN}Add a docker App${NC}"
