@@ -283,7 +283,7 @@ function install_services() {
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
-			if [[ "$LESSL" == "" ]] || [[ "$LESSL" == "y" ]]; then
+			if [[ "$LESSL" != "n" ]]; then
 				NGINXPROXYFILE="includes/nginxproxyssl/$line.conf"
 			else
 				NGINXPROXYFILE="includes/nginxproxy/$line.conf"
@@ -354,7 +354,7 @@ function create_reverse() {
 				FILE=$line.conf
 				SITEENABLED="$SITEFOLDER$line.conf"
 				echo " --> [$line] - Creating reverse"
-				if [[ "$LESSL" == "" -o "$LESSL" == "y" ]]; then
+				if [[ "$LESSL" != "n" ]]; then
 					REVERSEFOLDER="includes/nginxproxyssl/"
 				else
 					REVERSEFOLDER="includes/nginxproxy/"
