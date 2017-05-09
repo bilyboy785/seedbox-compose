@@ -19,6 +19,7 @@ function script_option() {
 	echo "Choose an option to launch the script (1, 2...) : "
 	echo ""
 	if [[ -d "/etc/seedboxcompose/" ]]; then
+		echo -e "	${BWHITE}[1] - ${GREEN}Seedbox already installed <3${NC}"
 		echo -e "	${BWHITE}[2] - ${GREEN}Add htaccess user${NC}"
 		echo -e "	${BWHITE}[3] - ${GREEN}Delete Htaccess protection${NC}"
 		echo -e "	${BWHITE}[4] - ${GREEN}Add a docker App${NC}"
@@ -94,7 +95,7 @@ function install_base_packages() {
 
 function delete_htaccess() {
 	SITEENABLEDFOLDER="/etc/nginx/sites-enabled/"
-	
+
 }
 function upgrade_system() {
 	DEBIANSOURCES="includes/sources.list/sources.list.debian"
