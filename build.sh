@@ -32,12 +32,12 @@ clear
 if [ $USER = "root" ] ; then
 	## Display script infos 
 	intro
-	## Create conf directory
-	conf_dir
 	## Check option for script lauching
 	script_option
 	case $SCRIPT in
 		"INSTALL")
+			## Create conf directory
+			conf_dir
 	    	if [[ ! -f "/etc/seedboxcompose/seedboxcompose.txt" ]]; then
 			## Install base packages
 			install_base_packages
