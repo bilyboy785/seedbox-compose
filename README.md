@@ -2,26 +2,27 @@
 A docker-compose file to deploy complete Seedbox based only Docker. Install a fresh Debian / Ubuntu Server, install git git-core and docker and use this **Docker-compose.yml** to deploy your Seedbox.
 
 ### Tested on ###
- * [x] Debian 8
- * [x] Ubuntu 16
+ * [x] Debian 8.X
+ * [x] Ubuntu 16.X
  * [ ] CentOS
  
 ## Services availables in this docker-compose
 
-Service                | Status      |   Access
+Service                | Status      |   Default subdomain
 ---------------------- | ----------- | ----------------------
 Nginx                  | Installed   |  /                                              
 Rtorrent/RuTorrent     | Installed   |  rtorrent.domain.tld                  
-Jackett                | Installed   |  jackett.domain.tld                 
-Radarr                 | Installed   |  radarr.domain.tld                  
-Sonarr                 | Installed   |  sonarr.domain.tld                 
+Jackett                | Installed   |  jackett.domain.tld                
 UI for Docker          | Installed   |  docker.domain.tld                  
+Radarr                 | Optional    |  radarr.domain.tld                  
+Sonarr                 | Optional    |  sonarr.domain.tld    
+Sickrage               | Optional    |  sickrage.domain.tld 
+Couchpotato            | Optional    |  couchpotato.domain.tld               
 PlexMediaServer        | Optional    |  plex.domain.tld
 Headphones.            | Optional    |  headphones.domain.tld                  
 PlexPy                 | Optional    |  plexpy.domain.tld                 
 Zerobin                | Optional    |  zerobin.domain.tld                 
-MariaDB                | Optional    |  ---                 
-Nextcloud              | Optional    |  cloud.domain.tld                   
+Teamspeak              | Optional    |  ---                                   
 
 ## Installation
  * First, you need to create DNS entry type A for each service you want to install : **service.domain.tld** (look at the services table)
@@ -37,13 +38,19 @@ cd /root/seedbox-compose
 ```
 
 ## Services configuration
+### Sonarr / Sickrage
+
+### Radarr / Couchpotato
+
+### Jackett
+
 ### Teamspeak
 To access and configure Teamspeak, you need to have the Token Access and ServerAdmin password. There are stored in logs of TS docker. You can access it with :
 ```shell
 docker logs teamspeak
 ```
 
-During docker-compose action, i stored your IDs in your **/home/user/dockers/teamspeak/id.txt**. Check this file before launching Teamspeak.
+During docker-compose action, i stored your IDs in your **/home/user/dockers/teamspeak/idteamspeak**. Check this file before launching Teamspeak.
 
 ## Sources
  * [uifd/ui-for-docker](https://hub.docker.com/r/uifd/ui-for-docker/)
