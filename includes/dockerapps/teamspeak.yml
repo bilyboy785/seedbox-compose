@@ -6,8 +6,8 @@ teamspeak:
   container_name: teamspeak
   net: host
   environment:
-    - PGID=%GID%
-    - PUID=%UID%
+    - PGID=0
+    - PUID=0
   volumes:
     - /etc/localtime:/etc/localtime:ro
     - /home/%USER%/dockers/teamspeak/config:/config
