@@ -74,6 +74,9 @@ if [ $USER = "root" ] ; then
 		"ADDUSER")
 	    	add_user_htpasswd	
 	  	;;
+	  	"DELETEHTACCESS")
+			delete_htaccess
+		;;
 		"ADDDOCKAPP")
 	    	echo ""
 	  	;;

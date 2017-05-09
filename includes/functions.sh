@@ -19,12 +19,12 @@ function script_option() {
 	echo "Choose an option to launch the script (1, 2...) : "
 	echo ""
 	if [[ -d "/etc/seedboxcompose/" ]]; then
-		#echo -e "	${BWHITE}[1] - ${GREEN}Install the Seedbox${NC}"
 		echo -e "	${BWHITE}[2] - ${GREEN}Add htaccess user${NC}"
-		echo -e "	${BWHITE}[3] - ${GREEN}Add a docker App${NC}"
-		echo -e "	${BWHITE}[4] - ${GREEN}Restart all Dockers Apps${NC}"
-		echo -e "	${BWHITE}[5] - ${GREEN}Backup Dockers conf${NC}"
-		echo -e "	${BWHITE}[6] - ${GREEN}Delete and clean all Dockers${NC}"
+		echo -e "	${BWHITE}[3] - ${GREEN}Delete Htaccess protection${NC}"
+		echo -e "	${BWHITE}[4] - ${GREEN}Add a docker App${NC}"
+		echo -e "	${BWHITE}[5] - ${GREEN}Restart all Dockers Apps${NC}"
+		echo -e "	${BWHITE}[6] - ${GREEN}Backup Dockers conf${NC}"
+		echo -e "	${BWHITE}[7] - ${GREEN}Delete and clean all Dockers${NC}"
 	else
 		echo -e "	${BWHITE}[1] - ${GREEN}Install the Seedbox${NC}"
 	fi
@@ -42,21 +42,24 @@ function script_option() {
 	  SCRIPT="ADDUSER"
 	  ;;
 	"3")
+	  SCRIPT="DELETEHTACCESS"
+	  ;;
+	"4")
 	  echo -e "${BLUE}##########################################${NC}"
 	  echo -e "${BLUE}###         ADDING DOCKER APPS         ###${NC}"
 	  echo -e "${BLUE}##########################################${NC}"
 	  SCRIPT="ADDDOCKAPP"
 	  ;;
-	"4")
+	"5")
 	  SCRIPT="RESTARTDOCKER"
 	  echo -e "${BLUE}##########################################${NC}"
 	  echo -e "${BLUE}###       RESTARTING DOCKER APPS       ###${NC}"
 	  echo -e "${BLUE}##########################################${NC}"
 	  ;;
-	"5")
+	"6")
 	   SCRIPT="BACKUPCONF"
 	  ;;
-	"6")
+	"7")
 	  SCRIPT="DELETEDOCKERS"
 	  ;;
 	esac
@@ -89,6 +92,10 @@ function install_base_packages() {
 	fi
 }
 
+function delete_htaccess() {
+	SITEENABLEDFOLDER="/etc/nginx/sites-enabled/"
+	
+}
 function upgrade_system() {
 	DEBIANSOURCES="includes/sources.list/sources.list.debian"
 	UBUNTUSOURCES="includes/sources.list/sources.list.ubuntu"
@@ -315,7 +322,8 @@ function docker_compose() {
 }
 
 function valid_htpasswd() {
-	HTFOLDER="/home/$SEEDUSER/dockers/nginx/conf/"
+	HTFOLDER="/etc/nginx/conf/passwd/"
+	mkdir -p $HTFOLDER
 	HTTEMPFOLDER="/tmp/"
 	HTFILE=".htpasswd"
 	cat $HTTEMPFOLDER$HTFILE >> $HTFOLDER$HTFILE
@@ -429,10 +437,10 @@ function delete_dockers() {
 			read -p "	--> Specify user to delete all his conf files : " SEEDUSER
 		fi
 		DOCKERFOLDER="/home/$SEEDUSER/dockers/"
-		echo " * Deleting user..."
+		echo "		* Deleting user..."
 		userdel $SEEDUSER
 		if [[ -d "$DOCKERFOLDER" ]]; then
-			echo " * Deleting files..."
+			echo "		* Deleting files..."
 			rm $DOCKERFOLDER -R
 			rm $CONFDIR -R
 		fi

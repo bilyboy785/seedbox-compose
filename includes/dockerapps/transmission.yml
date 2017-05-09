@@ -1,0 +1,18 @@
+
+#Transmission
+transmission:
+  restart: always
+  image: linuxserver/transmission
+  container_name: transmission
+  environment:
+    - PGID=%GID%
+    - PUID=%UID%
+    - TZ=%TIMEZONE%
+  ports:
+    - %PORT%:9091
+    - 51413:51413
+    - 51413:51413/udp
+  volumes:
+    - /home/%USER%/dockers/transmission/config:/config
+    - /home/%USER%/downloads:/downloads
+    - /home/%USER%/dockers/transmission/watch:/watch
