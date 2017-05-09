@@ -538,7 +538,9 @@ function access_token_ts() {
 			echo "Admin Username : serveradmin" >> $TSIDFILE
 			echo "Admin password : $SERVERADMINPASSWORD" >> $TSIDFILE
 			echo "Token : $TOKEN" >> $TSIDFILE
-			cat $TSIDFILE
+			echo -e "	--> ${YELLOW}Admin username : serveradmin${NC}"
+			echo -e "	--> ${YELLOW}Admin password : $SERVERADMINPASSWORD${NC}"
+			echo -e "	--> ${YELLOW}Token : $TOKEN${NC}"
 		else
 			echo -e "	--> Check teamspeak's Logs with ${BWHITE}docker logs teamspeak${NC}"
 		fi
