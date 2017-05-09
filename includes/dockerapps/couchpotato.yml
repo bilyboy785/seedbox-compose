@@ -1,0 +1,16 @@
+
+#Couchpotato
+couchpotato:
+  restart: always
+  image: linuxserver/couchpotato
+  container_name: couchpotato
+  environment:
+    - PUID=%UID%
+    - PGID=%GID%
+    - TZ=%TIMEZONE%
+  ports:
+    - %PORT%:5050
+  volumes:
+    - /home/%USER%/dockers/couchpotato/config:/config
+    - /home/%USER%/downloads/movies:/downloads
+    - /home/%USER%/downloads/medias/movies:/movies
