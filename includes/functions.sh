@@ -20,10 +20,10 @@ function script_option() {
 	echo ""
 	if [[ -d "/etc/seedboxcompose/" ]]; then
 		echo -e "	${BWHITE}[1] - ${GREEN}Seedbox already installed <3${NC}"
-		echo -e "	${BWHITE}[2] - ${GREEN}New htaccess user${NC}"
+		echo -e "	${BWHITE}[2] - ${GREEN}New htaccess user (Same Dockers)${NC}"
 		echo -e "	${BWHITE}[3] - ${GREEN}Delete htaccess protection${NC}"
-		echo -e "	${BWHITE}[4] - ${GREEN}Add docker application${NC}"
-		echo -e "	${BWHITE}[5] - ${GREEN}Add new user (new dockers app)${NC}"
+		echo -e "	${BWHITE}[4] - ${GREEN}Add docker applications${NC}"
+		echo -e "	${BWHITE}[5] - ${GREEN}Add new user${NC}"
 		echo -e "	${BWHITE}[6] - ${GREEN}Restart all dockers application${NC}"
 		echo -e "	${BWHITE}[7] - ${GREEN}Backup Dockers conf (/home/username/${NC}"
 		echo -e "	${BWHITE}[8] - ${GREEN}Delete and clean all Dockers${NC}"
@@ -52,7 +52,7 @@ function script_option() {
 	  echo -e "${BLUE}##########################################${NC}"
 	  SCRIPT="ADDDOCKAPP"
 	  ;;
-	"4")
+	"5")
 	  echo -e "${BLUE}##########################################${NC}"
 	  echo -e "${BLUE}###          ADDING NEW USER           ###${NC}"
 	  echo -e "${BLUE}##########################################${NC}"
@@ -533,7 +533,7 @@ function resume_seedbox() {
 
 function backup_docker_conf() {
 	BACKUPDIR="/var/archives/"
-	BACKUPNAME="backup-seedboxcompose-$SEEDUSER"
+	BACKUPNAME="backup-seedboxcompose-$SEEDUSER-"
 	echo ""
 	BACKUP="$BACKUPDIR$BACKUPNAME$BACKUPDATE.tar.gz"
 	echo -e "${BLUE}##########################################${NC}"
