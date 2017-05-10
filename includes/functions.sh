@@ -321,10 +321,11 @@ function install_services() {
 
 function docker_compose() {
 	echo -e "${BLUE}### DOCKERCOMPOSE ###${NC}"
+	cd /etc/seedboxcompose/
 	echo " * Starting docker..."
 	service docker restart
 	echo " * Docker-composing, it may take a long..."
-	docker-compose up -d -f $DOCKERCOMPOSEFILE > /dev/null 2>&1
+	docker-compose up -d > /dev/null 2>&1
 	echo -e "	${BWHITE}--> Docker-compose ok !${NC}"
 	echo ""
 }
@@ -427,8 +428,10 @@ function create_reverse() {
 		service nginx restart > /dev/null 2>&1
 	fi
 	USERDIR="/home/$SEEDUSER"
-	chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R
-	chmod 777 $USERDIR/downloads/{medias,movies,tv} -R
+	if [[ -d "$USERDIR" ]]; then
+		chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R > /dev/null 2>&1
+		chmod 777 $USERDIR/downloads/{medias,movies,tv} -R > /dev/null 2>&1
+	fi
 }
 
 function new_seedbox_user() {
@@ -530,7 +533,7 @@ function resume_seedbox() {
 
 function backup_docker_conf() {
 	BACKUPDIR="/var/archives/"
-	BACKUPNAME="backup-seedboxcompose-"
+	BACKUPNAME="backup-seedboxcompose-$SEEDUSER"
 	echo ""
 	BACKUP="$BACKUPDIR$BACKUPNAME$BACKUPDATE.tar.gz"
 	echo -e "${BLUE}##########################################${NC}"
