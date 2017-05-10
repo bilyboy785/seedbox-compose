@@ -74,7 +74,6 @@ function conf_dir() {
 		mkdir $CONFDIR > /dev/null 2>&1
 		touch $SERVICESOK
 		cat $SERVICES >> $SERVICESOK
-		echo ""
 	else
 		echo -e "	${BWHITE}--> Seedbox-Compose installation detected !${NC}"
 		echo ""
