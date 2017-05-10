@@ -20,12 +20,13 @@ function script_option() {
 	echo ""
 	if [[ -d "/etc/seedboxcompose/" ]]; then
 		echo -e "	${BWHITE}[1] - ${GREEN}Seedbox already installed <3${NC}"
-		echo -e "	${BWHITE}[2] - ${GREEN}Add htaccess user${NC}"
-		echo -e "	${BWHITE}[3] - ${GREEN}Delete Htaccess protection${NC}"
-		echo -e "	${BWHITE}[4] - ${GREEN}Add a docker App${NC}"
-		echo -e "	${BWHITE}[5] - ${GREEN}Restart all Dockers Apps${NC}"
-		echo -e "	${BWHITE}[6] - ${GREEN}Backup Dockers conf${NC}"
-		echo -e "	${BWHITE}[7] - ${GREEN}Delete and clean all Dockers${NC}"
+		echo -e "	${BWHITE}[2] - ${GREEN}New htaccess user${NC}"
+		echo -e "	${BWHITE}[3] - ${GREEN}Delete htaccess protection${NC}"
+		echo -e "	${BWHITE}[4] - ${GREEN}Add docker application${NC}"
+		echo -e "	${BWHITE}[5] - ${GREEN}Add new user (new dockers app)${NC}"
+		echo -e "	${BWHITE}[6] - ${GREEN}Restart all dockers application${NC}"
+		echo -e "	${BWHITE}[7] - ${GREEN}Backup Dockers conf (/home/username/${NC}"
+		echo -e "	${BWHITE}[8] - ${GREEN}Delete and clean all Dockers${NC}"
 	else
 		echo -e "	${BWHITE}[1] - ${GREEN}Install the Seedbox${NC}"
 	fi
@@ -51,16 +52,22 @@ function script_option() {
 	  echo -e "${BLUE}##########################################${NC}"
 	  SCRIPT="ADDDOCKAPP"
 	  ;;
-	"5")
+	"4")
+	  echo -e "${BLUE}##########################################${NC}"
+	  echo -e "${BLUE}###          ADDING NEW USER           ###${NC}"
+	  echo -e "${BLUE}##########################################${NC}"
+	  SCRIPT="NEWSEEDBOXUSER"
+	  ;;
+	"6")
 	  SCRIPT="RESTARTDOCKER"
 	  echo -e "${BLUE}##########################################${NC}"
 	  echo -e "${BLUE}###       RESTARTING DOCKER APPS       ###${NC}"
 	  echo -e "${BLUE}##########################################${NC}"
 	  ;;
-	"6")
+	"7")
 	   SCRIPT="BACKUPCONF"
 	  ;;
-	"7")
+	"8")
 	  SCRIPT="DELETEDOCKERS"
 	  ;;
 	esac
