@@ -171,6 +171,12 @@ function base_packages() {
 	echo ""
 }
 
+function new_seedbox_user() {
+	echo -e "${BLUE}### ADD NEW SEEDBOX USER ###${NC}"
+	
+	grep -R "teamspeak" "$SERVICESOK" > /dev/null
+}
+
 function install_docker() {
 	echo -e "${BLUE}### DOCKER ###${NC}"
 	dpkg-query -l docker > /dev/null 2>&1
@@ -258,7 +264,7 @@ function define_parameters() {
 }
 
 function add_user_htpasswd() {
-	HTFOLDER="/dockers/nginx/conf/"
+	HTFOLDER="/etc/nginx/conf/passwd/"
 	HTTEMPFOLDER="/tmp/"
 	HTFILE=".htpasswd"
 	if [[ $1 == "" ]]; then
@@ -289,6 +295,7 @@ function install_services() {
 	fi
 	for line in $(cat $SERVICESOK);
 	do
+		REVERSEPROXYNGINX="/etc/nginx/sites-enabled/$line.conf"
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
@@ -299,11 +306,13 @@ function install_services() {
 		if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
 			if [[ "$LESSL" != "n" ]]; then
 				NGINXPROXYFILE="includes/nginxproxyssl/$line.conf"
+				cat $NGINXPROXYFILE >> $REVERSEPROXYNGINX
 			else
 				NGINXPROXYFILE="includes/nginxproxy/$line.conf"
+				cat $NGINXPROXYFILE >> $REVERSEPROXYNGINX
 			fi
-			sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXPROXYFILE
-			sed -i "s|%PORT%|$PORT|g" $NGINXPROXYFILE
+			sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $REVERSEPROXYNGINX
+			sed -i "s|%PORT%|$PORT|g" $REVERSEPROXYNGINX
 		fi
 		echo "$line-$PORT" >> $INSTALLEDFILE
 		PORT=$PORT+1
