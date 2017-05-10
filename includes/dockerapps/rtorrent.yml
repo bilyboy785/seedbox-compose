@@ -1,9 +1,9 @@
 
 #RuTorrent-rTorrent
-rutorrent:
+rutorrent-%USER%:
   restart: always
   image: diameter/rtorrent-rutorrent
-  container_name: rutorrent
+  container_name: rutorrent-%USER%
   environment:
     - USR_ID=%UID%
     - GRP_ID=%GID%

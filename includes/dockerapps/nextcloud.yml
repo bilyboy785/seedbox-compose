@@ -1,9 +1,9 @@
 
 #Nextcloud
-nextcloud:
+nextcloud-%USER%:
   restart: always
   image: linuxserver/nextcloud
-  container_name: nextcloud
+  container_name: nextcloud-%USER%
   environment:
     - PUID=%UID%
     - PGID=%GID%

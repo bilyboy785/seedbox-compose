@@ -1,9 +1,9 @@
 
 #Transmission
-transmission:
+transmission-%USER%:
   restart: always
   image: linuxserver/transmission
-  container_name: transmission
+  container_name: transmission-%USER%
   environment:
     - PGID=%GID%
     - PUID=%UID%

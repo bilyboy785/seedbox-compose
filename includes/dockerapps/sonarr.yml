@@ -1,9 +1,9 @@
 
 #Sonarr
-sonarr:
+sonarr-%USER%:
   restart: always
   image: linuxserver/sonarr
-  container_name: sonarr
+  container_name: sonarr-%USER%
   environment:
     - PUID=%UID%
     - PGID=%GID%

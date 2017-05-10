@@ -1,8 +1,8 @@
 #Nginx
-nginx:
+nginx-%USER%:
   restart: always
   image: wonderfall/boring-nginx
-  container_name: nginx
+  container_name: nginx-%USER%
   ports:
     - "80:8000"
     - "443:4430"

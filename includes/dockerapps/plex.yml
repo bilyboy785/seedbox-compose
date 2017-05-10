@@ -1,9 +1,9 @@
 
 #Plex
-plex:
+plex-%USER%:
   restart: always
   image: linuxserver/plex
-  container_name: plex
+  container_name: plex-%USER%
   environment:
     - VERSION=latest
     - PUID=%UID%

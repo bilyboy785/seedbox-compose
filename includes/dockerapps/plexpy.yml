@@ -1,9 +1,9 @@
 
 #PlexPy
-plexpy:
+plexpy-%USER%:
   restart: always
   image: linuxserver/plexpy
-  container_name: plexpy
+  container_name: plexpy-%USER%
   environment:
     - PGID=%UID%
     - PUID=%GID%

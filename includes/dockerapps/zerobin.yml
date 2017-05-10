@@ -1,9 +1,9 @@
 
 #Zerobin
-zerobin:
+zerobin-%USER%:
   restart: always
   image: wonderfall/zerobin
-  container_name: zerobin
+  container_name: zerobin-%USER%
   environment:
     - UID=%UID%
     - GID=%GID%

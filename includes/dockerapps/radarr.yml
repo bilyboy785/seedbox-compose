@@ -1,9 +1,9 @@
 
 #Radarr
-radarr:
+radarr-%USER%:
   restart: always
   image: hotio/radarr
-  container_name: radarr
+  container_name: radarr-%USER%
   environment:
     - PUID=%UID%
     - PGID=%GID%

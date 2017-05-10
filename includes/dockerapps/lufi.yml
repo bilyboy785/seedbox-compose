@@ -1,9 +1,9 @@
 
 #Lufi
-lufi:
+lufi-%USER%:
   restart: always
   image: xataz/lufi
-  container_name: lufi
+  container_name: lufi-%USER%
   environment:
     - UID=%UID%
     - GID=%GID%

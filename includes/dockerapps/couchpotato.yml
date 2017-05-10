@@ -1,9 +1,9 @@
 
 #Couchpotato
-couchpotato:
+couchpotato-%USER%:
   restart: always
   image: linuxserver/couchpotato
-  container_name: couchpotato
+  container_name: couchpotato-%USER%
   environment:
     - PUID=%UID%
     - PGID=%GID%

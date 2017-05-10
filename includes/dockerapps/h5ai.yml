@@ -1,9 +1,9 @@
 
 #H5AI
-h5ai:
+h5ai-%USER%:
   restart: always
   image: clue/h5ai
-  container_name: h5ai
+  container_name: h5ai-%USER%
   ports:
     - %PORT%:80
   volumes:

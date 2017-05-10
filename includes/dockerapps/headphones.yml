@@ -1,9 +1,9 @@
 
 #Headphones
-headphones:
+headphones-%USER%:
   restart: always
   image: linuxserver/headphones
-  container_name: headphones
+  container_name: headphones-%USER%
   environment: 
     - PGID=%GID%
     - PUID=%UID%

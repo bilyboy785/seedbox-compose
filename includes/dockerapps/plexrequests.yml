@@ -1,9 +1,9 @@
 
 #PlexRequests
-plexrequests:
+plexrequests-%USER%:
   restart: always
   image: linuxserver/plexrequests
-  container_name: plexrequests
+  container_name: plexrequests-%USER%
   environment:
     - PGID=%GID%
     - PUID=%UID%

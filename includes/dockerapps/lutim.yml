@@ -1,9 +1,9 @@
 
 #Lutim
-lutim:
+lutim-%USER%:
   restart: always
   image: xataz/lutim
-  container_name: lutim
+  container_name: lutim-%USER%
   environment:
     - UID=%UID%
     - GID=%GID%

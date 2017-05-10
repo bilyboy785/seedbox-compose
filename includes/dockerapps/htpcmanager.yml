@@ -1,9 +1,9 @@
 
 #Manager
-manager:
+manager-%USER%:
   restart: always
   image: linuxserver/htpcmanager
-  container_name: manager
+  container_name: manager-%USER%
   environment:
     - PGID=%GID%
     - PUID=%UID%

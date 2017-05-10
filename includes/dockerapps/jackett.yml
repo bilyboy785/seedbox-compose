@@ -1,9 +1,9 @@
 
 #Jackett
-jackett:
+jackett-%USER%:
   restart: always
   image : linuxserver/jackett
-  container_name: jackett
+  container_name: jackett-%USER%
   environment:
     - PGID=%UID%
     - PUID=%GID%

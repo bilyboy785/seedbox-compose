@@ -1,9 +1,9 @@
 
 #TeamSpeak
-teamspeak:
+teamspeak-%USER%:
   restart: always
   image: linuxserver/gsm-ts3
-  container_name: teamspeak
+  container_name: teamspeak-%USER%
   net: host
   environment:
     - PGID=0

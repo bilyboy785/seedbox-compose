@@ -311,6 +311,7 @@ function install_services() {
 			fi
 			sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $REVERSEPROXYNGINX
 			sed -i "s|%PORT%|$PORT|g" $REVERSEPROXYNGINX
+			sed -i "s|%USER%|$SEEDUSER|g" $REVERSEPROXYNGINX
 		fi
 		echo "$line-$PORT" >> $INSTALLEDFILE
 		PORT=$PORT+1

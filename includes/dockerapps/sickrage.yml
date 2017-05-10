@@ -1,9 +1,9 @@
 
 #SIckrage
-sickrage:
+sickrage-%USER%:
   restart: always
   image: linuxserver/sickrage
-  container_name: sickrage
+  container_name: sickrage-%USER%
   environment:
     - PUID=%UID%
     - PGID=%GID%
