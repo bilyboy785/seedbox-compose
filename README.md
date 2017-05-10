@@ -53,7 +53,7 @@ docker logs teamspeak
 During docker-compose action, i stored your IDs in your **/home/user/dockers/teamspeak/idteamspeak**. Check this file before launching Teamspeak.
 
 ## Sources
- * [uifd/ui-for-docker](https://hub.docker.com/r/uifd/ui-for-docker/)
+ * [portainer/portainer](https://hub.docker.com/r/portainer/portainer/)
  * [linuxserver/gsm-ts3](https://hub.docker.com/r/linuxserver/gsm-ts3/)
  * [Linuxserver/PlexRequests](https://hub.docker.com/r/linuxserver/plexrequests/)
  * [linuxserver/sonarr](https://hub.docker.com/r/linuxserver/sonarr/)
