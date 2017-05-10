@@ -72,21 +72,24 @@ if [ $USER = "root" ] ; then
 	    	fi
 	  	;;
 		"ADDUSER")
-	    	add_user_htpasswd	
+	    		add_user_htpasswd	
 	  	;;
 	  	"DELETEHTACCESS")
 			delete_htaccess
 		;;
 		"ADDDOCKAPP")
-	    	echo ""
+	    		echo ""
 	  	;;
+		"NEWSEEDBOXUSER")
+			new_seedbox_user
+		;;
 		"RESTARTDOCKER")
-	    	restart_docker_apps
+	    		restart_docker_apps
 	  	;;
 		"DELETEDOCKERS")
-	    	delete_dockers
+	    		delete_dockers
 	  	;;
 		"BACKUPCONF")
-	    	backup_docker_conf
+	    		backup_docker_conf
 	esac
 fi
