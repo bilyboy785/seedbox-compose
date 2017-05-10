@@ -101,7 +101,6 @@ function install_base_packages() {
 
 function delete_htaccess() {
 	SITEENABLEDFOLDER="/etc/nginx/sites-enabled/"
-
 }
 function upgrade_system() {
 	DEBIANSOURCES="includes/sources.list/sources.list.debian"
@@ -171,12 +170,6 @@ function base_packages() {
 	echo ""
 }
 
-function new_seedbox_user() {
-	echo -e "${BLUE}### ADD NEW SEEDBOX USER ###${NC}"
-	
-	grep -R "teamspeak" "$SERVICESOK" > /dev/null
-}
-
 function install_docker() {
 	echo -e "${BLUE}### DOCKER ###${NC}"
 	dpkg-query -l docker > /dev/null 2>&1
@@ -210,7 +203,7 @@ function install_letsencrypt() {
 
 function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
-	echo -e "${BWHITE}Nginx, RuTorrent/rTorrent, Sonarr, Radarr, Jackett and Docker WebUI will be installed by default !${NC}"
+	echo -e "${BWHITE}Nginx, Jackett and Docker WebUI will be installed by default !${NC}"
 	echo "--> Choose wich services you want to add (default set to no) : "
 	for app in $(cat includes/config/services-available);
 	do
@@ -223,6 +216,11 @@ function choose_services() {
 		fi
 	done
 	echo ""
+}
+
+function new_seedbox_user() {
+	echo -e "${BLUE}### ADD NEW SEEDBOX USER ###${NC}"
+	grep -R "teamspeak" "$SERVICESOK" > /dev/null
 }
 
 function define_parameters() {
