@@ -1,9 +1,9 @@
 
-#UI For Docker
-ui-for-docker:
+#Portainer
+portainer:
   restart: always
-  image: uifd/ui-for-docker
-  container_name: ui-for-docker
+  image: portainer/portainer
+  container_name: portainer
   ports:
     - %PORT%:9000
   volumes:
