@@ -102,6 +102,7 @@ function install_base_packages() {
 function delete_htaccess() {
 	SITEENABLEDFOLDER="/etc/nginx/sites-enabled/"
 }
+
 function upgrade_system() {
 	DEBIANSOURCES="includes/sources.list/sources.list.debian"
 	UBUNTUSOURCES="includes/sources.list/sources.list.ubuntu"
@@ -218,15 +219,27 @@ function choose_services() {
 	echo ""
 }
 
-function new_seedbox_user() {
-	echo -e "${BLUE}### ADD NEW SEEDBOX USER ###${NC}"
-	grep -R "teamspeak" "$SERVICESOK" > /dev/null
-}
-
 function define_parameters() {
 	echo -e "${BLUE}### USER INFORMATIONS ###${NC}"
 	USEDOMAIN="y"
 	CURRTIMEZONE=$(cat /etc/timezone)
+	create_user
+	read -p " * Please specify your Timezone (default $CURRTIMEZONE) : " TIMEZONEDEF
+	if [[ $TIMEZONEDEF == "" ]]; then
+		TIMEZONE=$CURRTIMEZONE
+	else
+		TIMEZONE=$TIMEZONEDEF
+	fi
+	read -p " * Please enter an email address : " CONTACTEMAIL
+	read -p " * Do you want to use a domain to access services ? (default yes) [y/n] : " USEDOMAIN
+	if [[ "$USEDOMAIN" == "y" ]]; then
+		read -p "	--> Enter your domain name : " DOMAIN
+	else
+		DOMAIN="localhost"
+	fi
+}
+
+function create_user() {
 	read -p " * Create new user : " SEEDUSER
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
@@ -246,19 +259,6 @@ function define_parameters() {
 		GRPID=$(id -g $SEEDUSER)
 	fi
 	add_user_htpasswd $SEEDUSER $PASSWORD
-	read -p " * Please specify your Timezone (default $CURRTIMEZONE) : " TIMEZONEDEF
-	if [[ $TIMEZONEDEF == "" ]]; then
-		TIMEZONE=$CURRTIMEZONE
-	else
-		TIMEZONE=$TIMEZONEDEF
-	fi
-	read -p " * Please enter an email address : " CONTACTEMAIL
-	read -p " * Do you want to use a domain to access services ? (default yes) [y/n] : " USEDOMAIN
-	if [[ "$USEDOMAIN" == "y" ]]; then
-		read -p "	--> Enter your domain name : " DOMAIN
-	else
-		DOMAIN="localhost"
-	fi
 }
 
 function add_user_htpasswd() {
@@ -282,7 +282,7 @@ function add_user_htpasswd() {
 }
 
 function install_services() {
-	touch $INSTALLEDFILE
+	touch $INSTALLEDFILE > /dev/null 2>&1
 	if [[ -f "$FILEPORTPATH" ]]; then
 		declare -i PORT=$(cat $FILEPORTPATH | tail -1)
 	else
@@ -293,7 +293,7 @@ function install_services() {
 	fi
 	for line in $(cat $SERVICESOK);
 	do
-		REVERSEPROXYNGINX="/etc/nginx/sites-enabled/$line.conf"
+		REVERSEPROXYNGINX="/etc/nginx/sites-enabled/$line.$SEEDUSER.conf"
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
@@ -315,22 +315,16 @@ function install_services() {
 		echo "$line-$PORT" >> $INSTALLEDFILE
 		PORT=$PORT+1
 	done
-	#touch $CONFDIR/services.it && cat $SERVICES >> $CONFDIR/services.it
 	echo $PORT >> $FILEPORTPATH
 	echo ""
 }
 
 function docker_compose() {
 	echo -e "${BLUE}### DOCKERCOMPOSE ###${NC}"
-	echo " * Backing up docker-compose file to $CONFDIR"
-	DOCKERCOMPOSEBACKUP="/etc/seedboxcompose/docker-compose.yml"
-	DOCKERCOMPOSEFILE="docker-compose.yml"
-	touch $DOCKERCOMPOSEBACKUP
-	cat $DOCKERCOMPOSEFILE >> $DOCKERCOMPOSEBACKUP
 	echo " * Starting docker..."
 	service docker restart
 	echo " * Docker-composing, it may take a long..."
-	docker-compose up -d > /dev/null 2>&1
+	docker-compose up -d -f $DOCKERCOMPOSEFILE > /dev/null 2>&1
 	echo -e "	${BWHITE}--> Docker-compose ok !${NC}"
 	echo ""
 }
@@ -435,6 +429,18 @@ function create_reverse() {
 	USERDIR="/home/$SEEDUSER"
 	chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R
 	chmod 777 $USERDIR/downloads/{medias,movies,tv} -R
+}
+
+function new_seedbox_user() {
+	echo -e "${BLUE}### NEW SEEDBOX USER ###${NC}"
+	define_parameters
+	choose_services
+	install_services
+	docker_compose
+	create_reverse
+	valid_htpasswd
+	resume_seedbox
+	backup_docker_conf
 }
 
 function delete_dockers() {
