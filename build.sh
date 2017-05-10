@@ -49,10 +49,10 @@ if [ $USER = "root" ] ; then
 			base_packages
 			## Check for LetsEncrypt packages on system
 			install_letsencrypt
-			## Choose wich services install
-			choose_services
 			## Defines parameters for dockers : password, domains and replace it in docker-compose file
 			define_parameters
+			## Choose wich services install
+			choose_services
 			## Update docker-compose file
 			install_services
 			## Generate dockers apps running in background
