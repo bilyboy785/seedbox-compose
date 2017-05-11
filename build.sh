@@ -70,8 +70,9 @@ if [ $USER = "root" ] ; then
 			## Display Teamspeak IDs
 			access_token_ts
 	    	else
+			clear
 			echo -e " ${RED}--> Seedbox-Compose already installed !${NC}"
-	    		exit 1
+	    		script_option
 	    	fi
 	  	;;
 		"ADDUSER")
