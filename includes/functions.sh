@@ -28,9 +28,7 @@ function script_option() {
 		"7" "Disable htaccess protection" \
 		"8" "Delete and clean dockers"  3>&1 1>&2 2>&3)
 	echo ""
-	read -p "	Your choice : " CHOICE
-	echo ""
-	case $CHOICE in
+	case $ACTION in
 	"1")
 	  echo -e "${BLUE}##########################################${NC}"
 	  echo -e "${BLUE}###    INSTALLING SEEDBOX-COMPOSE      ###${NC}"
