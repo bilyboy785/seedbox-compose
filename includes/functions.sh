@@ -208,15 +208,15 @@ function choose_services() {
 	echo " Choose wich services you want to add (default no) [y/n] : "
 	for app in $(cat includes/config/services-available);
 	do
-		service=$(echo $app | cut -d\# -f1)
-		desc=$(echo $app | cut -d\# -f2)
+		service=$(echo $app | cut -d\- -f1)
+		desc=$(echo $app | cut -d\- -f2)
 		echo "$app $desc off" >> /tmp/outputmenu.txt
 	done
 	dialog --checklist "Select services to install :" 22 60 20 \
 	$(cat /tmp/outputmenu.txt) 2>/tmp/outputselectedapp.txt
 	for dockerapp in $(cat /tmp/outputselectedapp.txt)
 	do
-		echo ${service,,} >> $SERVICESOK
+		echo ${service,,} >> "$SERVICESOK"
 	done
 	echo ""
 }
