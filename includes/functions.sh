@@ -79,7 +79,7 @@ function conf_dir() {
 function install_base_packages() {
 	echo ""
 	{
-	    while $FINISHINSTALL != "ok"; do
+	    while [[ "$FINISHINSTALL" != "ok" ]]; do
 	    	apt-get install -y gawk apache2-utils htop unzip dialog git apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 			FINISHINSTALL="ok"
 	    done
