@@ -259,8 +259,9 @@ function create_user() {
 		read -s -p " * Enter password : " PASSWORD
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 		useradd -m -p $PASS $SEEDUSER > /dev/null 2>&1
-		if [[ $? -eq 0 ]]; then 
-			echo "User has been added to system !"
+		if [[ $? -eq 0 ]]; then
+			echo ""
+			echo -e "	--> ${GREEN}User has been added to system !${NC}"
 		else
 			echo "Failed to add a user !"
 		fi
