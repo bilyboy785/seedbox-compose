@@ -1,14 +1,22 @@
-TeamSpeak
+#Movies Automation
 Radarr
 Couchpotato
+#Shows Automation
 Sonarr
 Sickrage
+#Musics Automation
+Headphones
+#Torrent Client
 Rtorrent
 Transmission
-H5ai
-Headphones
+#Seedbox Manager
 HTPCManager
+#Media Server
 Plex
 PlexPy
 PlexRequests
+#Web
+H5ai
+#Utilities
+TeamSpeak
 ZeroBin
