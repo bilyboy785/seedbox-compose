@@ -18,21 +18,15 @@ function script_option() {
 	echo "This script will help you to make a complete seedbox based on Docker !"
 	echo "Choose an option to launch the script (1, 2...) : "
 	echo ""
-	if [[ -d "/etc/seedboxcompose/" ]]; then
-		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 18 60 9 \
-			"1" "Install Seedbox-Compose" \
-			"2" "New seedbox user" \
-			"3" "New htaccess user" \
-			"4" "New application for user X" \
-			"5" "Restart all dockers" \
-			"6" "Backup dockers configuration" \
-			"7" "Disable htaccess protection" \
-			"8" "Delete and clean dockers"  3>&1 1>&2 2>&3)
-		echo $ACTION
-		exit 1
-	else
-		echo -e "	${BWHITE}[1] - ${GREEN}Install the Seedbox${NC}"
-	fi
+	ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 18 60 9 \
+		"1" "Install Seedbox-Compose" \
+		"2" "New seedbox user" \
+		"3" "New htaccess user" \
+		"4" "New application for user X" \
+		"5" "Restart all dockers" \
+		"6" "Backup dockers configuration" \
+		"7" "Disable htaccess protection" \
+		"8" "Delete and clean dockers"  3>&1 1>&2 2>&3)
 	echo ""
 	read -p "	Your choice : " CHOICE
 	echo ""
