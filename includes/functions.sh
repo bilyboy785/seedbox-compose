@@ -243,7 +243,7 @@ function create_user() {
 function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
 	echo -e "${BWHITE}Nginx, Jackett and Portainer will be installed by default !${NC}"
-	echo "	Services wich will be installed : "
+	echo " --> Services wich will be installed : "
 	for app in $(cat includes/config/services-available);
 	do
 		service=$(echo $app | cut -d\- -f1)
@@ -257,10 +257,9 @@ function choose_services() {
 	cat $SERVICES >> $SERVICESUSER
 	for APPDOCKER in $SERVICESTOINSTALL
 	do
-		echo -e "		${BLUE}* $(echo $APPDOCKER | tr -d '"')${NC}"
+		echo -e "	${BLUE}* $(echo $APPDOCKER | tr -d '"')${NC}"
 		echo $(echo ${APPDOCKER,,} | tr -d '"') >> $SERVICESUSER
 	done
-	echo ""
 }
 
 function add_user_htpasswd() {
