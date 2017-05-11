@@ -225,8 +225,8 @@ function define_parameters() {
 	CURRTIMEZONE=$(cat /etc/timezone)
 	create_user
 	TIMEZONEDEF=$(whiptail --title "Timezone" --textbox \
-	"Please enter your timezone :" 20 50 \
-	$CURRTIMEZONE 3>&1 1>&2 2>&3)
+	"Please enter your timezone (default : $CURRTIMEZONE)" 20 50 \
+	3>&1 1>&2 2>&3)
 	if [[ $TIMEZONEDEF == "" ]]; then
 		TIMEZONE=$CURRTIMEZONE
 	else
@@ -246,14 +246,17 @@ function define_parameters() {
 }
 
 function create_user() {
-	read -p " * Create new user : " SEEDUSER
+	SEEDUSER=$(whiptail --title "New user" --textbox \
+				"Please enter a username :" 20 50 \
+				3>&1 1>&2 2>&3)
+	PASSWORD=$(whiptail --title "New user" --passwordbox \
+				"Please enter a password :" 20 50 \
+				3>&1 1>&2 2>&3)
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
-		read -s -p " * Enter password : " PASSWORD
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
 	else
-		read -s -p " * Enter password : " PASSWORD
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 		useradd -m -p $PASS $SEEDUSER > /dev/null 2>&1
 		if [[ $? -eq 0 ]]; then
