@@ -216,7 +216,10 @@ function choose_services() {
 	$(cat /tmp/outputmenu.txt) 2>/tmp/outputselectedapp.txt
 	for dockerapp in $(cat /tmp/outputselectedapp.txt)
 	do
-		echo ${service,,} >> "$SERVICESOK"
+		if [[ "$dockerapp" != "#" ]]; then
+			dockerapp=$(echo $app | cut -d\- -f1)
+			echo ${dockerapp,,} >> "$SERVICESOK"
+		fi
 	done
 	echo ""
 }
