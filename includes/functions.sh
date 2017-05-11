@@ -80,7 +80,7 @@ function install_base_packages() {
 	echo ""
 	echo -e "${BLUE}### INSTALL BASE PACKAGES ###${NC}"
 	echo " * Installing apache2-utils, unzip, git, curl ..."
-	apt-get install -y gawk apache2-utils htop unzip dialog git apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1 | debconf-apt-progress
+	apt-get install -y gawk apache2-utils htop unzip dialog git apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 	if [[ $? = 0 ]]; then
 		echo -e "	${BWHITE}--> Packages installation done !${NC}"
 	else
