@@ -210,7 +210,7 @@ function choose_services() {
 	do
 		service=$(echo $app | cut -d\- -f1)
 		desc=$(echo $app | cut -d\- -f2)
-		echo "$app $desc off" >> /tmp/outputmenu.txt
+		echo "$service $desc off" >> /tmp/outputmenu.txt
 	done
 	dialog --checklist "Select services to install :" 22 60 20 \
 	$(cat /tmp/outputmenu.txt) 2>/tmp/outputselectedapp.txt
