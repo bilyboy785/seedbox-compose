@@ -213,13 +213,13 @@ function choose_services() {
 		fi
 		if [[ ${app:0:1} != "#" ]]; then
 			declare -i num=1
-			echo "		--> [$num] - $app : "
-			read
-			if [[ $SERVICEINSTALL == "y" ]] && [[ ${app:0:1} != "#" ]]; then
-				echo -e "		${GREEN}$app will be installed${NC}"
-				echo "${app,,}" >> $SERVICESOK
+			echo "		--> $app : "
+			read -p "		* Choose your app : " SERVICEINSTALL
+			if [[ ${app:0:1} != "#" ]]; then
+				echo -e "		${GREEN}$SERVICEINSTALL will be installed${NC}"
+				echo "${SERVICEINSTALL,,}" >> $SERVICESOK
 			else
-				echo -e "		${RED}$app will not be installed${NC}"
+				echo -e "		${RED}$SERVICEINSTALL will not be installed${NC}"
 			fi
 		fi
 		num=$num+1
