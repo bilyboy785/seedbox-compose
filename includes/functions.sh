@@ -191,33 +191,13 @@ function install_letsencrypt() {
 	fi
 }
 
-function choose_services() {
-	echo -e "${BLUE}### SERVICES ###${NC}"
-	echo -e "${BWHITE}Nginx, Jackett and Docker WebUI will be installed by default !${NC}"
-	echo " Choose wich services you want to add (default no) [y/n] : "
-	for app in $(cat includes/config/services-available);
-	do
-		service=$(echo $app | cut -d\- -f1)
-		desc=$(echo $app | cut -d\- -f2)
-		echo "$service $desc off" >> /tmp/menuservices.txt
-	done
-	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
-	"Please select services you want to add for $SEEDUSER" 25 50 15 \
-	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
-	for APPDOCKER in $SERVICESTOINSTALL
-	do
-		echo "${servicetoinstall,,}" >> "$SERVICESOK"
-	done
-	echo ""
-}
-
 function define_parameters() {
 	echo -e "${BLUE}### USER INFORMATIONS ###${NC}"
 	USEDOMAIN="y"
 	CURRTIMEZONE=$(cat /etc/timezone)
 	create_user
 	TIMEZONEDEF=$(whiptail --title "Timezone" --inputbox \
-	"Please enter your timezone (default : $CURRTIMEZONE)" 7 50 \
+	"Please enter your timezone (default : $CURRTIMEZONE)" 7 66 \
 	3>&1 1>&2 2>&3)
 	if [[ $TIMEZONEDEF == "" ]]; then
 		TIMEZONE=$CURRTIMEZONE
@@ -252,15 +232,34 @@ function create_user() {
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 		useradd -m -p $PASS $SEEDUSER > /dev/null 2>&1
 		if [[ $? -eq 0 ]]; then
-			echo ""
-			echo -e "	${GREEN}--> User has been added to system !${NC}"
+			echo -e "${GREEN}--> User has been added to system !${NC}"
 		else
-			echo -e "	${RED}--> Failed to add a user !${NC}"
+			echo -e "${RED}--> Failed to add a user !${NC}"
 		fi
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
 	fi
 	add_user_htpasswd $SEEDUSER $PASSWORD
+}
+
+function choose_services() {
+	echo -e "${BLUE}### SERVICES ###${NC}"
+	echo -e "${BWHITE}Nginx, Jackett and Docker WebUI will be installed by default !${NC}"
+	echo " Choose wich services you want to add (default no) [y/n] : "
+	for app in $(cat includes/config/services-available);
+	do
+		service=$(echo $app | cut -d\- -f1)
+		desc=$(echo $app | cut -d\- -f2)
+		echo "$service $desc off" >> /tmp/menuservices.txt
+	done
+	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
+	"Please select services you want to add for $SEEDUSER" 25 50 15 \
+	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
+	for APPDOCKER in $SERVICESTOINSTALL
+	do
+		echo "${servicetoinstall,,}" >> "$SERVICESOK"
+	done
+	echo ""
 }
 
 function add_user_htpasswd() {
