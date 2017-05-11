@@ -34,9 +34,9 @@ if [ $USER = "root" ] ; then
 	intro
 	## Check option for script lauching
 	script_option
-	case $SCRIPT in
-		"INSTALL")
-	    	if [[ ! -f "/etc/seedboxcompose/seedboxcompose.txt" ]]; then
+	case $ACTION in
+		"1")
+	    	if [[ ! -d "/etc/seedboxcompose/" ]]; then
 			conf_dir
 			## Install base packages
 			install_base_packages
@@ -67,6 +67,7 @@ if [ $USER = "root" ] ; then
 			## Display Teamspeak IDs
 			access_token_ts
 	    	else
+			echo -e " ${RED}--> Seedbox-Compose already installed !${NC}"
 	    		exit 1
 	    	fi
 	  	;;
