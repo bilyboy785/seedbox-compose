@@ -224,7 +224,7 @@ function define_parameters() {
 	USEDOMAIN="y"
 	CURRTIMEZONE=$(cat /etc/timezone)
 	create_user
-	TIMEZONEDEF=$(whiptail --title "Timezone" --textbox \
+	TIMEZONEDEF=$(whiptail --title "Timezone" --inputbox \
 	"Please enter your timezone (default : $CURRTIMEZONE)" 20 30 \
 	3>&1 1>&2 2>&3)
 	if [[ $TIMEZONEDEF == "" ]]; then
@@ -232,11 +232,11 @@ function define_parameters() {
 	else
 		TIMEZONE=$TIMEZONEDEF
 	fi
-	CONTACTEMAIL=$(whiptail --title "Email address" --textbox \
+	CONTACTEMAIL=$(whiptail --title "Email address" --inputbox \
 	"Please enter your email address :" 20 30 \
 	3>&1 1>&2 2>&3)
 	if (whiptail --title "Use domain name" --yesno "Do you want to use a domain to join your apps ?" 10 50) then
-		DOMAIN=$(whiptail --title "Your domain name" --textbox \
+		DOMAIN=$(whiptail --title "Your domain name" --inputbox \
 		"Please enter your domain :" 20 30 \
 		3>&1 1>&2 2>&3)
 	else
@@ -246,7 +246,7 @@ function define_parameters() {
 }
 
 function create_user() {
-	SEEDUSER=$(whiptail --title "Username" --textbox \
+	SEEDUSER=$(whiptail --title "Username" --inputbox \
 		"Please enter a username :" 10 50 \
 		3>&1 1>&2 2>&3)
 	PASSWORD=$(whiptail --title "Password" --passwordbox \
