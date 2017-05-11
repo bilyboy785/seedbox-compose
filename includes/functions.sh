@@ -224,16 +224,21 @@ function define_parameters() {
 	USEDOMAIN="y"
 	CURRTIMEZONE=$(cat /etc/timezone)
 	create_user
-	read -p " * Please specify your Timezone (default $CURRTIMEZONE) : " TIMEZONEDEF
+	TIMEZONEDEF=$(whiptail --title "Timezone" --textbox \
+	"Please enter your timezone :" 20 50 \
+	$CURRTIMEZONE 3>&1 1>&2 2>&3)
 	if [[ $TIMEZONEDEF == "" ]]; then
 		TIMEZONE=$CURRTIMEZONE
 	else
 		TIMEZONE=$TIMEZONEDEF
 	fi
-	read -p " * Please enter an email address : " CONTACTEMAIL
-	read -p " * Do you want to use a domain to access services ? (default yes) [y/n] : " USEDOMAIN
-	if [[ "$USEDOMAIN" == "y" ]]; then
-		read -p "	--> Enter your domain name : " DOMAIN
+	CONTACTEMAIL=$(whiptail --title "Email address" --textbox \
+	"Please enter your email address :" 20 50 \
+	3>&1 1>&2 2>&3)
+	if (whiptail --title "Use domain name" --yesno "Do you want to use a domain to join your apps ?" 10 50) then
+		DOMAIN=$(whiptail --title "Your domain name" --textbox \
+		"Please enter your domain :" 20 50 \
+		3>&1 1>&2 2>&3)
 	else
 		DOMAIN="localhost"
 	fi
