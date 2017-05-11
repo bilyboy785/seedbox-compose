@@ -209,7 +209,7 @@ function choose_services() {
 	for app in $(cat includes/config/services-available);
 	do
 		if [[ ${app:0:1} == "#" ]]; then
-			echo "	* ${BLUE}$app${NC}"
+			echo -e "	* ${BLUE}$app${NC}"
 		fi
 		if [[ ${app:0:1} != "#" ]]; then
 			read -p "		--> $app" SERVICEINSTALL
@@ -242,6 +242,7 @@ function define_parameters() {
 	else
 		DOMAIN="localhost"
 	fi
+	echo ""
 }
 
 function create_user() {
