@@ -14,10 +14,10 @@ function intro() {
 	echo -e ""
 }
 function script_option() {
-	echo -e "${BLUE}### WELCOME TO SEEDBOX-COMPOSE ###${NC}"
-	echo "This script will help you to make a complete seedbox based on Docker !"
-	echo "Choose an option to launch the script (1, 2...) : "
-	echo ""
+	#echo -e "${BLUE}### WELCOME TO SEEDBOX-COMPOSE ###${NC}"
+	#echo "This script will help you to make a complete seedbox based on Docker !"
+	#echo "Choose an option to launch the script (1, 2...) : "
+	#echo ""
 	ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 18 60 9 \
 		"1" "Install Seedbox-Compose" \
 		"2" "New seedbox user" \
