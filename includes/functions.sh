@@ -202,9 +202,12 @@ function choose_services() {
 		echo "$service $desc off" >> /tmp/menuservices.txt
 	done
 	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
-	"Please select services you want to add for $SEEDUSER" 40 50 20 \
+	"Please select services you want to add for $SEEDUSER" 30 50 18 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
-	echo $SERVICESTOINSTALL
+	for APPDOCKER in $SERVICESTOINSTALL
+	do
+		echo $APPDOCKER
+	done
 	exit 1
 	for dockerapp in $(cat /tmp/outputselectedapp.txt)
 	do
