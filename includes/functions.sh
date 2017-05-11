@@ -19,11 +19,11 @@ function script_option() {
 	echo "Choose an option to launch the script (1, 2...) : "
 	echo ""
 	if [[ -d "/etc/seedboxcompose/" ]]; then
-		ACTION=$(dialog --radiolist "Choose an action :" 22 60 20 \
-			"1" "New seedbox user" off \
-			"2" "Restart all dockers" off \
-			"3" "Backup dockers configuration" off \
-			"4" "Delete and clean dockers" off)
+		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Choose an action" 15 60 4 \
+			"1" "New seedbox user" \
+			"2" "Restart all dockers" \
+			"3" "Backup dockers configuration" \
+			"4" "Delete and clean dockers"  3>&1 1>&2 2>&3)
 		echo $ACTION
 		exit 1
 		$(cat /tmp/outputmenu.txt) 2>/tmp/outputselectedapp.txt
