@@ -19,22 +19,17 @@ function script_option() {
 	echo "Choose an option to launch the script (1, 2...) : "
 	echo ""
 	if [[ -d "/etc/seedboxcompose/" ]]; then
-		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Choose an action" 15 60 4 \
-			"1" "New seedbox user" \
-			"2" "Restart all dockers" \
-			"3" "Backup dockers configuration" \
-			"4" "Delete and clean dockers"  3>&1 1>&2 2>&3)
+		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 15 60 4 \
+			"1" "Seedbox already installed" \
+			"2" "New seedbox user" \
+			"3" "New htaccess user" \
+			"4" "New application for user X" \
+			"5" "Restart all dockers" \
+			"6" "Backup dockers configuration" \
+			"7" "Disable htaccess protection" \
+			"8" "Delete and clean dockers"  3>&1 1>&2 2>&3)
 		echo $ACTION
 		exit 1
-		$(cat /tmp/outputmenu.txt) 2>/tmp/outputselectedapp.txt
-		echo -e "	${BWHITE}[1] - ${GREEN}Seedbox already installed <3${NC}"
-		echo -e "	${BWHITE}[2] - ${GREEN}New htaccess user (Same Dockers)${NC}"
-		echo -e "	${BWHITE}[3] - ${GREEN}Delete htaccess protection${NC}"
-		echo -e "	${BWHITE}[4] - ${GREEN}Add docker applications${NC}"
-		echo -e "	${BWHITE}[5] - ${GREEN}Add new user${NC}"
-		echo -e "	${BWHITE}[6] - ${GREEN}Restart all dockers application${NC}"
-		echo -e "	${BWHITE}[7] - ${GREEN}Backup Dockers conf (/home/username/${NC}"
-		echo -e "	${BWHITE}[8] - ${GREEN}Delete and clean all Dockers${NC}"
 	else
 		echo -e "	${BWHITE}[1] - ${GREEN}Install the Seedbox${NC}"
 	fi
