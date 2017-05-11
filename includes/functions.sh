@@ -20,7 +20,7 @@ function script_option() {
 	echo ""
 	if [[ -d "/etc/seedboxcompose/" ]]; then
 		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 18 60 9 \
-			"1" "Seedbox already installed" \
+			"1" "Install Seedbox-Compose" \
 			"2" "New seedbox user" \
 			"3" "New htaccess user" \
 			"4" "New application for user X" \
