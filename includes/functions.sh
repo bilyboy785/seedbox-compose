@@ -208,19 +208,15 @@ function choose_services() {
 	echo " Choose wich services you want to add (default no) [y/n] : "
 	for app in $(cat includes/config/services-available);
 	do
-		if [[ ${app:0:1} == "#" ]]; then
-			echo -e "	* ${BLUE}$app${NC}"
-		elif [[ ${app:0:1} != "#" ]]; then
-			declare -i num=1
-			echo -e "		--> $app"
-			#if [[ ${app:0:1} != "#" ]]; then
-			#	echo -e "		${GREEN}$SERVICEINSTALL will be installed${NC}"
-			#	echo "${SERVICEINSTALL,,}" >> $SERVICESOK
-			#else
-			#	echo -e "		${RED}$SERVICEINSTALL will not be installed${NC}"
-			#fi
-		fi
-		num=$num+1
+		service=$(echo $app | cut -d\# -f1)
+		desc=$(echo $app | cut -d\# -f2)
+		echo "$app $desc off" >> /tmp/outputmenu.txt
+	done
+	dialog --checklist "Select services to install :" 22 60 20 \
+	$(cat /tmp/outputmenu.txt) 2>/tmp/outputselectedapp.txt
+	for dockerapp in $(cat /tmp/outputselectedapp.txt)
+	do
+		echo ${service,,} >> $SERVICESOK
 	done
 	echo ""
 }
@@ -259,9 +255,9 @@ function create_user() {
 		useradd -m -p $PASS $SEEDUSER > /dev/null 2>&1
 		if [[ $? -eq 0 ]]; then
 			echo ""
-			echo -e "	--> ${GREEN}User has been added to system !${NC}"
+			echo -e "	${GREEN}--> User has been added to system !${NC}"
 		else
-			echo "Failed to add a user !"
+			echo -e "	${RED}--> Failed to add a user !${NC}"
 		fi
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
