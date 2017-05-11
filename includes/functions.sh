@@ -225,7 +225,7 @@ function define_parameters() {
 	CURRTIMEZONE=$(cat /etc/timezone)
 	create_user
 	TIMEZONEDEF=$(whiptail --title "Timezone" --textbox \
-	"Please enter your timezone (default : $CURRTIMEZONE)" 20 50 \
+	"Please enter your timezone (default : $CURRTIMEZONE)" 20 30 \
 	3>&1 1>&2 2>&3)
 	if [[ $TIMEZONEDEF == "" ]]; then
 		TIMEZONE=$CURRTIMEZONE
@@ -233,11 +233,11 @@ function define_parameters() {
 		TIMEZONE=$TIMEZONEDEF
 	fi
 	CONTACTEMAIL=$(whiptail --title "Email address" --textbox \
-	"Please enter your email address :" 20 50 \
+	"Please enter your email address :" 20 30 \
 	3>&1 1>&2 2>&3)
 	if (whiptail --title "Use domain name" --yesno "Do you want to use a domain to join your apps ?" 10 50) then
 		DOMAIN=$(whiptail --title "Your domain name" --textbox \
-		"Please enter your domain :" 20 50 \
+		"Please enter your domain :" 20 30 \
 		3>&1 1>&2 2>&3)
 	else
 		DOMAIN="localhost"
@@ -246,11 +246,11 @@ function define_parameters() {
 }
 
 function create_user() {
-	SEEDUSER=$(whiptail --title "New user" --textbox \
-				"Please enter a username :" 20 50 \
+	SEEDUSER=$(whiptail --title "Username" --textbox \
+				"Please enter a username :" 20 30 \
 				3>&1 1>&2 2>&3)
-	PASSWORD=$(whiptail --title "New user" --passwordbox \
-				"Please enter a password :" 20 50 \
+	PASSWORD=$(whiptail --title "Password" --passwordbox \
+				"Please enter a password :" 20 30 \
 				3>&1 1>&2 2>&3)
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
