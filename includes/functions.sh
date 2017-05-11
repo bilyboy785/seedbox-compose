@@ -71,8 +71,6 @@ function conf_dir() {
 	if [[ ! -d "$CONFDIR" ]]; then
 		#echo -e "	${BWHITE}--> Seedbox-Compose not detected : Let's get started !${NC}"
 		mkdir $CONFDIR > /dev/null 2>&1
-		touch $SERVICESOK
-		cat $SERVICES >> $SERVICESOK
 	fi
 }
 
@@ -244,8 +242,8 @@ function create_user() {
 
 function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
-	echo -e "${BWHITE}Nginx, Jackett and Docker WebUI will be installed by default !${NC}"
-	echo " Choose wich services you want to add (default no) [y/n] : "
+	echo -e "${BWHITE}Nginx, Jackett and Portainer will be installed by default !${NC}"
+	echo "	Services wich will be installed : "
 	for app in $(cat includes/config/services-available);
 	do
 		service=$(echo $app | cut -d\- -f1)
@@ -255,9 +253,12 @@ function choose_services() {
 	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
 	"Please select services you want to add for $SEEDUSER" 25 50 15 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
+	touch $SERVICESOK
+	cat $SERVICES >> $SERVICESOK
 	for APPDOCKER in $SERVICESTOINSTALL
 	do
-		echo "${servicetoinstall,,}" >> "$SERVICESOK"
+		echo "		${BLUE}* $APPDOCKER${NC}"
+		echo "${APPDOCKER,,}" >> "$SERVICESOK"
 	done
 	echo ""
 }

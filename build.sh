@@ -31,7 +31,7 @@ clear
 
 if [ $USER = "root" ] ; then
 	## Display script infos 
-	intro
+	## intro
 	## Check option for script lauching
 	script_option
 	case $SCRIPT in
