@@ -34,9 +34,12 @@ if [ $USER = "root" ] ; then
 	intro
 	## Check option for script lauching
 	script_option
-	case $ACTION in
+	case $SCRIPT in
 		"INSTALL")
 	    	if [[ ! -d "/etc/seedboxcompose/" ]]; then
+	  		echo -e "${BLUE}##########################################${NC}"
+	  		echo -e "${BLUE}###    INSTALLING SEEDBOX-COMPOSE      ###${NC}"
+	  		echo -e "${BLUE}##########################################${NC}"
 			conf_dir
 			## Install base packages
 			install_base_packages
