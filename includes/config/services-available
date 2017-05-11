@@ -1,17 +1,17 @@
-#Movies Automation
+#Movies-Automation
 Radarr
 Couchpotato
-#Shows Automation
+#Shows-Automation
 Sonarr
 Sickrage
-#Musics Automation
+#Musics-Automation
 Headphones
-#Torrent Client
+#Torrent-Client
 Rtorrent
 Transmission
-#Seedbox Manager
+#Seedbox-Manager
 HTPCManager
-#Media Server
+#Media-Server
 Plex
 PlexPy
 PlexRequests
