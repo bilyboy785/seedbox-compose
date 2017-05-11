@@ -79,7 +79,7 @@ function conf_dir() {
 function install_base_packages() {
 	echo ""
 	{
-	    for ((i = 0 ; i <= 100 ; i+=20)); do
+	    for ((i = 0 ; i <= 100 ; i+=2)); do
 	    	apt-get install -y gawk apache2-utils htop unzip dialog git apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 		sleep 1
 		echo $i
