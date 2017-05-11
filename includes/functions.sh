@@ -247,11 +247,11 @@ function define_parameters() {
 
 function create_user() {
 	SEEDUSER=$(whiptail --title "Username" --textbox \
-				"Please enter a username :" 20 30 \
-				3>&1 1>&2 2>&3)
+		"Please enter a username :" 10 50 \
+		3>&1 1>&2 2>&3)
 	PASSWORD=$(whiptail --title "Password" --passwordbox \
-				"Please enter a password :" 20 30 \
-				3>&1 1>&2 2>&3)
+		"Please enter a password :" 10 50 \
+		3>&1 1>&2 2>&3)
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
 		USERID=$(id -u $SEEDUSER)
