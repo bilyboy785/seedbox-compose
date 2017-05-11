@@ -206,11 +206,13 @@ function choose_services() {
 	do
 		service=$(echo $app | cut -d\- -f1)
 		desc=$(echo $app | cut -d\- -f2)
-		echo "$service $desc off" >> /tmp/outputmenu.txt
+		echo "$service $desc off" >> /tmp/menuservices.txt
 	done
-	dialog --checklist "Select services to install :" 22 60 20 \
-	$(cat /tmp/outputmenu.txt) 2>/tmp/outputselectedapp.txt
-	cat /tmp/outputselectedapp.txt
+	SERVICESTOINSTALL=$(whiptail --title "Services manager" --radiolist \
+	"Please select services you want to add for $SEEDUSER" 22 60 20 \
+	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
+	echo $SERVICESTOINSTALL
+	exit 1
 	for dockerapp in $(cat /tmp/outputselectedapp.txt)
 	do
 		if [[ "$dockerapp" != "#" ]]; then
