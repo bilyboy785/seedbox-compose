@@ -206,15 +206,20 @@ function install_letsencrypt() {
 function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
 	echo -e "${BWHITE}Nginx, Jackett and Docker WebUI will be installed by default !${NC}"
-	echo "--> Choose wich services you want to add (default set to no) : "
+	echo " Choose wich services you want to add (default set to no) : "
 	for app in $(cat includes/config/services-available);
 	do
-		read -p "	* $app ? (y/n) : " SERVICEINSTALL
+		if [[ ${app:0:1} == "#" ]]; then
+			echo "	* ${BLUE}$app${NC}"
+		fi
+		if [[ ${app:0:1} != "#" ]]; then
+			read -p "		--> $app" SERVICEINSTALL
+		fi
 		if [[ $SERVICEINSTALL == "y" ]]; then
-			echo -e "		${GREEN}$service will be installed${NC}"
+			echo -e "		${GREEN}$app will be installed${NC}"
 			echo "${app,,}" >> $SERVICESOK
 		else
-			echo -e "		${RED}$service will not be installed${NC}"
+			echo -e "		${RED}$app will not be installed${NC}"
 		fi
 	done
 	echo ""
