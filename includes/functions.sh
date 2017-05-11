@@ -15,7 +15,7 @@ function intro() {
 }
 function script_option() {
 	echo -e "${BLUE}### WELCOME TO SEEDBOX-COMPOSE ###${NC}"
-	echo "This script will help you to make a complete seedbox with Rutorrent, Sonarr, Radarr and Jacket, based on Docker !"
+	echo "This script will help you to make a complete seedbox based on Docker !"
 	echo "Choose an option to launch the script (1, 2...) : "
 	echo ""
 	if [[ -d "/etc/seedboxcompose/" ]]; then
