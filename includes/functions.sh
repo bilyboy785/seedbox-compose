@@ -214,6 +214,7 @@ function choose_services() {
 	done
 	dialog --checklist "Select services to install :" 22 60 20 \
 	$(cat /tmp/outputmenu.txt) 2>/tmp/outputselectedapp.txt
+	cat /tmp/outputselectedapp.txt
 	for dockerapp in $(cat /tmp/outputselectedapp.txt)
 	do
 		if [[ "$dockerapp" != "#" ]]; then
