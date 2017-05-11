@@ -30,9 +30,6 @@ function script_option() {
 	echo ""
 	case $ACTION in
 	"1")
-	  echo -e "${BLUE}##########################################${NC}"
-	  echo -e "${BLUE}###    INSTALLING SEEDBOX-COMPOSE      ###${NC}"
-	  echo -e "${BLUE}##########################################${NC}"
 	  SCRIPT="INSTALL"
 	  ;;
 	"2")
