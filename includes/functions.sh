@@ -208,8 +208,8 @@ function choose_services() {
 		desc=$(echo $app | cut -d\- -f2)
 		echo "$service $desc off" >> /tmp/menuservices.txt
 	done
-	SERVICESTOINSTALL=$(whiptail --title "Services manager" --radiolist \
-	"Please select services you want to add for $SEEDUSER" 22 60 20 \
+	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
+	"Please select services you want to add for $SEEDUSER" 40 50 20 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
 	echo $SERVICESTOINSTALL
 	exit 1
