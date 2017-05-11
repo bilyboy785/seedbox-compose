@@ -206,15 +206,7 @@ function choose_services() {
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
 	for APPDOCKER in $SERVICESTOINSTALL
 	do
-		echo $(echo $APPDOCKER | tr -d "\"")
-	done
-	exit 1
-	for dockerapp in $(cat /tmp/outputselectedapp.txt)
-	do
-		if [[ "$dockerapp" != "#" ]]; then
-			servicetoinstall=$(echo $app | cut -d\  -f1)
-			echo ${servicetoinstall,,} >> "$SERVICESOK"
-		fi
+		echo "${servicetoinstall,,}" >> "$SERVICESOK"
 	done
 	echo ""
 }
@@ -225,7 +217,7 @@ function define_parameters() {
 	CURRTIMEZONE=$(cat /etc/timezone)
 	create_user
 	TIMEZONEDEF=$(whiptail --title "Timezone" --inputbox \
-	"Please enter your timezone (default : $CURRTIMEZONE)" 20 30 \
+	"Please enter your timezone (default : $CURRTIMEZONE)" 7 50 \
 	3>&1 1>&2 2>&3)
 	if [[ $TIMEZONEDEF == "" ]]; then
 		TIMEZONE=$CURRTIMEZONE
@@ -233,11 +225,11 @@ function define_parameters() {
 		TIMEZONE=$TIMEZONEDEF
 	fi
 	CONTACTEMAIL=$(whiptail --title "Email address" --inputbox \
-	"Please enter your email address :" 20 30 \
+	"Please enter your email address :" 7 50 \
 	3>&1 1>&2 2>&3)
-	if (whiptail --title "Use domain name" --yesno "Do you want to use a domain to join your apps ?" 10 50) then
+	if (whiptail --title "Use domain name" --yesno "Do you want to use a domain to join your apps ?" 7 50) then
 		DOMAIN=$(whiptail --title "Your domain name" --inputbox \
-		"Please enter your domain :" 20 30 \
+		"Please enter your domain :" 7 50 \
 		3>&1 1>&2 2>&3)
 	else
 		DOMAIN="localhost"
@@ -247,10 +239,10 @@ function define_parameters() {
 
 function create_user() {
 	SEEDUSER=$(whiptail --title "Username" --inputbox \
-		"Please enter a username :" 10 50 \
+		"Please enter a username :" 7 50 \
 		3>&1 1>&2 2>&3)
 	PASSWORD=$(whiptail --title "Password" --passwordbox \
-		"Please enter a password :" 10 50 \
+		"Please enter a password :" 7 50 \
 		3>&1 1>&2 2>&3)
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
