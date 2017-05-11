@@ -78,9 +78,16 @@ function conf_dir() {
 
 function install_base_packages() {
 	echo ""
-	echo -e "${BLUE}### INSTALL BASE PACKAGES ###${NC}"
-	echo " * Installing apache2-utils, unzip, git, curl ..."
-	apt-get install -y gawk apache2-utils htop unzip dialog git apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
+	{
+	    for ((i = 0 ; i <= 100 ; i+=20)); do
+	    	apt-get install -y gawk apache2-utils htop unzip dialog git apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
+		sleep 1
+		echo $i
+	    done
+	} | whiptail --gauge "Please wait during packages installation..." 6 60 0
+	#echo -e "${BLUE}### INSTALL BASE PACKAGES ###${NC}"
+	#echo " * Installing apache2-utils, unzip, git, curl ..."
+	#apt-get install -y gawk apache2-utils htop unzip dialog git apt-transport-https ca-certificates curl gnupg2 software-properties-common > /dev/null 2>&1
 	if [[ $? = 0 ]]; then
 		echo -e "	${BWHITE}--> Packages installation done !${NC}"
 	else
