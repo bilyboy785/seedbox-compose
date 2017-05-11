@@ -19,6 +19,14 @@ function script_option() {
 	echo "Choose an option to launch the script (1, 2...) : "
 	echo ""
 	if [[ -d "/etc/seedboxcompose/" ]]; then
+		ACTION=$(dialog --radiolist "Choose an action :" 22 60 20 \
+			"New seedbox user" off \
+			"Restart all dockers" off \
+			"Backup dockers configuration" off \
+			"Delete and clean dockers" off)
+		echo $ACTION
+		exit 1
+		$(cat /tmp/outputmenu.txt) 2>/tmp/outputselectedapp.txt
 		echo -e "	${BWHITE}[1] - ${GREEN}Seedbox already installed <3${NC}"
 		echo -e "	${BWHITE}[2] - ${GREEN}New htaccess user (Same Dockers)${NC}"
 		echo -e "	${BWHITE}[3] - ${GREEN}Delete htaccess protection${NC}"
