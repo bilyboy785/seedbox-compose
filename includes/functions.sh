@@ -215,7 +215,7 @@ function choose_services() {
 		if [[ ${app:0:1} != "#" ]]; then
 			read -p "		--> $app" SERVICEINSTALL
 		fi
-		if [[ $SERVICEINSTALL == "y" ]]; then
+		if [[ $SERVICEINSTALL == "y" ]] && [[ ${app:0:1} != "#" ]]; then
 			echo -e "		${GREEN}$app will be installed${NC}"
 			echo "${app,,}" >> $SERVICESOK
 		else
