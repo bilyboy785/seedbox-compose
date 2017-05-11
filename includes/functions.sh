@@ -217,8 +217,8 @@ function choose_services() {
 	for dockerapp in $(cat /tmp/outputselectedapp.txt)
 	do
 		if [[ "$dockerapp" != "#" ]]; then
-			dockerapp=$(echo $app | cut -d\- -f1)
-			echo ${dockerapp,,} >> "$SERVICESOK"
+			servicetoinstall=$(echo $app | cut -d\  -f1)
+			echo ${servicetoinstall,,} >> "$SERVICESOK"
 		fi
 	done
 	echo ""
