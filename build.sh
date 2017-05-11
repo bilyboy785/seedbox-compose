@@ -20,7 +20,7 @@ CONFDIR="/etc/seedboxcompose"
 DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 SERVICESAVAILABLE="includes/config/services-available"
 SERVICES="includes/config/services"
-SERVICESOK="/etc/seedboxcompose/services-$SEEDUSER"
+SERVICESUSER="/etc/seedboxcompose/services$SEEDUSER"
 FILEPORTPATH="/etc/seedboxcompose/ports.pt"
 INSTALLEDFILE="/etc/seedboxcompose/installed.ok"
 DOCKERCOMPOSEFILE="/etc/seedboxcompose/docker-compose.yml"
@@ -43,7 +43,7 @@ if [ $USER = "root" ] ; then
 			conf_dir
 			## Install base packages
 			install_base_packages
-		    	## Upgrading system
+		    ## Upgrading system
 			upgrade_system
 			## Check for docker on system
 			install_docker

@@ -253,12 +253,12 @@ function choose_services() {
 	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
 	"Please select services you want to add for $SEEDUSER" 25 50 15 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
-	touch $SERVICESOK
-	cat $SERVICES >> $SERVICESOK
+	touch $SERVICESUSER
+	cat $SERVICES >> $SERVICESUSER
 	for APPDOCKER in $SERVICESTOINSTALL
 	do
-		echo "		${BLUE}* $APPDOCKER${NC}"
-		echo "${APPDOCKER,,}" >> "$SERVICESOK"
+		echo -e "		${BLUE}* $APPDOCKER${NC}"
+		echo ${APPDOCKER,,} >> $SERVICESUSER
 	done
 	echo ""
 }
@@ -293,7 +293,7 @@ function install_services() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
 	fi
-	for line in $(cat $SERVICESOK);
+	for line in $(cat $SERVICESUSER);
 	do
 		REVERSEPROXYNGINX="/etc/nginx/sites-enabled/$line.$SEEDUSER.conf"
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
@@ -368,7 +368,7 @@ function create_reverse() {
 		echo " * Installing Nginx"
 		apt-get install nginx -y > /dev/null 2>&1
 		service nginx stop > /dev/null 2>&1
-		for line in $(cat $SERVICESOK);
+		for line in $(cat $SERVICESUSER);
 		do
 			if [[ "$line" != "teamspeak" ]]; then
 				FILE=$line.conf
@@ -509,7 +509,7 @@ function resume_seedbox() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 		echo -e "	--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
-		for line in $(cat $SERVICESOK);
+		for line in $(cat $SERVICESUSER);
 		do
 			echo -e "	--> $line from ${YELLOW}$line.$DOMAIN${NC}"
 		done
@@ -564,7 +564,7 @@ function backup_docker_conf() {
 }
 
 function access_token_ts() {
-	grep -R "teamspeak" "$SERVICESOK" > /dev/null
+	grep -R "teamspeak" "$SERVICESUSER" > /dev/null
 	if [[ "$?" == "0" ]]; then
 		read -p " * Do you want create a file with your Teamspeak password and Token ? (default no) [y/n] : " SHOWTSTOKEN
 		if [[ "$SHOWTSTOKEN" == "y" ]]; then
