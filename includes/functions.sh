@@ -329,7 +329,7 @@ function docker_compose() {
 	cd /etc/seedboxcompose/
 	echo " * Starting docker..."
 	service docker restart
-	echo " * Docker-composing, it may take a long..."
+	echo " * Docker-composing, it may takes a long..."
 	docker-compose up -d > /dev/null 2>&1
 	echo -e "	${BWHITE}--> Docker-compose ok !${NC}"
 	echo ""
