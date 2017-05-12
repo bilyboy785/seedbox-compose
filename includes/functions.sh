@@ -615,6 +615,7 @@ function schedule_backup_seedbox() {
 		echo -e "	${BWHITE}* For $SEEDUSER ${NC}"
 		echo -e "	${BWHITE}* Cron job : $SCHEDULEBACKUP${NC}"
 		echo ""
+		rm $TMPCRONFILE
 	else
 		echo -e " ${YELLOW}* Please install Seedbox for $SEEDUSER before backup${NC}"
 		echo ""
