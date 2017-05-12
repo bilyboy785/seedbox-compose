@@ -1,68 +1,60 @@
 #!/bin/bash
-function intro() {
-	echo ""
-	echo -e "${BLUE}###############################################################"
-	echo -e "###                                                         ###"
-	echo -e "###                     SEEDBOX-COMPOSE                     ###"
-	echo -e "###       Deploy a complete Seedbox with Docker easily      ###"
-	echo -e "###                  Author : bilyboy785                    ###"
-	echo -e "###                  Version : 1.0                          ###"
-	echo -e "###         Publication date : 2017-03-26                   ###"
-	echo -e "###            Update date : 2017-03-27                     ###"
-	echo -e "###                                                         ###"
-	echo -e "###############################################################${NC}"
-	echo -e ""
-}
 function script_option() {
 	#echo -e "${BLUE}### WELCOME TO SEEDBOX-COMPOSE ###${NC}"
 	#echo "This script will help you to make a complete seedbox based on Docker !"
 	#echo "Choose an option to launch the script (1, 2...) : "
 	#echo ""
-	ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 18 60 9 \
-		"1" "Install Seedbox-Compose" \
-		"2" "New seedbox user" \
-		"3" "New htaccess user" \
-		"4" "New application for user X" \
-		"5" "Restart all dockers" \
-		"6" "Backup dockers configuration" \
-		"7" "Disable htaccess protection" \
-		"8" "Delete and clean dockers"  3>&1 1>&2 2>&3)
-	echo ""
-	case $ACTION in
-	"1")
-	  SCRIPT="INSTALL"
-	  ;;
-	"2")
-	  SCRIPT="ADDUSER"
-	  ;;
-	"3")
-	  SCRIPT="DELETEHTACCESS"
-	  ;;
-	"4")
-	  echo -e "${BLUE}##########################################${NC}"
-	  echo -e "${BLUE}###         ADDING DOCKER APPS         ###${NC}"
-	  echo -e "${BLUE}##########################################${NC}"
-	  SCRIPT="ADDDOCKAPP"
-	  ;;
-	"5")
-	  echo -e "${BLUE}##########################################${NC}"
-	  echo -e "${BLUE}###          ADDING NEW USER           ###${NC}"
-	  echo -e "${BLUE}##########################################${NC}"
-	  SCRIPT="NEWSEEDBOXUSER"
-	  ;;
-	"6")
-	  SCRIPT="RESTARTDOCKER"
-	  echo -e "${BLUE}##########################################${NC}"
-	  echo -e "${BLUE}###       RESTARTING DOCKER APPS       ###${NC}"
-	  echo -e "${BLUE}##########################################${NC}"
-	  ;;
-	"7")
-	   SCRIPT="BACKUPCONF"
-	  ;;
-	"8")
-	  SCRIPT="DELETEDOCKERS"
-	  ;;
-	esac
+	if [[ -d "$CONFDIR" ]]; then
+		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 18 60 9 \
+			"1" "Install Seedbox-Compose" \
+			"2" "New seedbox user" \
+			"3" "New htaccess user" \
+			"4" "New application for user X" \
+			"5" "Restart all dockers" \
+			"6" "Backup dockers configuration" \
+			"7" "Disable htaccess protection" \
+			"8" "Delete and clean dockers"  3>&1 1>&2 2>&3)
+		echo ""
+		case $ACTION in
+		"1")
+		  SCRIPT="INSTALL"
+		  ;;
+		"2")
+		  SCRIPT="ADDUSER"
+		  ;;
+		"3")
+		  SCRIPT="DELETEHTACCESS"
+		  ;;
+		"4")
+		  echo -e "${BLUE}##########################################${NC}"
+		  echo -e "${BLUE}###         ADDING DOCKER APPS         ###${NC}"
+		  echo -e "${BLUE}##########################################${NC}"
+		  SCRIPT="ADDDOCKAPP"
+		  ;;
+		"5")
+		  echo -e "${BLUE}##########################################${NC}"
+		  echo -e "${BLUE}###          ADDING NEW USER           ###${NC}"
+		  echo -e "${BLUE}##########################################${NC}"
+		  SCRIPT="NEWSEEDBOXUSER"
+		  ;;
+		"6")
+		  SCRIPT="RESTARTDOCKER"
+		  echo -e "${BLUE}##########################################${NC}"
+		  echo -e "${BLUE}###       RESTARTING DOCKER APPS       ###${NC}"
+		  echo -e "${BLUE}##########################################${NC}"
+		  ;;
+		"7")
+		   SCRIPT="BACKUPCONF"
+		  ;;
+		"8")
+		  SCRIPT="DELETEDOCKERS"
+		  ;;
+		esac
+	else
+		if [[ -d "$CONFDIR" ]]; then
+		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Seedbox-Compose not detected. Please install it !" 18 60 9 \
+			"1" "Install Seedbox-Compose"3>&1 1>&2 2>&3)
+		echo ""
 	
 }
 
