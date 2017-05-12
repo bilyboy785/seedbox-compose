@@ -82,10 +82,11 @@ if [ $USER = "root" ] ; then
 			schedule_backup_seedbox
 		;;
 	  	"DELETEHTACCESS")
-			delete_htaccess
+			echo -e " * Under developpment"
+			#delete_htaccess
 		;;
 		"ADDDOCKAPP")
-	    		echo ""
+	    		echo -e " * Under developpment"
 	  	;;
 		"NEWSEEDBOXUSER")
 			new_seedbox_user
@@ -94,7 +95,8 @@ if [ $USER = "root" ] ; then
 	    		restart_docker_apps
 	  	;;
 		"DELETEDOCKERS")
-	    		delete_dockers
+			echo -e " * Under developpment"
+	    		#delete_dockers
 	  	;;
 		"BACKUPCONF")
 	    		backup_docker_conf
