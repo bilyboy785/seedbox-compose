@@ -90,14 +90,13 @@ function install_base_packages() {
 	echo " * Installing apache2-utils, unzip, git, curl ..."
 	{
 	NUMPACKAGES=$(cat $PACKAGESFILE | wc -l)
-	declare -i NUMPACK=0
 	for package in $(cat $PACKAGESFILE);
 	do
 		apt-get install -y $package
-		echo $NUMPACK
-		NUMPACK=$(($NUMPACK+(100/$NUMPACKAGES)))
+		echo $NUMPACKAGES
+		NUMPACK=$(($NUMPACKAGES+(100/$NUMPACKAGES)))
 	done 
-	} | whiptail --gauge "Please wait during packages installation" 6 60 0
+	} | whiptail --gauge "Please wait during packages installation" 6 60 $NUMPACKAGES
 	if [[ $? = 0 ]]; then
 		echo -e "	${GREEN}--> Packages installation done !${NC}"
 	else
