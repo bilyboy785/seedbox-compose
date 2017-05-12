@@ -2,7 +2,7 @@
 function under_developpment() {
 	clear
 	echo -e "${RED}####################################"
-	echo -e "###         UNDERDEVELOPPEMENT       ###"
+	echo -e "###       UNDERDEVELOPPEMENT     ###"
 	echo -e "####################################${NC}"
 }
 
