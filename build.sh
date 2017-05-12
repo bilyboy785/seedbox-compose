@@ -78,6 +78,8 @@ if [ $USER = "root" ] ; then
 		"ADDUSER")
 	    		add_user_htpasswd	
 	  	;;
+		"SCHEDULEBACKUP")
+			schedule_backup_seedbox
 	  	"DELETEHTACCESS")
 			delete_htaccess
 		;;
