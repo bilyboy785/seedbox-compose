@@ -1,0 +1,11 @@
+gawk
+apache2-utils
+htop
+unzip
+dialog
+git
+apt-transport-https
+ca-certificates
+curl
+gnupg2
+software-properties-common
