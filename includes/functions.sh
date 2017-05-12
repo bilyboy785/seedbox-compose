@@ -567,29 +567,34 @@ function backup_docker_conf() {
 }
 
 function schedule_backup_seedbox() {
-	DAILYBACKUP="0 $HOUR * * * tar $BACKUPNAME $BACKUPDIR >/dev/null 2>&1"
-	WEEKLYBACKUP="0 0 */7 * * tar $BACKUPNAME $BACKUPDIR >/dev/null 2>&1"
-	MONTHLYBACKUP="0 0 $DAY * * tar $BACKUPNAME $BACKUPDIR >/dev/null 2>&1"
 	if [[ "$SEEDUSER" == "" ]]; then
 		SEEDUSER=$(whiptail --title "Username" --inputbox \
 		"Please enter your username :" 7 50 \
 		3>&1 1>&2 2>&3)
 	fi
 	BACKUPTYPE=$(whiptail --title "Backup type" --menu "Choose a scheduling backup type" 12 60 4 \
-	"1" "Daily backup" \
-	"2" "Weekly backup" \
-	"3" "Monthly backup" 3>&1 1>&2 2>&3)
-	echo $BACKUPTYPE
+		"1" "Daily backup" \
+		"2" "Weekly backup" \
+		"3" "Monthly backup" 3>&1 1>&2 2>&3)
+	BACKUPDIR=$(whiptail --title "Backup dir" --inputbox \
+		"Please choose backup destination (default /var/archives)" 7 50 \
+		3>&1 1>&2 2>&3)
+	if [[ "$BACKUPDIR" == "" ]];
+		BACKUPDIR="/var/archives"
+	fi
+	BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
+	DOCKERDIR="/home/$SEEDUSER/"
 	case $BACKUPTYPE in
-	"")
-	  docker restart $(docker ps)
-	  ;;
-	"0")
-	  docker restart $(docker ps)
-	  ;;
 	"1")
-	  echo $TABAPP[1]
+	  	SCHEDULEBACKUP="0 2 * * * tar $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+	;;
+	"2")
+	  	SCHEDULEBACKUP="0 0 */7 * * tar $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+	  ;;
+	"3")
+	  	SCHEDULEBACKUP="0 0 1 * * tar $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
 	esac
+	echo "$SCHEDULEBACKUP" >> "/etc/crontab"
 }
 
 function access_token_ts() {
