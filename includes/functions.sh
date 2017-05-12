@@ -461,6 +461,10 @@ function new_seedbox_user() {
 	backup_docker_conf
 }
 
+function add_docker_app() {
+	
+}
+
 function delete_dockers() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###        CLEANING DOCKER APPS        ###${NC}"
