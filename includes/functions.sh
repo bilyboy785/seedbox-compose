@@ -613,7 +613,6 @@ function schedule_backup_seedbox() {
 		echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
 		echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
 		echo -e "	${BWHITE}* For $SEEDUSER ${NC}"
-		echo -e "	${BWHITE}* Cron job : $SCHEDULEBACKUP${NC}"
 		echo ""
 		rm $TMPCRONFILE
 	else
