@@ -593,7 +593,7 @@ function schedule_backup_seedbox() {
 	  	SCHEDULEBACKUP="0 0 1 * * tar $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
 	;;
 	esac
-	echo $SCHEDULEBACKUP >> $CRONTABFILE
+	echo "$SCHEDULEBACKUP" >> "$CRONTABFILE" >/dev/null 2>&1
 }
 
 function access_token_ts() {
