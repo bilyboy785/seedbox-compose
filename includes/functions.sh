@@ -592,21 +592,23 @@ function schedule_backup_seedbox() {
 		BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
 		DOCKERDIR="/home/$SEEDUSER"
 		CRONTABFILE="/etc/crontab"
+		TMPCRONFILE="/tmp/crontab"
 		case $BACKUPTYPE in
 		"1")
-			SCHEDULEBACKUP="0 2 * * * tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+			SCHEDULEBACKUP="@daily tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
 			BACKUPDESC="Backup every day"
 		;;
 		"2")
-			SCHEDULEBACKUP="0 0 */7 * * tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+			SCHEDULEBACKUP="@weekly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
 			BACKUPDESC="Backup every weeks"
 		;;
 		"3")
-			SCHEDULEBACKUP="0 0 1 * * tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+			SCHEDULEBACKUP="@monthly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
 			BACKUPDESC="Backup every months"
 		;;
 		esac
-		echo $SCHEDULEBACKUP >> $CRONTABFILE
+		echo $SCHEDULEBACKUP >> $TMPCRONFILE
+		cat $TMPCRONTFILE >> $CRONTABFILE
 		echo -e " ${GREEN}--> Backup successfully scheduled :${NC}"
 		echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
 		echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
