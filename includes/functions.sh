@@ -229,6 +229,7 @@ function define_parameters() {
 }
 
 function create_user() {
+	touch $USERSFILE
 	SEEDUSER=$(whiptail --title "Username" --inputbox \
 		"Please enter a username :" 7 50 \
 		3>&1 1>&2 2>&3)
@@ -251,6 +252,7 @@ function create_user() {
 		GRPID=$(id -g $SEEDUSER)
 	fi
 	add_user_htpasswd $SEEDUSER $PASSWORD
+	echo $SEEDUSER >> $USERSFILE
 }
 
 function choose_services() {
@@ -462,7 +464,14 @@ function new_seedbox_user() {
 }
 
 function add_docker_app() {
-	
+	echo -e "${BLUE}##########################################${NC}"
+	echo -e "${BLUE}###           ADD DOCKER APPS          ###${NC}"
+	echo -e "${BLUE}##########################################${NC}"
+	SEEDBOXUSERS=$(cat $USERSFILE)
+	SEEDUSER=$(whiptail --title "Choose username" --menu \
+		"Please select user to add dockers app" 15 50 4 \
+		$SEEDBOXUSERS 3>&1 1>&2 2>&3)
+	echo -e " ${BWHITE}* Adding apps for $SEEDUSER"
 }
 
 function delete_dockers() {
