@@ -205,7 +205,7 @@ function define_parameters() {
 	CURRTIMEZONE=$(cat /etc/timezone)
 	create_user
 	TIMEZONEDEF=$(whiptail --title "Timezone" --inputbox \
-	"Please enter your timezone (default : $CURRTIMEZONE)" 7 66 \
+	"Please enter your timezone" 7 66 "$CURRTIMEZONE" \
 	3>&1 1>&2 2>&3)
 	if [[ $TIMEZONEDEF == "" ]]; then
 		TIMEZONE=$CURRTIMEZONE
