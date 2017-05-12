@@ -12,8 +12,9 @@ function script_option() {
 			"4" "New application for user X" \
 			"5" "Restart all dockers" \
 			"6" "Backup dockers configuration" \
-			"7" "Disable htaccess protection" \
-			"8" "Delete and clean dockers"  3>&1 1>&2 2>&3)
+			"7" "Enable schedule backup" \
+			"8" "Disable htaccess protection" \
+			"9" "Delete and clean dockers"  3>&1 1>&2 2>&3)
 		echo ""
 		case $ACTION in
 		"1")
@@ -44,9 +45,15 @@ function script_option() {
 		  echo -e "${BLUE}##########################################${NC}"
 		  ;;
 		"7")
-		   SCRIPT="BACKUPCONF"
+		   SCRIPT="SCHEDULEBACKUP"
+		   echo -e "${BLUE}##########################################${NC}"
+		  echo -e "${BLUE}###           SCHEDULE BACKUP           ###${NC}"
+		  echo -e "${BLUE}##########################################${NC}"
 		  ;;
 		"8")
+		   SCRIPT="BACKUPCONF"
+		  ;;
+		"9")
 		  SCRIPT="DELETEDOCKERS"
 		  ;;
 		esac
