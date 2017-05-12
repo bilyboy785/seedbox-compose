@@ -559,6 +559,32 @@ function backup_docker_conf() {
 	echo ""
 }
 
+function schedule_backup_seedbox() {
+	DAILYBACKUP="0 $HOUR * * * tar $BACKUPNAME $BACKUPDIR >/dev/null 2>&1"
+	WEEKLYBACKUP="0 0 */7 * * tar $BACKUPNAME $BACKUPDIR >/dev/null 2>&1"
+	MONTHLYBACKUP="0 0 $DAY * * tar $BACKUPNAME $BACKUPDIR >/dev/null 2>&1"
+	if [[ "$SEEDUSER" == "" ]]; then
+		SEEDUSER=$(whiptail --title "Username" --inputbox \
+		"Please enter your username :" 7 50 \
+		3>&1 1>&2 2>&3)
+	fi
+	BACKUPTYPE=$(whiptail --title "Backup type" --menu "Choose a scheduling backup type" 15 60 4 \
+	"1" "Daily backup" \
+	"2" "Weekly backup" \
+	"3" "Monthly backup" 3>&1 1>&2 2>&3)
+	echo $BACKUPTYPE
+	case $BACKUPTYPE in
+	"")
+	  docker restart $(docker ps)
+	  ;;
+	"0")
+	  docker restart $(docker ps)
+	  ;;
+	"1")
+	  echo $TABAPP[1]
+	esac
+}
+
 function access_token_ts() {
 	grep -R "teamspeak" "$SERVICESUSER" > /dev/null
 	if [[ "$?" == "0" ]]; then
