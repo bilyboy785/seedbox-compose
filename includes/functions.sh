@@ -575,7 +575,7 @@ function schedule_backup_seedbox() {
 		"Please enter your username :" 7 50 \
 		3>&1 1>&2 2>&3)
 	fi
-	BACKUPTYPE=$(whiptail --title "Backup type" --menu "Choose a scheduling backup type" 15 60 4 \
+	BACKUPTYPE=$(whiptail --title "Backup type" --menu "Choose a scheduling backup type" 12 60 4 \
 	"1" "Daily backup" \
 	"2" "Weekly backup" \
 	"3" "Monthly backup" 3>&1 1>&2 2>&3)
