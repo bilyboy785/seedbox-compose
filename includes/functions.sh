@@ -581,37 +581,40 @@ function schedule_backup_seedbox() {
 		"Please enter your username :" 7 50 \
 		3>&1 1>&2 2>&3)
 	fi
-	BACKUPTYPE=$(whiptail --title "Backup type" --menu "Choose a scheduling backup type" 12 60 4 \
-		"1" "Daily backup" \
-		"2" "Weekly backup" \
-		"3" "Monthly backup" 3>&1 1>&2 2>&3)
-	BACKUPDIR=$(whiptail --title "Backup dir" --inputbox \
-		"Please choose backup destination" 7 65 "/var/archives" \
-		3>&1 1>&2 2>&3)
-	BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
-	DOCKERDIR="/home/$SEEDUSER"
-	CRONTABFILE="/etc/crontab"
-	case $BACKUPTYPE in
-	"1")
-	  	SCHEDULEBACKUP="0 2 * * * tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-		BACKUPDESC="Backup every day"
-	;;
-	"2")
-	  	SCHEDULEBACKUP="0 0 */7 * * tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-		BACKUPDESC="Backup every weeks"
-	;;
-	"3")
-	  	SCHEDULEBACKUP="0 0 1 * * tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-		BACKUPDESC="Backup every months"
-	;;
-	esac
-	echo $SCHEDULEBACKUP >> $CRONTABFILE
-	echo -e " ${GREEN}--> Backup successfully scheduled :${NC}"
-	echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
-	echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
-	echo -e "	${BWHITE}* For $SEEDUSER ${NC}"
-	echo -e "	${BWHITE}* Cron job : $SCHEDULEBACKUP${NC}"
-	echo ""
+	if [[ -d "/home/$SEEDUSER" ]]; then
+		BACKUPTYPE=$(whiptail --title "Backup type" --menu "Choose a scheduling backup type" 12 60 4 \
+			"1" "Daily backup" \
+			"2" "Weekly backup" \
+			"3" "Monthly backup" 3>&1 1>&2 2>&3)
+		BACKUPDIR=$(whiptail --title "Backup dir" --inputbox \
+			"Please choose backup destination" 7 65 "/var/archives" \
+			3>&1 1>&2 2>&3)
+		BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
+		DOCKERDIR="/home/$SEEDUSER"
+		CRONTABFILE="/etc/crontab"
+		case $BACKUPTYPE in
+		"1")
+			SCHEDULEBACKUP="0 2 * * * tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+			BACKUPDESC="Backup every day"
+		;;
+		"2")
+			SCHEDULEBACKUP="0 0 */7 * * tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+			BACKUPDESC="Backup every weeks"
+		;;
+		"3")
+			SCHEDULEBACKUP="0 0 1 * * tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+			BACKUPDESC="Backup every months"
+		;;
+		esac
+		echo $SCHEDULEBACKUP >> $CRONTABFILE
+		echo -e " ${GREEN}--> Backup successfully scheduled :${NC}"
+		echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
+		echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
+		echo -e "	${BWHITE}* For $SEEDUSER ${NC}"
+		echo -e "	${BWHITE}* Cron job : $SCHEDULEBACKUP${NC}"
+		echo ""
+	else
+		echo -e " ${YELLOW}* Please install Seedbox for $SEEDUSER before backup${NC}"
 }
 
 function access_token_ts() {
