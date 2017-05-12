@@ -86,7 +86,8 @@ if [ $USER = "root" ] ; then
 			#delete_htaccess
 		;;
 		"ADDDOCKAPP")
-	    		echo -e 
+	    		under_developpment
+			#add_docker_app
 	  	;;
 		"NEWSEEDBOXUSER")
 			new_seedbox_user
