@@ -579,9 +579,6 @@ function schedule_backup_seedbox() {
 	BACKUPDIR=$(whiptail --title "Backup dir" --inputbox \
 		"Please choose backup destination" 7 65 "/var/archives" \
 		3>&1 1>&2 2>&3)
-	if [[ "$BACKUPDIR" == "" ]]; then
-		BACKUPDIR="/var/archives"
-	fi
 	BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
 	DOCKERDIR="/home/$SEEDUSER"
 	CRONTABFILE="/etc/crontab"
