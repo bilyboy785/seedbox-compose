@@ -87,6 +87,7 @@ function conf_dir() {
 function install_base_packages() {
 	echo ""
 	echo -e "${BLUE}### INSTALL BASE PACKAGES ###${NC}"
+	whiptail --title "Base Package" --msgbox "Seedbox-Compose installer will now install base packages and update system" 10 60
 	echo " * Installing apache2-utils, unzip, git, curl ..."
 	{
 	NUMPACKAGES=$(cat $PACKAGESFILE | wc -l)
