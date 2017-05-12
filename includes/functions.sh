@@ -1,4 +1,10 @@
 #!/bin/bash
+function under_developpment() {
+	echo -e "####################################"
+	echo -e "${RED}###   UNDERDEVELOPPEMENT    ###"
+	echo -e "####################################${NC}"
+}
+
 function script_option() {
 	#echo -e "${BLUE}### WELCOME TO SEEDBOX-COMPOSE ###${NC}"
 	#echo "This script will help you to make a complete seedbox based on Docker !"
