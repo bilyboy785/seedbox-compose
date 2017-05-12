@@ -80,6 +80,7 @@ if [ $USER = "root" ] ; then
 	  	;;
 		"SCHEDULEBACKUP")
 			schedule_backup_seedbox
+		;;
 	  	"DELETEHTACCESS")
 			delete_htaccess
 		;;
