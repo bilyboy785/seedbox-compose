@@ -50,7 +50,7 @@ function script_option() {
 		  SCRIPT="DELETEDOCKERS"
 		  ;;
 		esac
-	elif [[ -d "$CONFDIR" ]]; then
+	elif
 		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Seedbox-Compose not detected. Please install it !" 18 60 9 \
 			"1" "Install Seedbox-Compose"3>&1 1>&2 2>&3)
 		echo ""
