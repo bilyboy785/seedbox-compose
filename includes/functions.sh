@@ -464,10 +464,17 @@ function add_docker_app() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###           ADD DOCKER APPS          ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
+	declare -i NUMUSER=1
+	for line in $(cat $USERSFILE);
+		declare -A seedboxusers=( ['$NUMUSER']="$line" )
+	done
+	echo ${seedboxusers[@]}
+	exit 1
 	SEEDUSER=$(whiptail --title "Choose username" --menu \
 		"Please select user to add dockers app" 15 50 4 \
-		$(cat $USERSFILE) " " 3>&1 1>&2 2>&3)
+		${seedboxusers[@]} " " 3>&1 1>&2 2>&3)
 	echo -e " ${BWHITE}* Adding apps for $SEEDUSER"
+	
 }
 
 function delete_dockers() {
