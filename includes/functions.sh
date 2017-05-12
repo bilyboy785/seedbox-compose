@@ -88,11 +88,13 @@ function install_base_packages() {
 	echo ""
 	echo -e "${BLUE}### INSTALL BASE PACKAGES ###${NC}"
 	echo " * Installing apache2-utils, unzip, git, curl ..."
-	{ for package in $(cat $PACKAGESFILE);
+	{ 
+	for package in $(cat $PACKAGESFILE);
 	do
 		apt-get install -y $package > /dev/null 2>&1
-		echco "Installing $package ..."
-	done } | whiptail --gauge "Please wait during packages installation" 6 60 0
+		echo "Installing $package ..."
+	done 
+	} | whiptail --gauge "Please wait during packages installation" 6 60 0
 	if [[ $? = 0 ]]; then
 		echo -e "	${BWHITE}--> Packages installation done !${NC}"
 	else
