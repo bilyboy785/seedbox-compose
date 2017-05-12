@@ -58,6 +58,7 @@ function script_option() {
 		"1")
 		  SCRIPT="INSTALL"
 		  ;;
+		 esac
 	fi
 	
 }
