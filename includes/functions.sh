@@ -608,7 +608,7 @@ function schedule_backup_seedbox() {
 		;;
 		esac
 		echo $SCHEDULEBACKUP >> $TMPCRONFILE
-		cat $TMPCRONTFILE >> $CRONTABFILE
+		cat "$TMPCRONFILE" >> "$CRONTABFILE"
 		echo -e " ${GREEN}--> Backup successfully scheduled :${NC}"
 		echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
 		echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
