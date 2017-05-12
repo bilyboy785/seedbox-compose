@@ -254,7 +254,7 @@ function choose_services() {
 	cat $SERVICES >> $SERVICESUSER
 	for APPDOCKER in $SERVICESTOINSTALL
 	do
-		echo -e "	${BLUE}* $(echo $APPDOCKER | tr -d '"')${NC}"
+		echo -e "	${GREEN}* $(echo $APPDOCKER | tr -d '"')${NC}"
 		echo $(echo ${APPDOCKER,,} | tr -d '"') >> $SERVICESUSER
 	done
 }
