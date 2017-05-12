@@ -99,7 +99,7 @@ function install_base_packages() {
 	done 
 	} | whiptail --gauge "Please wait during packages installation" 6 60 0
 	if [[ $? = 0 ]]; then
-		echo -e "	${BWHITE}--> Packages installation done !${NC}"
+		echo -e "	${GREEN}--> Packages installation done !${NC}"
 	else
 		echo -e "	${RED}--> Error while installing packages, please see logs${NC}"
 	fi
@@ -113,6 +113,7 @@ function upgrade_system() {
 	DEBIANSOURCES="includes/sources.list/sources.list.debian"
 	UBUNTUSOURCES="includes/sources.list/sources.list.ubuntu"
 	DOCKERLIST="/etc/apt/sources.list.d/docker.list"
+	NGINXLIST="/etc/apt/sources.list.d/nginx.list"
 	SOURCESFOLDER="/etc/apt/sources.list"
 	DEBIANVERSION=$(cat /etc/debian_version | cut -d \. -f1)
 	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
@@ -133,12 +134,24 @@ function upgrade_system() {
 			echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
 			apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
 			if [[ $? = 0 ]]; then
-				echo -e "	${BWHITE}--> Docker.list successfully created !${NC}"
+				echo -e "	${GREEN}--> Docker.list successfully created !${NC}"
 			else
 				echo -e "	${RED}--> Error adding the Key P80.POOL.SKS for Docker's Repo${NC}" 	
 			fi
 		else
 			echo -e "	${BWHITE}--> Docker.list already exist !${NC}"
+		fi
+		echo " * Creating nginx.list"
+		if [[ ! -f "$NGINXLIST" ]]; then
+			echo "deb http://nginx.org/packages/debian/ $(lsb_release -sc) nginx" > $NGINXLIST
+			wget -q -O - https://nginx.org/keys/nginx_signing.key | apt-key add - > /dev/null 2>&1
+			if [[ $? = 0 ]]; then
+				echo -e "	${GREEN}--> Nginx.list successfully created !${NC}"
+			else
+				echo -e "	${RED}--> Error adding the Key nginx_signing.key for Nginx Repo${NC}" 	
+			fi
+		else
+			echo -e "	${BWHITE}--> Nginx.list already exist !${NC}"
 		fi
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo " * Creating docker.list"
@@ -155,7 +168,7 @@ function upgrade_system() {
 	apt-get update > /dev/null 2>&1
 	apt-get upgrade -y > /dev/null 2>&1
 	if [[ $? = 0 ]]; then
-		echo -e "	${BWHITE}--> System upgraded successfully !${NC}"
+		echo -e "	${GREEN}--> System upgraded successfully !${NC}"
 	fi
 	echo ""
 }
