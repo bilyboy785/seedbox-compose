@@ -21,10 +21,10 @@ function script_option() {
 		  SCRIPT="INSTALL"
 		  ;;
 		"2")
-		  SCRIPT="ADDUSER"
+		  SCRIPT="NEWSEEDBOXUSER"
 		  ;;
 		"3")
-		  SCRIPT="DELETEHTACCESS"
+		  SCRIPT="ADDUSER"
 		  ;;
 		"4")
 		  echo -e "${BLUE}##########################################${NC}"
@@ -34,24 +34,24 @@ function script_option() {
 		  ;;
 		"5")
 		  echo -e "${BLUE}##########################################${NC}"
-		  echo -e "${BLUE}###          ADDING NEW USER           ###${NC}"
+		  echo -e "${BLUE}###        RESTART ALL DOCKERS         ###${NC}"
 		  echo -e "${BLUE}##########################################${NC}"
-		  SCRIPT="NEWSEEDBOXUSER"
+		  SCRIPT="RESTARTDOCKERS"
 		  ;;
 		"6")
-		  SCRIPT="RESTARTDOCKER"
+		  SCRIPT="BACKUPCONF"
 		  echo -e "${BLUE}##########################################${NC}"
-		  echo -e "${BLUE}###       RESTARTING DOCKER APPS       ###${NC}"
+		  echo -e "${BLUE}###        BACKUP DOCKERS CONF         ###${NC}"
 		  echo -e "${BLUE}##########################################${NC}"
 		  ;;
 		"7")
 		   SCRIPT="SCHEDULEBACKUP"
 		   echo -e "${BLUE}##########################################${NC}"
-		  echo -e "${BLUE}###           SCHEDULE BACKUP           ###${NC}"
+		  echo -e "${BLUE}###           SCHEDULE BACKUP          ###${NC}"
 		  echo -e "${BLUE}##########################################${NC}"
 		  ;;
 		"8")
-		   SCRIPT="BACKUPCONF"
+		   SCRIPT="DELETEHTACCESS"
 		  ;;
 		"9")
 		  SCRIPT="DELETEDOCKERS"
