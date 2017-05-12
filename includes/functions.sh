@@ -1,9 +1,11 @@
 #!/bin/bash
 function under_developpment() {
 	clear
+	echo ""
 	echo -e "${RED}####################################"
 	echo -e "###       UNDERDEVELOPPEMENT     ###"
 	echo -e "####################################${NC}"
+	echo ""
 }
 
 function script_option() {
