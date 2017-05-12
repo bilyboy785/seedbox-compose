@@ -1,7 +1,8 @@
 #!/bin/bash
 function under_developpment() {
+	clear
 	echo -e "####################################"
-	echo -e "${RED}###   UNDERDEVELOPPEMENT    ###"
+	echo -e "${RED}###      UNDERDEVELOPPEMENT      ###"
 	echo -e "####################################${NC}"
 }
 
