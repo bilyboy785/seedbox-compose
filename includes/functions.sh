@@ -585,15 +585,23 @@ function schedule_backup_seedbox() {
 	case $BACKUPTYPE in
 	"1")
 	  	SCHEDULEBACKUP="0 2 * * * tar $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+		BACKUPDESC="Backup every day"
 	;;
 	"2")
 	  	SCHEDULEBACKUP="0 0 */7 * * tar $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+		BACKUPDESC="Backup every weeks"
 	;;
 	"3")
 	  	SCHEDULEBACKUP="0 0 1 * * tar $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+		BACKUPDESC="Backup every months"
 	;;
 	esac
-	echo "$SCHEDULEBACKUP" >> "$CRONTABFILE" >/dev/null 2>&1
+	echo $SCHEDULEBACKUP >> $CRONTABFILE > /dev/null 2>&1
+	echo -e " ${GREEN}--> Backup successfully scheduled :${NC}"
+	echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
+	echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
+	echo -e "	${BWHITE}* For $SEEDUSER ${NC}"
+	echo ""
 }
 
 function access_token_ts() {
