@@ -12,7 +12,7 @@ function script_option() {
 			"4" "New application for user X" \
 			"5" "Restart all dockers" \
 			"6" "Backup dockers configuration" \
-			"7" "Enable schedule backup" \
+			"7" "Enable scheduled backup" \
 			"8" "Disable htaccess protection" \
 			"9" "Delete and clean dockers"  3>&1 1>&2 2>&3)
 		echo ""
@@ -583,16 +583,17 @@ function schedule_backup_seedbox() {
 		BACKUPDIR="/var/archives"
 	fi
 	BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
-	DOCKERDIR="/home/$SEEDUSER/"
+	DOCKERDIR="/home/$SEEDUSER"
 	case $BACKUPTYPE in
 	"1")
 	  	SCHEDULEBACKUP="0 2 * * * tar $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
 	;;
 	"2")
 	  	SCHEDULEBACKUP="0 0 */7 * * tar $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-	  ;;
+	;;
 	"3")
 	  	SCHEDULEBACKUP="0 0 1 * * tar $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+	;;
 	esac
 	echo "$SCHEDULEBACKUP" >> "/etc/crontab"
 }
