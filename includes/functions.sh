@@ -97,7 +97,7 @@ function install_base_packages() {
 		echo $NUMPACKAGES
 		NUMPACK=$(($NUMPACKAGES+(100/$NUMPACKAGES)))
 	done 
-	} | whiptail --gauge "Please wait during packages installation" 6 60 $NUMPACKAGES
+	} | whiptail --gauge "Please wait during packages installation" 6 60 "$NUMPACKAGES"
 	if [[ $? = 0 ]]; then
 		echo -e "	${GREEN}--> Packages installation done !${NC}"
 	else
