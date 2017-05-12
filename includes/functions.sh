@@ -584,6 +584,7 @@ function schedule_backup_seedbox() {
 	fi
 	BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
 	DOCKERDIR="/home/$SEEDUSER"
+	CRONTABFILE="/etc/crontab"
 	case $BACKUPTYPE in
 	"1")
 	  	SCHEDULEBACKUP="0 2 * * * tar $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
@@ -595,7 +596,7 @@ function schedule_backup_seedbox() {
 	  	SCHEDULEBACKUP="0 0 1 * * tar $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
 	;;
 	esac
-	echo "$SCHEDULEBACKUP" >> "/etc/crontab"
+	echo $SCHEDULEBACKUP >> $CRONTABFILE
 }
 
 function access_token_ts() {
