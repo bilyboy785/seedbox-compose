@@ -139,7 +139,7 @@ function upgrade_system() {
 				echo -e "	${RED}--> Error adding the Key P80.POOL.SKS for Docker's Repo${NC}" 	
 			fi
 		else
-			echo -e "	${BWHITE}--> Docker.list already exist !${NC}"
+			echo -e "	${YELLOW}--> Docker.list already exist !${NC}"
 		fi
 		echo " * Creating nginx.list"
 		if [[ ! -f "$NGINXLIST" ]]; then
@@ -151,7 +151,7 @@ function upgrade_system() {
 				echo -e "	${RED}--> Error adding the Key nginx_signing.key for Nginx Repo${NC}" 	
 			fi
 		else
-			echo -e "	${BWHITE}--> Nginx.list already exist !${NC}"
+			echo -e "	${YELLOW}--> Nginx.list already exist !${NC}"
 		fi
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo " * Creating docker.list"
