@@ -36,9 +36,6 @@ function script_option() {
 		  SCRIPT="ADDUSER"
 		  ;;
 		"4")
-		  echo -e "${BLUE}##########################################${NC}"
-		  echo -e "${BLUE}###         ADDING DOCKER APPS         ###${NC}"
-		  echo -e "${BLUE}##########################################${NC}"
 		  SCRIPT="ADDDOCKAPP"
 		  ;;
 		"5")
@@ -468,6 +465,7 @@ function add_docker_app() {
 	echo -e "${BLUE}###           ADD DOCKER APPS          ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	SEEDBOXUSERS=$(cat $USERSFILE)
+	echo $SEEDBOXUSERS
 	SEEDUSER=$(whiptail --title "Choose username" --menu \
 		"Please select user to add dockers app" 15 50 4 \
 		$SEEDBOXUSERS 3>&1 1>&2 2>&3)
