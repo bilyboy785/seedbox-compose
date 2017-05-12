@@ -466,7 +466,8 @@ function add_docker_app() {
 	echo -e "${BLUE}##########################################${NC}"
 	declare -i NUMUSER=1
 	for line in $(cat $USERSFILE);
-		declare -A seedboxusers=( ['$NUMUSER']="$line" )
+		declare -A seedboxusers=( [$NUMUSER]="$line" )
+		NUMUSER=$NUMUSER+1
 	done
 	echo ${seedboxusers[@]}
 	exit 1
@@ -474,7 +475,6 @@ function add_docker_app() {
 		"Please select user to add dockers app" 15 50 4 \
 		${seedboxusers[@]} " " 3>&1 1>&2 2>&3)
 	echo -e " ${BWHITE}* Adding apps for $SEEDUSER"
-	
 }
 
 function delete_dockers() {
