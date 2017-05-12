@@ -265,12 +265,13 @@ function choose_services() {
 	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
 	"Please select services you want to add for $SEEDUSER" 25 50 15 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
-	touch $SERVICESUSER
-	cat $SERVICES >> $SERVICESUSER
+	touch $SERVICESUSER$SEEDUSER
+	SERVICESPERUSER="$SERVICESUSER$SEEDUSER"
+	cat $SERVICES >> $SERVICESPERUSER
 	for APPDOCKER in $SERVICESTOINSTALL
 	do
 		echo -e "	${GREEN}* $(echo $APPDOCKER | tr -d '"')${NC}"
-		echo $(echo ${APPDOCKER,,} | tr -d '"') >> $SERVICESUSER
+		echo $(echo ${APPDOCKER,,} | tr -d '"') >> $SERVICESPERUSER
 	done
 }
 
@@ -304,7 +305,7 @@ function install_services() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
 	fi
-	for line in $(cat $SERVICESUSER);
+	for line in $(cat $SERVICESPERUSER);
 	do
 		REVERSEPROXYNGINX="/etc/nginx/sites-enabled/$line.$SEEDUSER.conf"
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
@@ -379,7 +380,7 @@ function create_reverse() {
 		echo " * Installing Nginx"
 		apt-get install nginx -y > /dev/null 2>&1
 		service nginx stop > /dev/null 2>&1
-		for line in $(cat $SERVICESUSER);
+		for line in $(cat $SERVICESPERUSER);
 		do
 			if [[ "$line" != "teamspeak" ]]; then
 				FILE=$line.conf
@@ -537,7 +538,7 @@ function resume_seedbox() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 		echo -e "	--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
-		for line in $(cat $SERVICESUSER);
+		for line in $(cat $SERVICESPERUSER);
 		do
 			echo -e "	--> $line from ${YELLOW}$line.$DOMAIN${NC}"
 		done
@@ -638,7 +639,7 @@ function schedule_backup_seedbox() {
 }
 
 function access_token_ts() {
-	grep -R "teamspeak" "$SERVICESUSER" > /dev/null
+	grep -R "teamspeak" "$SERVICESPERUSER" > /dev/null
 	if [[ "$?" == "0" ]]; then
 		read -p " * Do you want create a file with your Teamspeak password and Token ? (default no) [y/n] : " SHOWTSTOKEN
 		if [[ "$SHOWTSTOKEN" == "y" ]]; then
