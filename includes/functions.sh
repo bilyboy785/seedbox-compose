@@ -51,8 +51,8 @@ function script_option() {
 		  ;;
 		esac
 	else
-		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Seedbox-Compose not detected. Please install it !" 18 60 9 \
-			"1" "Install Seedbox-Compose"3>&1 1>&2 2>&3)
+		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please install it first !" 18 60 9 \
+			"1" "Install Seedbox-Compose" 3>&1 1>&2 2>&3)
 		echo ""
 		case $ACTION in
 		"1")
