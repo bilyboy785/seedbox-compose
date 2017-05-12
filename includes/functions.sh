@@ -577,7 +577,7 @@ function schedule_backup_seedbox() {
 		"2" "Weekly backup" \
 		"3" "Monthly backup" 3>&1 1>&2 2>&3)
 	BACKUPDIR=$(whiptail --title "Backup dir" --inputbox \
-		"Please choose backup destination (default /var/archives)" 7 50 \
+		"Please choose backup destination" 7 65 "/var/archives" \
 		3>&1 1>&2 2>&3)
 	if [[ "$BACKUPDIR" == "" ]]; then
 		BACKUPDIR="/var/archives"
