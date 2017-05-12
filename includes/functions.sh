@@ -615,6 +615,7 @@ function schedule_backup_seedbox() {
 		echo ""
 	else
 		echo -e " ${YELLOW}* Please install Seedbox for $SEEDUSER before backup${NC}"
+		echo ""
 	fi
 }
 
