@@ -101,7 +101,7 @@ function install_base_packages() {
 	NUMPACKAGES=$(cat $PACKAGESFILE | wc -l)
 	for package in $(cat $PACKAGESFILE);
 	do
-		apt-get install -y $package > /dev/null 2>&1
+		apt-get install -y $package ## > /dev/null 2>&1
 		echo $NUMPACKAGES
 		NUMPACKAGES=$(($NUMPACKAGES+(100/$NUMPACKAGES)))
 	done 
