@@ -504,7 +504,7 @@ function add_docker_app() {
 	exit 1
 	SEEDUSER=$(whiptail --title "Choose username" --menu \
 		"Please select user to add dockers app" 15 50 4 \
-		${seedboxusers[@]} " " 3>&1 1>&2 2>&3)
+		printf '%s\n' "${seedboxusers[@]}" " " 3>&1 1>&2 2>&3)
 	echo -e " ${BWHITE}* Adding apps for $SEEDUSER"
 }
 
