@@ -500,6 +500,7 @@ function add_docker_app() {
 		seedboxusers[${#seedboxusers[*]}]=$line
 		#NUMUSER=$NUMUSER+1
 	done
+	NBUSERS=$(${#nomtableau[*]})
 	SEEDUSER=$(whiptail --title "Choose username" --menu \
 		"Please select user to add dockers app" 15 50 4 \
 		${seedboxusers[0]} " " 3>&1 1>&2 2>&3)
