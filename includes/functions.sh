@@ -528,10 +528,9 @@ function delete_dockers() {
 	docker stop $(docker ps) > /dev/null 2>&1
 	echo " * Removing dockers..."
 	docker rm $(docker ps -a) > /dev/null 2>&1
-	read -p " * Do you want to delete all docker's configuration files, data and user ? [y/n] " DELETECONF
-	if [[ "$DELETECONF" == "y" ]]; then
+	if (whiptail --title "Data deleting" --yesno "Do you want to delete all docker's configuration files, data and user ?" 10 60) then
 		if [[ "$SEEDUSER" == "" ]]; then
-			read -p "	--> Specify user to delete all his conf files : " SEEDUSER
+			SEEDUSER=$(whiptail --title "Username" --inputbox "Specify user to delete all his conf files" 10 60 Morgan 3>&1 1>&2 2>&3)
 		fi
 		DOCKERFOLDER="/home/$SEEDUSER/dockers/"
 		echo "		* Deleting user..."
@@ -541,6 +540,8 @@ function delete_dockers() {
 			rm $DOCKERFOLDER -R
 			rm $CONFDIR -R
 		fi
+	else
+		echo -e "	${BWHITE}* Nothing will be deleted !${NC}"
 	fi
 	echo ""
 }
