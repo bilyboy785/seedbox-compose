@@ -634,13 +634,13 @@ function backup_docker_conf() {
 	echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	if [[ "$SEEDUSER" != "" ]]; then
-		read -p " * Do you want backup configuration for $SEEDUSER [y/n] ? : " BACKUPCONFUSER
-		if [[ "$BACKUPCONFUSER" != "y" ]]; then
+		if (whiptail --title "Backup Dockers conf" --yesno "Do you want backup configuration for $SEEDUSER ?" 10 60) then
+			USERBACKUP=$SEEDUSER
+		else
 			exit 1
 		fi
-		USERBACKUP=$SEEDUSER
 	else
-		read -p " * Enter username to backup configuration : " USERBACKUP
+		USERBACKUP=$(whiptail --title "Backup User" --inputbox "Enter username to backup configuration" 10 60 3>&1 1>&2 2>&3)
 	fi
 	DOCKERCONFDIR="/home/$USERBACKUP/dockers/"
 	if [[ -d "$DOCKERCONFDIR" ]]; then

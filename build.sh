@@ -79,7 +79,7 @@ if [ $USER = "root" ] ; then
 	    	fi
 	  	;;
 		"ADDUSER")
-	    		add_user_htpasswd	
+	    	add_user_htpasswd	
 	  	;;
 		"SCHEDULEBACKUP")
 			schedule_backup_seedbox
@@ -89,18 +89,19 @@ if [ $USER = "root" ] ; then
 			#delete_htaccess
 		;;
 		"ADDDOCKAPP")
-	    		#under_developpment
+	    	#under_developpment
 			add_docker_app
 	  	;;
 		"NEWSEEDBOXUSER")
 			new_seedbox_user
 		;;
 		"RESTARTDOCKER")
-	    		restart_docker_apps
+			under_developpment
+	    	#restart_docker_apps
 	  	;;
 		"DELETEDOCKERS")
 			under_developpment
-	    		#delete_dockers
+	    	#delete_dockers
 	  	;;
 		"BACKUPCONF")
 	    	backup_docker_conf
