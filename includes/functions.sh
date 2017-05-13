@@ -526,6 +526,16 @@ function delete_dockers() {
 	echo ""
 }
 
+function install_ftp_server() {
+	apt install vsftpd -y
+	VSFTPDCONF="/etc/vsftpd.conf"
+ 	sed -i 's/olisten=NO/listen=YES/g' $VSFTPDCONF
+ 	sed -i 's/#write_enable=YES/write_enable=YES/g' $VSFTPDCONF
+ 	sed -i 's/#write_enable=YES/write_enable=YES/g' $VSFTPDCONF
+ 	sed -i 's/#chroot_local_user=YES'
+ 	echo "xferlog_file=YES" >> $VSFTPDCONF
+}
+
 function restart_docker_apps() {
 	DOCKERS=$(docker ps --format "{{.Names}}")
 	declare -i i=1
