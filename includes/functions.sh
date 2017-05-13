@@ -23,8 +23,9 @@ function script_option() {
 			"6" "Backup dockers configuration" \
 			"7" "Enable scheduled backup" \
 			"8" "Install FTP Server" \
-			"9" "Disable htaccess protection" \
-			"10" "Delete and clean dockers"  3>&1 1>&2 2>&3)
+			"9" "Generate SSL certificate" \
+			"10" "Disable htaccess protection" \
+			"11" "Delete and clean dockers"  3>&1 1>&2 2>&3)
 		echo ""
 		case $ACTION in
 		"1")
@@ -61,9 +62,12 @@ function script_option() {
 		   SCRIPT="INSTALLFTPSERVER"
 		;;
 		"9")
-		   SCRIPT="DELETEHTACCESS"
+		   SCRIPT="GENERATECERT"
 		;;
 		"10")
+		   SCRIPT="DELETEHTACCESS"
+		;;
+		"11")
 		  SCRIPT="DELETEDOCKERS"
 		;;
 		esac
@@ -404,7 +408,6 @@ function create_reverse() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
 		SITEFOLDER="/etc/nginx/sites-enabled/"
-		CERTBOT="includes/certbot/certbot-auto"
 		echo " * Installing Nginx"
 		apt-get install nginx -y > /dev/null 2>&1
 		service nginx stop > /dev/null 2>&1
@@ -420,12 +423,14 @@ function create_reverse() {
 					REVERSEFOLDER="includes/nginxproxy/"
 				fi
 				cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
-				read -p "	* Specify a different subdomain for $line ? (default $line.$DOMAIN) : " SUBDOMAINVAR
+				SUBDOMAINVAR=$(whiptail --title "SSl Subdomain" --inputbox \
+				"Specify a different subdomain for $line ? default :" 7 50 "$line.$DOMAIN" \
+				3>&1 1>&2 2>&3)
 				case $LESSL in
 				"y")
 					if [[ "$SUBDOMAINVAR" == "" ]]; then
 						echo -e "		${BWHITE}--> Generating LE certificate files for $line.$DOMAIN, please wait...${NC}"
-						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
+						generate_ssl_cert "$CONTACTEMAIL" "$line.$DOMAIN"
 						if [[ "$?" == "0" ]]; then
 							echo -e "		${GREEN}* Certificate generation OK !${NC}"
 						else
@@ -433,7 +438,7 @@ function create_reverse() {
 						fi
 					else
 						echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
-						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $SUBDOMAINVAR.$DOMAIN
+						generate_ssl_cert "$CONTACTEMAIL" "$SUBDOMAINVAR.$DOMAIN"
 						echo -e "		${BWHITE}--> Replacing domain name in sites-enabled...${NC}"
 						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
 						if [[ "$?" == "0" ]]; then
@@ -446,7 +451,7 @@ function create_reverse() {
 				"")
 					if [[ "$SUBDOMAINVAR" == "" ]]; then
 						echo -e "		${BWHITE}--> Generating LE certificate files for $line.$DOMAIN, please wait...${NC}"
-						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $line.$DOMAIN
+						generate_ssl_cert "$CONTACTEMAIL" "$line.$DOMAIN"
 						if [[ "$?" == "0" ]]; then
 							echo -e "		${GREEN}* Certificate generation OK !${NC}"
 						else
@@ -454,7 +459,7 @@ function create_reverse() {
 						fi
 					else
 						echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
-						./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $CONTACTEMAIL -d $SUBDOMAINVAR.$DOMAIN
+						generate_ssl_cert "$CONTACTEMAIL" "$SUBDOMAINVAR.$DOMAIN"
 						echo -e "		${BWHITE}--> Replacing domain name in sites-enabled...${NC}"
 						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
 						if [[ "$?" == "0" ]]; then
@@ -475,6 +480,14 @@ function create_reverse() {
 		chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R > /dev/null 2>&1
 		chmod 777 $USERDIR/downloads/{medias,movies,tv} -R > /dev/null 2>&1
 	fi
+}
+
+function generate_ssl_cert() {
+	CERTBOT="$PWD/seedbox-compose/includes/certbot/certbot-auto"
+	EMAILADDRESS=$1
+	DOMAINSSL=$2
+	echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
+	./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $EMAILADDRESS -d $DOMAINSSL
 }
 
 function new_seedbox_user() {

@@ -108,5 +108,8 @@ if [ $USER = "root" ] ; then
 	    "INSTALLFTPSERVER")
 			install_ftp_server
 		;;
+		"GENERATECERT")
+			generate_ssl_cert
+		;;
 	esac
 fi
