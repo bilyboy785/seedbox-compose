@@ -314,8 +314,8 @@ function add_user_htpasswd() {
 	if [[ $1 == "" ]]; then
 		echo ""
 		echo -e "${BLUE}## HTPASSWD MANAGER ##${NC}"
-		read -p "	* Enter username for HTACCESS : " HTUSER
-		read -s -p "	* Enter password : " HTPASSWORD
+		HTUSER=$(whiptail --title "HTUser" --inputbox "Enter username for htaccess" 10 60 3>&1 1>&2 2>&3)
+		HTPASSWORD=$(whiptail --title "HTPassword" --passwordbox "Enter password" 10 60 3>&1 1>&2 2>&3)
 	else
 		HTUSER=$1
 		HTPASSWORD=$2
@@ -335,7 +335,7 @@ function install_services() {
 		declare -i PORT=$FIRSTPORT
 	fi
 	if [[ "$DOMAIN" != "localhost" ]]; then
-		read -p " * Do you want to use SSL with Let's Encrypt support ? (default yes) [y/n] : " LESSL
+		LESSL=$(whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" --yes-button "y" --no-button "n" 10 60 3>&1 1>&2 2>&3)
 	fi
 	for line in $(cat $SERVICESPERUSER);
 	do
