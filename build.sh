@@ -13,7 +13,7 @@ BWHITE='\e[1;37m'
 NC='\033[0m'
 DATE=`date +%d/%m/%Y-%H:%M:%S`
 BACKUPDATE=`date +%d-%m-%Y-%H-%M-%S`
-IPADDRESS=$(ip a | grep eth0 | awk '/inet /{print substr($2,1)}' | cut -d\/ -f1)
+IPADDRESS=$(hostname -I | cut -d\  -f1)
 FIRSTPORT="5050"
 LASTPORT="8080"
 CONFDIR="/etc/seedboxcompose"
@@ -102,6 +102,10 @@ if [ $USER = "root" ] ; then
 	    		#delete_dockers
 	  	;;
 		"BACKUPCONF")
-	    		backup_docker_conf
+	    	backup_docker_conf
+	    ;;
+	    "INSTALLFTPSERVER")
+			install_ftp_server
+		;;
 	esac
 fi

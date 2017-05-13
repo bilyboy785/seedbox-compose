@@ -22,8 +22,9 @@ function script_option() {
 			"5" "Restart all dockers" \
 			"6" "Backup dockers configuration" \
 			"7" "Enable scheduled backup" \
-			"8" "Disable htaccess protection" \
-			"9" "Delete and clean dockers"  3>&1 1>&2 2>&3)
+			"8" "Install FTP Server" \
+			"9" "Disable htaccess protection" \
+			"10" "Delete and clean dockers"  3>&1 1>&2 2>&3)
 		echo ""
 		case $ACTION in
 		"1")
@@ -43,25 +44,28 @@ function script_option() {
 		  echo -e "${BLUE}###        RESTART ALL DOCKERS         ###${NC}"
 		  echo -e "${BLUE}##########################################${NC}"
 		  SCRIPT="RESTARTDOCKERS"
-		  ;;
+		;;
 		"6")
 		  SCRIPT="BACKUPCONF"
 		  echo -e "${BLUE}##########################################${NC}"
 		  echo -e "${BLUE}###        BACKUP DOCKERS CONF         ###${NC}"
 		  echo -e "${BLUE}##########################################${NC}"
-		  ;;
+		;;
 		"7")
 		   SCRIPT="SCHEDULEBACKUP"
 		   echo -e "${BLUE}##########################################${NC}"
 		  echo -e "${BLUE}###           SCHEDULE BACKUP          ###${NC}"
 		  echo -e "${BLUE}##########################################${NC}"
-		  ;;
+		;;
 		"8")
-		   SCRIPT="DELETEHTACCESS"
-		  ;;
+		   SCRIPT="INSTALLFTPSERVER"
+		;;
 		"9")
+		   SCRIPT="DELETEHTACCESS"
+		;;
+		"10")
 		  SCRIPT="DELETEDOCKERS"
-		  ;;
+		;;
 		esac
 	else
 		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please install it first !" 16 60 8 \
@@ -527,13 +531,18 @@ function delete_dockers() {
 }
 
 function install_ftp_server() {
-	apt install vsftpd -y
-	VSFTPDCONF="/etc/vsftpd.conf"
- 	sed -i 's/olisten=NO/listen=YES/g' $VSFTPDCONF
- 	sed -i 's/#write_enable=YES/write_enable=YES/g' $VSFTPDCONF
- 	sed -i 's/#write_enable=YES/write_enable=YES/g' $VSFTPDCONF
- 	sed -i 's/#chroot_local_user=YES'
- 	echo "xferlog_file=YES" >> $VSFTPDCONF
+	if (whiptail --title "Use FTP Server" --yesno "Do you really want to use a FTP server ?" 7 50) then
+		FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
+		"Please enter a name for your FTP Server :" 7 50 \
+		3>&1 1>&2 2>&3)
+		apt install proftpd -y
+		BASEPROFTPDFILE="includes/config/proftpd.conf"
+		PROFTPDCONF="/etc/proftpd/proftpd.conf"
+		mv "$PROFTPDCONF" "$PROFTPDCONF.bak"
+ 		cat "$BASEPROFTPDFILE" >> "$PROFTPDCONF"
+ 		sed -i -e "s/ServerName\ "Debian"/$FTPSERVERNAME/g" "$PROFTPDCONF"
+ 		service proftpd restart
+	fi
 }
 
 function restart_docker_apps() {
