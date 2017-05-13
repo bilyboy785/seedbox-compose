@@ -494,11 +494,11 @@ function add_docker_app() {
 	echo -e "${BLUE}###           ADD DOCKER APPS          ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	declare -i NUMUSER=0
+	declare -a seedboxusers=()
 	for line in $(cat $USERSFILE);
 	do
-		seedboxusers=()
-		seedboxusers[${seedboxusers[*]}]=$line
-		NUMUSER=$NUMUSER+1
+		seedboxusers[${#seedboxusers[*]}]=$line
+		#NUMUSER=$NUMUSER+1
 	done
 	echo ${seedboxusers[@]}
 	exit 1
