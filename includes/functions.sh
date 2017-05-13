@@ -14,11 +14,11 @@ function script_option() {
 	#echo "Choose an option to launch the script (1, 2...) : "
 	#echo ""
 	if [[ -d "$CONFDIR" ]]; then
-		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 18 60 9 \
+		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 20 65 10 \
 			"1" "Install Seedbox-Compose" \
 			"2" "New seedbox user" \
 			"3" "New htaccess user" \
-			"4" "New application for user X" \
+			"4" "Add docker Apps for user X" \
 			"5" "Restart all dockers" \
 			"6" "Backup dockers configuration" \
 			"7" "Enable scheduled backup" \
@@ -97,7 +97,7 @@ function install_base_packages() {
 	NUMPACKAGES=$(cat $PACKAGESFILE | wc -l)
 	for package in $(cat $PACKAGESFILE);
 	do
-		apt-get install -y $package
+		apt-get install -y $package > /dev/null 2>&1
 		echo $NUMPACKAGES
 		NUMPACKAGES=$(($NUMPACKAGES+(100/$NUMPACKAGES)))
 	done 
@@ -248,6 +248,7 @@ function define_parameters() {
 	else
 		DOMAIN="localhost"
 	fi
+	install_ftp_server
 	echo ""
 }
 
@@ -289,7 +290,7 @@ function choose_services() {
 		echo "$service $desc off" >> /tmp/menuservices.txt
 	done
 	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
-	"Please select services you want to add for $SEEDUSER" 25 50 15 \
+	"Please select services you want to add for $SEEDUSER. Portainer & Jackett are installed by default !" 25 50 15 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
 	touch $SERVICESUSER$SEEDUSER
 	SERVICESPERUSER="$SERVICESUSER$SEEDUSER"
@@ -299,6 +300,7 @@ function choose_services() {
 		echo -e "	${GREEN}* $(echo $APPDOCKER | tr -d '"')${NC}"
 		echo $(echo ${APPDOCKER,,} | tr -d '"') >> $SERVICESPERUSER
 	done
+	rm /tmp/menuservices.txt
 }
 
 function add_user_htpasswd() {
@@ -491,10 +493,10 @@ function add_docker_app() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###           ADD DOCKER APPS          ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
-	declare -i NUMUSER=1
+	declare -i NUMUSER=0
 	for line in $(cat $USERSFILE);
 	do
-		declare -A seedboxusers=( [$NUMUSER]="$line" )
+		seedboxusers=([$NUMUSER]=$line)
 		NUMUSER=$NUMUSER+1
 	done
 	echo ${seedboxusers[@]}
@@ -531,17 +533,21 @@ function delete_dockers() {
 }
 
 function install_ftp_server() {
-	if (whiptail --title "Use FTP Server" --yesno "Do you really want to use a FTP server ?" 7 50) then
-		FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
-		"Please enter a name for your FTP Server :" 7 50 \
-		3>&1 1>&2 2>&3)
-		apt install proftpd -y
-		BASEPROFTPDFILE="includes/config/proftpd.conf"
-		PROFTPDCONF="/etc/proftpd/proftpd.conf"
-		mv "$PROFTPDCONF" "$PROFTPDCONF.bak"
- 		cat "$BASEPROFTPDFILE" >> "$PROFTPDCONF"
- 		sed -i -e "s/ServerName\ "Debian"/$FTPSERVERNAME/g" "$PROFTPDCONF"
- 		service proftpd restart
+	if [[ ! -d "$PROFTPDCONF" ]]; then
+		if (whiptail --title "Use FTP Server" --yesno "Do you want to install FTP server ?" 7 50) then
+			FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
+			"Please enter a name for your FTP Server :" 7 50 "SeedBox" \
+			3>&1 1>&2 2>&3)
+			apt-get install proftpd -y > /dev/null 2>&1
+			BASEPROFTPDFILE="includes/config/proftpd.conf"
+			mv "$PROFTPDCONF" "$PROFTPDCONF.bak"
+	 		cat "$BASEPROFTPDFILE" >> "$PROFTPDCONF"
+	 		sed -i -e "s/ServerName\ "Debian"/$FTPSERVERNAME/g" "$PROFTPDCONF"
+	 		service proftpd restart
+		fi
+	else
+		echo -e "${BLUE}### INSTALL FTP SERVER ###${NC}"
+		echo -e "	${RED}* Proftpd is already installed !${NC}"
 	fi
 }
 
@@ -631,6 +637,7 @@ function backup_docker_conf() {
 	else
 		echo -e "	${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
 	fi
+	schedule_backup_seedbox
 	echo ""
 }
 
