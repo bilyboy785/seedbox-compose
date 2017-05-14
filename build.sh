@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 source includes/functions.sh
 
 ## PARAMETERS
@@ -33,9 +33,6 @@ ERRORLOGS="/var/log/seedboxcompose.error.log"
 clear
 
 if [ $USER = "root" ] ; then
-	## Display script infos 
-	## intro
-	## Check option for script lauching
 	script_option
 	case $SCRIPT in
 		"INSTALL")
