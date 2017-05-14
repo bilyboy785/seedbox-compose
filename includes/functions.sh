@@ -177,9 +177,9 @@ function upgrade_system() {
 		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
 		apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main' > /dev/null 2>&1
 		if [[ "$?" == "0" ]]; then
-			echo -e "		* ${GREEN}Docker.list successfully added !${NC}"
+			echo -e "	--> ${GREEN}Docker.list successfully added !${NC}"
 		else
-			echo -e "		* ${RED}Error adding Key or repository !${NC}"
+			echo -e "	--> ${RED}Error adding Key or repository !${NC}"
 		fi
 		echo " * Adding certbot repository"
 		apt-get install -y software-properties-common > /dev/null 2>&1
