@@ -443,6 +443,7 @@ function valid_htpasswd() {
 	HTTEMPFOLDER="/tmp/"
 	HTFILE=".htpasswd-$SEEDUSER"
 	cat "$HTTEMPFOLDER$HTFILE" >> "$HTFOLDER$HTFILE"
+	rm "$HTTEMPFOLDER$HTFILE"
 }
 
 function create_reverse() {
