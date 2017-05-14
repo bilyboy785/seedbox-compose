@@ -106,7 +106,7 @@ function install_base_packages() {
 		echo $NUMPACKAGES
 		NUMPACKAGES=$(($NUMPACKAGES+(100/$NUMPACKAGES)))
 	done 
-	} | whiptail --gauge "Please wait during packages installation" 6 60 0
+	} | whiptail --gauge "Please wait. Installing $package" 6 60 0
 	if [[ $? = 0 ]]; then
 		echo -e "	${GREEN}--> Packages installation done !${NC}"
 	else
@@ -215,7 +215,6 @@ function install_docker() {
 	echo -e "${BLUE}### DOCKER ###${NC}"
 	dpkg-query -l docker > /dev/null 2>&1
   	if [ $? != 0 ]; then
-		echo -e "${RED}Docker not detected !${NC}"
 		echo " * Installing Docker"
 		apt-get install -y docker-engine > /dev/null 2>&1
 		service docker start > /dev/null 2>&1
@@ -406,13 +405,12 @@ function create_reverse() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
 		SITEFOLDER="/etc/nginx/conf.d/"
-		echo " * Installing Nginx"
-		apt-get install nginx -y > /dev/null 2>&1
 		service nginx stop > /dev/null 2>&1
 		for line in $(cat $SERVICESPERUSER);
 		do
+			FQDN="$line.$DOMAIN"
 			if [[ "$line" != "teamspeak" ]]; then
-				FILE="$line.$SEEDUSER.conf"
+				FILE="$line-$SEEDUSER.conf"
 				SITEENABLED="$SITEFOLDER$FILE"
 				echo " --> [$line] - Creating reverse"
 				if [[ "$LESSL" != "n" ]]; then
@@ -421,13 +419,12 @@ function create_reverse() {
 					REVERSEFOLDER="includes/nginxproxy/"
 				fi
 				#cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
-				SUBDOMAINVAR=$(whiptail --title "SSl Subdomain" --inputbox \
+				SUBDOMAINVAR=$(whiptail --title "SSL Subdomain" --inputbox \
 				"Specify a different subdomain for $line ? default :" 7 50 "$FQDN" \
 				3>&1 1>&2 2>&3)
 				case $LESSL in
 				"y")
 					if [[ "$SUBDOMAINVAR" == "" ]]; then
-						FQDN="$line.$DOMAIN"
 						echo -e "		${BWHITE}--> Generating LE certificate files for $FQDN, please wait...${NC}"
 						generate_ssl_cert $CONTACTEMAIL $FQDN
 						if [[ "$?" == "0" ]]; then
@@ -450,8 +447,9 @@ function create_reverse() {
 				;;
 				esac
 			fi
+			FQDN=""
 		done
-		echo -e "	--> ${BWHITE}Starting Nginx...${NC}"
+		echo -e "	--> ${YELLOW}Restarting Nginx...${NC}"
 		service nginx restart > /dev/null 2>&1
 	fi
 	USERDIR="/home/$SEEDUSER"
@@ -466,7 +464,7 @@ function generate_ssl_cert() {
 	EMAILADDRESS=$1
 	DOMAINSSL=$2
 	echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
-	./$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $EMAILADDRESS -d $DOMAINSSL
+	.$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $EMAILADDRESS -d $DOMAINSSL
 }
 
 function new_seedbox_user() {
