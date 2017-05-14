@@ -466,7 +466,8 @@ function create_reverse() {
 				fi
 			fi
 		done
-		echo -e " --> ${YELLOW}Restarting Nginx...${NC}"
+		echo ""
+		echo -e " --> ${BWHITE}Restarting Nginx...${NC}"
 		service nginx restart > /dev/null 2>&1
 		if [[ "$?" == "0" ]]; then
 			echo -e "	${GREEN}* Service nginx restarted !${NC}"
@@ -484,7 +485,7 @@ function create_reverse() {
 function generate_ssl_cert() {
 	EMAILADDRESS=$1
 	DOMAINSSL=$2
-	echo -e "		${BWHITE}--> Generating LE certificate files for $DOMAINSSL, please wait...${NC}"
+	echo -e "	${BWHITE}--> Generating LE certificate files for $DOMAINSSL, please wait...${NC}"
 	bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size $RSASSLKEY --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
 }
 
@@ -671,7 +672,7 @@ function schedule_backup_seedbox() {
 				"2" "Weekly backup" \
 				"3" "Monthly backup" 3>&1 1>&2 2>&3)
 			BACKUPDIR=$(whiptail --title "Backup dir" --inputbox \
-				"Please choose backup destination" 7 65 "/var/archives" \
+				"Please choose backup destination" 7 65 "/var/backup" \
 				3>&1 1>&2 2>&3)
 			BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
 			DOCKERDIR="/home/$SEEDUSER"
