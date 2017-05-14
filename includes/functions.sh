@@ -97,15 +97,16 @@ function install_base_packages() {
 	echo -e "${BLUE}### INSTALL BASE PACKAGES ###${NC}"
 	whiptail --title "Base Package" --msgbox "Seedbox-Compose installer will now install base packages and update system" 10 60
 	echo " * Installing apache2-utils, unzip, git, curl ..."
-	{
-	NUMPACKAGES=$(cat $PACKAGESFILE | wc -l)
-	for package in $(cat $PACKAGESFILE);
-	do
-		apt-get install -y $package ### > /dev/null 2>&1
-		echo $NUMPACKAGES
-		NUMPACKAGES=$(($NUMPACKAGES+(100/$NUMPACKAGES)))
-	done 
-	} | whiptail --gauge "Please wait during packages installation" 6 60 0
+	# {
+	# NUMPACKAGES=$(cat $PACKAGESFILE | wc -l)
+	# for package in $(cat $PACKAGESFILE);
+	# do
+	# 	apt-get install -y $package ### > /dev/null 2>&1
+	# 	echo $NUMPACKAGES
+	# 	NUMPACKAGES=$(($NUMPACKAGES+(100/$NUMPACKAGES)))
+	# done 
+	# } | whiptail --gauge "Please wait during packages installation" 6 60 0
+	apt-get install -y gawk apache2-utils htop unzip dialog git apt-transport-https ca-certificates curl gnupg2 software-properties-common
 	if [[ $? = 0 ]]; then
 		echo -e "	${GREEN}--> Packages installation done !${NC}"
 	else
