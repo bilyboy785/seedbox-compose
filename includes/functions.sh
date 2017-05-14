@@ -362,7 +362,7 @@ function choose_services() {
 function add_user_htpasswd() {
 	HTFOLDER="/etc/nginx/passwd/"
 	HTTEMPFOLDER="/tmp/"
-	HTFILE=".htpasswd"
+	HTFILE=".htpasswd-$SEEDUSER"
 	if [[ $1 == "" ]]; then
 		echo ""
 		echo -e "${BLUE}## HTPASSWD MANAGER ##${NC}"
@@ -386,6 +386,13 @@ function install_services() {
 	else
 		declare -i PORT=$FIRSTPORT
 	fi
+	if [[ "$DOMAIN" != "localhost" ]]; then
+		if (whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" 10 60) then
+			LESSL="y"
+		else
+			LESSL="n"
+		fi
+	fi
 	for line in $(cat $SERVICESPERUSER);
 	do
 		REVERSEPROXYNGINX="/etc/nginx/conf.d/$line-$SEEDUSER.conf"
@@ -396,8 +403,26 @@ function install_services() {
 		sed -i "s|%PORT%|$PORT|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
-		echo "$line-$PORT" >> $INSTALLEDFILE
+		FQDNTMP="$line.$DOMAIN"
+		FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
+		"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
+		NGINXSITE="/etc/nginx/conf.d/$line.$FQDN.conf"
+		if [[ "$LESSL" = "y" ]]; then
+			NGINXPROXYFILE="$PWD/includes/nginxproxyssl/$line.conf"
+			touch $NGINXSITE
+			cat $NGINXPROXYFILE >> $NGINXSITE
+		else
+			NGINXPROXYFILE="$PWD/includes/nginxproxy/$line.conf"
+			touch $NGINXSITE
+			cat $NGINXPROXYFILE >> $NGINXSITE
+		fi
+		sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXSITE
+		sed -i "s|%PORT%|$PORT|g" $NGINXSITE
+		sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
+		echo "$line-$PORT-$FQDN" >> $INSTALLEDFILE
 		PORT=$PORT+1
+		FQDN=""
+		FQDNTMP=""
 	done
 	echo $PORT >> $FILEPORTPATH
 	echo ""
@@ -420,7 +445,7 @@ function valid_htpasswd() {
 	HTFOLDER="/etc/nginx/passwd/"
 	mkdir -p $HTFOLDER
 	HTTEMPFOLDER="/tmp/"
-	HTFILE=".htpasswd"
+	HTFILE=".htpasswd-$SEEDUSER"
 	cat "$HTTEMPFOLDER$HTFILE" >> "$HTFOLDER$HTFILE"
 }
 
@@ -429,34 +454,10 @@ function create_reverse() {
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
 		SITEFOLDER="/etc/nginx/conf.d/"
 		service nginx stop > /dev/null 2>&1
-		if [[ "$DOMAIN" != "localhost" ]]; then
-			if (whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" 10 60) then
-				LESSL="y"
-			else
-				LESSL="n"
-			fi
-		fi
 		for line in $(cat $SERVICESPERUSER);
 		do
-			NGINXSITE="/etc/nginx/conf.d/$line"
-			FQDNTMP="$line.$DOMAIN"
 			echo -e " ${BWHITE}--> [$line] - Creating reverse${NC}"
 			if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
-				FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
-				"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
-				NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
-				if [[ "$LESSL" = "y" ]]; then
-					NGINXPROXYFILE="$PWD/includes/nginxproxyssl/$line.conf"
-					touch $NGINXSITE
-					cat $NGINXPROXYFILE >> $NGINXSITE
-				else
-					NGINXPROXYFILE="$PWD/includes/nginxproxy/$line.conf"
-					touch $NGINXSITE
-					cat $NGINXPROXYFILE >> $NGINXSITE
-				fi
-				sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXSITE
-				sed -i "s|%PORT%|$PORT|g" $NGINXSITE
-				sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
 				generate_ssl_cert $CONTACTEMAIL $FQDN
 				if [[ "$?" == "0" ]]; then
 					echo -e "		${GREEN}* Certificate generation OK !${NC}"
@@ -464,8 +465,6 @@ function create_reverse() {
 					echo -e "		${RED}* Certificate generation failed !${NC}"
 				fi
 			fi
-			FQDN=""
-			FQDNTMP=""
 		done
 		echo -e " --> ${YELLOW}Restarting Nginx...${NC}"
 		service nginx restart > /dev/null 2>&1
