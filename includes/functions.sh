@@ -396,20 +396,6 @@ function install_services() {
 		sed -i "s|%PORT%|$PORT|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
-		# if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
-		# 	if [[ "$LESSL" != "n" ]]; then
-		# 		NGINXPROXYFILE="includes/nginxproxyssl/$line.conf"
-		# 		touch $REVERSEPROXYNGINX
-		# 		cat $NGINXPROXYFILE >> $REVERSEPROXYNGINX
-		# 	else
-		# 		NGINXPROXYFILE="includes/nginxproxy/$line.conf"
-		# 		touch $REVERSEPROXYNGINX
-		# 		cat $NGINXPROXYFILE >> $REVERSEPROXYNGINX
-		# 	fi
-		# 	sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $REVERSEPROXYNGINX
-		# 	sed -i "s|%PORT%|$PORT|g" $REVERSEPROXYNGINX
-		# 	sed -i "s|%USER%|$SEEDUSER|g" $REVERSEPROXYNGINX
-		# fi
 		echo "$line-$PORT" >> $INSTALLEDFILE
 		PORT=$PORT+1
 	done
@@ -456,13 +442,13 @@ function create_reverse() {
 			if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
 				FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
 				"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
-				NGINXSITE="/etc/nginx/conf.d/$line.$FQDN.conf"
+				NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
 				if [[ "$LESSL" = "y" ]]; then
-					NGINXPROXYFILE="includes/nginxproxyssl/$line.conf"
+					NGINXPROXYFILE="$PWD/includes/nginxproxyssl/$line.conf"
 					touch $NGINXSITE
 					cat $NGINXPROXYFILE >> $NGINXSITE
 				else
-					NGINXPROXYFILE="includes/nginxproxy/$line.conf"
+					NGINXPROXYFILE="$PWD/includes/nginxproxy/$line.conf"
 					touch $NGINXSITE
 					cat $NGINXPROXYFILE >> $NGINXSITE
 				fi
