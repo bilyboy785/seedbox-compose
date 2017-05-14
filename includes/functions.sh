@@ -433,7 +433,7 @@ function valid_htpasswd() {
 	mkdir -p $HTFOLDER
 	HTTEMPFOLDER="/tmp/"
 	HTFILE=".htpasswd"
-	cat $HTTEMPFOLDER$HTFILE >> $HTFOLDER$HTFILE
+	cat "$HTTEMPFOLDER$HTFILE" >> "$HTFOLDER$HTFILE"
 }
 
 function create_reverse() {
@@ -487,10 +487,10 @@ function create_reverse() {
 			echo -e "	${RED}* Failed to restart Nginx !${NC}"
 		fi
 	fi
-	USERDIR="/home/$SEEDUSER"
+	USERDIR="/home/$SEEDUSER/downloads/{medias,movies,tv}"
 	if [[ -d "$USERDIR" ]]; then
-		chown $SEEDUSER: $USERDIR/downloads/{medias,movies,tv} -R > /dev/null 2>&1
-		chmod 777 $USERDIR/downloads/{medias,movies,tv} -R > /dev/null 2>&1
+		chown $SEEDUSER: $USERDIR -R > /dev/null 2>&1
+		chmod 777 $USERDIR -R > /dev/null 2>&1
 	fi
 }
 
