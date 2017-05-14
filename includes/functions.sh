@@ -185,9 +185,19 @@ function upgrade_system() {
 		echo " * Adding certbot repository"
 		apt-get install -y software-properties-common > /dev/null 2>&1
 		add-apt-repository ppa:certbot/certbot -y > /dev/null 2>&1
+		if [[ $? = 0 ]]; then
+			echo -e "	${GREEN}--> Certbot repository successfully added !${NC}"
+		else
+			echo -e "	${RED}--> Failed to add Certbot repository !${NC}"
+		fi
 		apt-get update > /dev/null 2>&1
 		echo " * Installing certbot"
 		apt-get install certbot -y  > /dev/null 2>&1
+		if [[ $? = 0 ]]; then
+			echo -e "	${GREEN}--> Certbot successfully installed !${NC}"
+		else
+			echo -e "	${RED}--> Failed to install Certbot !${NC}"
+		fi
 	fi
 	echo " * Updating sources and upgrading system"
 	apt-get update > /dev/null 2>&1
@@ -232,7 +242,11 @@ function install_docker() {
 	dpkg-query -l docker > /dev/null 2>&1
   	if [ $? != 0 ]; then
 		echo " * Installing Docker"
-		apt-get install -y docker-engine > /dev/null 2>&1
+		if [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
+			apt-get install -y docker-engine --allow-unauthenticated > /dev/null 2>&1
+		else
+			apt-get install -y docker-engine > /dev/null 2>&1
+		fi
 		if [[ "$?" == "0" ]]; then
 			echo -e "	${GREEN}* Docker successfully installed${NC}"
 		else
