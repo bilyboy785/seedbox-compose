@@ -115,7 +115,7 @@ function install_base_packages() {
 }
 
 function delete_htaccess() {
-	SITEENABLEDFOLDER="/etc/nginx/sites-enabled/"
+	SITEENABLEDFOLDER="/etc/nginx/conf.d/"
 }
 
 function upgrade_system() {
@@ -194,7 +194,7 @@ function install_nginx() {
 	echo ""
 }
 
-function base_packages() {
+function install_zsh() {
 	echo -e "${BLUE}### ZSH-OHMYZSH ###${NC}"
 	ZSHDIR="/usr/share/zsh"
 	OHMYZSHDIR="/root/.oh-my-zsh/"
@@ -215,7 +215,7 @@ function install_docker() {
 	echo -e "${BLUE}### DOCKER ###${NC}"
 	dpkg-query -l docker > /dev/null 2>&1
   	if [ $? != 0 ]; then
-		echo "Docker is not installed, it will be installed !"
+		echo -e "${RED}Docker not detected !${NC}"
 		echo " * Installing Docker"
 		apt-get install -y docker-engine > /dev/null 2>&1
 		service docker start > /dev/null 2>&1
@@ -321,7 +321,7 @@ function choose_services() {
 }
 
 function add_user_htpasswd() {
-	HTFOLDER="/etc/nginx/conf/passwd/"
+	HTFOLDER="/etc/nginx/passwd/"
 	HTTEMPFOLDER="/tmp/"
 	HTFILE=".htpasswd"
 	if [[ $1 == "" ]]; then
@@ -354,7 +354,7 @@ function install_services() {
 	fi
 	for line in $(cat $SERVICESPERUSER);
 	do
-		REVERSEPROXYNGINX="/etc/nginx/sites-enabled/$line-$SEEDUSER.conf"
+		REVERSEPROXYNGINX="/etc/nginx/conf.d/$line-$SEEDUSER.conf"
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
@@ -395,7 +395,7 @@ function docker_compose() {
 }
 
 function valid_htpasswd() {
-	HTFOLDER="/etc/nginx/conf/passwd/"
+	HTFOLDER="/etc/nginx/passwd/"
 	mkdir -p $HTFOLDER
 	HTTEMPFOLDER="/tmp/"
 	HTFILE=".htpasswd"
@@ -405,7 +405,7 @@ function valid_htpasswd() {
 function create_reverse() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
-		SITEFOLDER="/etc/nginx/sites-enabled/"
+		SITEFOLDER="/etc/nginx/conf.d/"
 		echo " * Installing Nginx"
 		apt-get install nginx -y > /dev/null 2>&1
 		service nginx stop > /dev/null 2>&1

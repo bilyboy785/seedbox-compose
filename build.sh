@@ -50,9 +50,10 @@ if [ $USER = "root" ] ; then
 			upgrade_system
 			## Check for docker on system
 			install_docker
-			## Installing base packages
+			## Installing Nginx
 			install_nginx
-			base_packages
+			## Installing ZSH
+			install_zsh
 			## Check for LetsEncrypt packages on system
 			install_letsencrypt
 			## Defines parameters for dockers : password, domains and replace it in docker-compose file
