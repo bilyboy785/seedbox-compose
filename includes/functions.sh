@@ -398,20 +398,20 @@ function install_services() {
 		if [[ "$DOMAIN" != "localhost" ]]; then
 			FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
 			"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
-			NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
-			echo "$line-$PORT-$FQDN" >> $INSTALLEDFILE
-		else
+			if [[ "$LESSL" = "y" ]]; then
+				NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
+				NGINXPROXYFILE="$PWD/includes/nginxproxyssl/$line.conf"
+				touch $NGINXSITE
+				cat $NGINXPROXYFILE >> $NGINXSITE
+				echo "$line-$PORT-$FQDN" >> $INSTALLEDFILE
+			else
+				NGINXPROXYFILE="$PWD/includes/nginxproxy/$line.conf"
+				touch $NGINXSITE
+				cat $NGINXPROXYFILE >> $NGINXSITE
+			fi
+		elif [[ "$DOMAIN" == "localhost" ]]; then
 			NGINXSITE="/etc/nginx/conf.d/$line.$SEEDUSER.conf"
 			echo "$line-$PORT-$SEEDUSER" >> $INSTALLEDFILE
-		fi
-		if [[ "$LESSL" = "y" ]]; then
-			NGINXPROXYFILE="$PWD/includes/nginxproxyssl/$line.conf"
-			touch $NGINXSITE
-			cat $NGINXPROXYFILE >> $NGINXSITE
-		else
-			NGINXPROXYFILE="$PWD/includes/nginxproxy/$line.conf"
-			touch $NGINXSITE
-			cat $NGINXPROXYFILE >> $NGINXSITE
 		fi
 		sed -i "s|%DOMAIN%|$FQDN|g" $NGINXSITE
 		sed -i "s|%PORT%|$PORT|g" $NGINXSITE
@@ -594,7 +594,6 @@ function resume_seedbox() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###       RESUMING SEEDBOX INSTALL     ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
-	echo ""
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 		echo -e "	--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
@@ -694,7 +693,6 @@ function schedule_backup_seedbox() {
 			esac
 			echo $SCHEDULEBACKUP >> $TMPCRONFILE
 			cat "$TMPCRONFILE" >> "$CRONTABFILE"
-			echo ""
 			echo -e " ${GREEN}--> Backup successfully scheduled :${NC}"
 			echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
 			echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
