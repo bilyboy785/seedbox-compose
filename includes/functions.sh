@@ -405,6 +405,7 @@ function install_services() {
 
 function docker_compose() {
 	echo -e "${BLUE}### DOCKERCOMPOSE ###${NC}"
+	ACTDIR="$PWD"
 	cd /etc/seedboxcompose/
 	echo " * Starting docker..."
 	service docker restart
@@ -412,6 +413,7 @@ function docker_compose() {
 	docker-compose up -d > /dev/null 2>&1
 	echo -e "	${BWHITE}--> Docker-compose ok !${NC}"
 	echo ""
+	cd $ACTDIR
 }
 
 function valid_htpasswd() {
