@@ -219,6 +219,11 @@ function install_docker() {
   	if [ $? != 0 ]; then
 		echo " * Installing Docker"
 		apt-get install -y docker-engine > /dev/null 2>&1
+		if [[ "$?" == "0" ]]; then
+			echo -e "	${GREEN}* Docker successfully installed"
+		else
+			echo -e "	${GREEN}* Failed installing Docker !"
+		fi
 		service docker start > /dev/null 2>&1
 		echo " * Installing Docker-compose"
 		curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
@@ -286,9 +291,9 @@ function create_user() {
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 		useradd -m -p $PASS $SEEDUSER > /dev/null 2>&1
 		if [[ $? -eq 0 ]]; then
-			echo -e "${GREEN}--> User has been added to system !${NC}"
+			echo -e " ${GREEN}--> User has been added to system !${NC}"
 		else
-			echo -e "${RED}--> Failed to add a user !${NC}"
+			echo -e " ${RED}--> Failed to add a user !${NC}"
 		fi
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
@@ -348,11 +353,6 @@ function install_services() {
 	else
 		declare -i PORT=$FIRSTPORT
 	fi
-	if [[ "$DOMAIN" != "localhost" ]]; then
-		LESSL="y"
-		#LESSL="$(whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" --yes-button "yes" --no-button "no" 10 60 3>&1 1>&2 2>&3)
-		#echo $LESSL"
-	fi
 	for line in $(cat $SERVICESPERUSER);
 	do
 		REVERSEPROXYNGINX="/etc/nginx/conf.d/$line-$SEEDUSER.conf"
@@ -363,20 +363,20 @@ function install_services() {
 		sed -i "s|%PORT%|$PORT|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
-		if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
-			if [[ "$LESSL" != "n" ]]; then
-				NGINXPROXYFILE="includes/nginxproxyssl/$line.conf"
-				touch $REVERSEPROXYNGINX
-				cat $NGINXPROXYFILE >> $REVERSEPROXYNGINX
-			else
-				NGINXPROXYFILE="includes/nginxproxy/$line.conf"
-				touch $REVERSEPROXYNGINX
-				cat $NGINXPROXYFILE >> $REVERSEPROXYNGINX
-			fi
-			sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $REVERSEPROXYNGINX
-			sed -i "s|%PORT%|$PORT|g" $REVERSEPROXYNGINX
-			sed -i "s|%USER%|$SEEDUSER|g" $REVERSEPROXYNGINX
-		fi
+		# if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
+		# 	if [[ "$LESSL" != "n" ]]; then
+		# 		NGINXPROXYFILE="includes/nginxproxyssl/$line.conf"
+		# 		touch $REVERSEPROXYNGINX
+		# 		cat $NGINXPROXYFILE >> $REVERSEPROXYNGINX
+		# 	else
+		# 		NGINXPROXYFILE="includes/nginxproxy/$line.conf"
+		# 		touch $REVERSEPROXYNGINX
+		# 		cat $NGINXPROXYFILE >> $REVERSEPROXYNGINX
+		# 	fi
+		# 	sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $REVERSEPROXYNGINX
+		# 	sed -i "s|%PORT%|$PORT|g" $REVERSEPROXYNGINX
+		# 	sed -i "s|%USER%|$SEEDUSER|g" $REVERSEPROXYNGINX
+		# fi
 		echo "$line-$PORT" >> $INSTALLEDFILE
 		PORT=$PORT+1
 	done
@@ -408,18 +408,31 @@ function create_reverse() {
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
 		SITEFOLDER="/etc/nginx/conf.d/"
 		service nginx stop > /dev/null 2>&1
+		if [[ "$DOMAIN" != "localhost" ]]; then
+			#LESSL="y"
+			LESSL=$(whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" --yes-button "yes" --no-button "no" 10 60 3>&1 1>&2 2>&3)
+			echo "Use SSL ==> $LESSL"
+			exit 1
+		fi
 		for line in $(cat $SERVICESPERUSER);
 		do
+			echo $SERVICESPERUSER
+			NGINXSITE="/etc/nginx/conf.d/$line-$SEEDUSER.conf"
 			FQDNTMP="$line.$DOMAIN"
-			if [[ "$line" != "teamspeak" ]]; then
-				FILE="$line-$SEEDUSER.conf"
-				SITEENABLED="$SITEFOLDER$FILE"
-				echo " --> [$line] - Creating reverse"
+			echo -e " ${BWHITE}--> [$line] - Creating reverse${NC}"
+			if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
 				if [[ "$LESSL" != "n" ]]; then
-					REVERSEFOLDER="includes/nginxproxyssl/"
+					NGINXPROXYFILE="includes/nginxproxyssl/$line.conf"
+					touch $NGINXSITE
+					cat $NGINXPROXYFILE >> $NGINXSITE
 				else
-					REVERSEFOLDER="includes/nginxproxy/"
+					NGINXPROXYFILE="includes/nginxproxy/$line.conf"
+					touch $NGINXSITE
+					cat $NGINXPROXYFILE >> $NGINXSITE
 				fi
+				sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXSITE
+				sed -i "s|%PORT%|$PORT|g" $NGINXSITE
+				sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
 				FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
 				"Specify a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
 				case $LESSL in
