@@ -662,6 +662,9 @@ function backup_docker_conf() {
 }
 
 function schedule_backup_seedbox() {
+	echo -e "${BLUE}##########################################${NC}"
+	echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"
+	echo -e "${BLUE}##########################################${NC}"
 	if (whiptail --title "Backup Dockers conf" --yesno "Do you want to schedule a configuration backup ?" 10 60) then
 		if [[ "$SEEDUSER" == "" ]]; then
 			SEEDUSER=$(whiptail --title "Username" --inputbox \
@@ -704,7 +707,7 @@ function schedule_backup_seedbox() {
 			echo ""
 			rm $TMPCRONFILE
 		else
-			echo -e " ${YELLOW}* Please install Seedbox for $SEEDUSER before backup${NC}"
+			echo -e " ${YELLOW}--> Please install Seedbox for $SEEDUSER before backup${NC}"
 			echo ""
 		fi
 	fi
