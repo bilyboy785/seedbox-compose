@@ -184,7 +184,7 @@ function upgrade_system() {
 		fi
 		echo " * Adding certbot repository"
 		apt-get install -y software-properties-common > /dev/null 2>&1
-		add-apt-repository ppa:certbot/certbot
+		add-apt-repository ppa:certbot/certbot -y > /dev/null 2>&1
 		apt-get update > /dev/null 2>&1
 		echo " * Installing certbot"
 		apt-get install certbot -y  > /dev/null 2>&1
