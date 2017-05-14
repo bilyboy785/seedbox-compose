@@ -107,6 +107,7 @@ function install_base_packages() {
 	else
 		echo -e "	${RED}--> Error while installing packages, please see logs${NC}"
 	fi
+	echo ""
 }
 
 function delete_htaccess() {
@@ -176,7 +177,8 @@ function checking_system() {
 	apt-get update > /dev/null 2>&1
 	echo -e " ${BWHITE}* Upgrading system${NC}"
 	apt-get upgrade -y > /dev/null 2>&1
-	echo " ${BWHITE}* Installing certbot${NC}"
+	checking_errors $?
+	echo -e " ${BWHITE}* Installing certbot${NC}"
 	if [[ "$SYSTEMOS" == "Ubuntu" ]]; then
 		apt-get install certbot -y  > /dev/null 2>&1
 	elif [[ "$SYSTEMOS" == "Debian" ]]; then
