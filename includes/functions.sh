@@ -134,11 +134,15 @@ function upgrade_system() {
 	echo -e "	${YELLOW}--> System detected : $SYSTEM${NC}"
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
 		echo -e "	${YELLOW}--> $SYSTEM version : $DEBIANVERSION${NC}"
-		echo "deb http://ftp.debian.org/debian jessie-backports main" >> $SOURCESFOLDER
+		if [[ $(grep -R "deb http://ftp.debian.org/debian jessie-backports main" /etc/apt/sources.list) != "" ]]; then
+			echo "deb http://ftp.debian.org/debian jessie-backports main" >> $SOURCESFOLDER
+		fi
 		apt-get update > /dev/null 2>&1
 		if [[ "$DEBIANVERSION" -lt "8" ]]; then
 			sed -ri 's/deb\ cdrom/#deb\ cdrom/g' /etc/apt/sources.list
-			echo "deb http://ftp.debian.org/debian wheezy-backports main" >> $SOURCESFOLDER
+			if [[ $(grep -R "deb http://ftp.debian.org/debian wheezy-backports main" /etc/apt/sources.list) != "" ]]; then
+				echo "deb http://ftp.debian.org/debian wheezy-backports main" >> $SOURCESFOLDER
+			fi
 			apt-get update > /dev/null 2>&1
 			apt-get install python-software-properties > /dev/null 2>&1
 		fi
