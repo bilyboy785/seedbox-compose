@@ -338,7 +338,6 @@ function choose_services() {
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
 	SERVICESPERUSER="$SERVICESUSER$SEEDUSER"
 	touch $SERVICESPERUSER
-	#cat $SERVICES >> $SERVICESPERUSER
 	for APPDOCKER in $SERVICESTOINSTALL
 	do
 		echo -e "	${GREEN}* $(echo $APPDOCKER | tr -d '"')${NC}"
@@ -368,7 +367,8 @@ function add_user_htpasswd() {
 }
 
 function install_services() {
-	touch $INSTALLEDFILE$SEEDUSER > /dev/null 2>&1
+	INSTALLEDFILE="/home/$SEEDUSER/resume"
+	touch "$INSTALLEDFILE" > /dev/null 2>&1
 	if [[ -f "$FILEPORTPATH" ]]; then
 		declare -i PORT=$(cat $FILEPORTPATH | tail -1)
 	else
@@ -450,7 +450,7 @@ function create_reverse() {
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
 		SITEFOLDER="/etc/nginx/conf.d/"
 		service nginx stop > /dev/null 2>&1
-		for line in $(cat $SERVICESPERUSER);
+		for line in $(cat $INSTALLEDFILE);
 		do
 			SERVICE=$(echo $line | cut -d\- -f1)
 			PORT=$(echo $line | cut -d\- -f2)
@@ -597,9 +597,10 @@ function resume_seedbox() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 		echo -e "	--> Your Web server is available on ${YELLOW}$DOMAIN${NC}"
-		for line in $(cat $SERVICESPERUSER);
+		for line in $(cat $INSTALLEDFILE);
 		do
-			echo -e "	--> $line from ${YELLOW}$line.$DOMAIN${NC}"
+			ACCESSDOMAIN=$(echo $line | cut -d\- -f3)
+			echo -e "	--> $line from ${YELLOW}$ACCESSDOMAIN${NC}"
 		done
 	else
 		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
