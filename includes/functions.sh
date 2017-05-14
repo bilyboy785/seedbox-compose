@@ -166,7 +166,7 @@ function upgrade_system() {
 		else
 			echo -e "	${YELLOW}--> Nginx.list already exist !${NC}"
 		fi
-		echo -e " ${BWHITE}* Installing Certbot${NC}"
+		echo -e " * Installing Certbot"
 		apt-get install certbot -t jessie-backports -y > /dev/null 2>&1
 		if [[ "$?" == "0" ]]; then
 			echo -e "	${GREEN}--> Certbot successfully installed !${NC}"
@@ -629,9 +629,9 @@ function resume_seedbox() {
 	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
 	echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
 	echo ""
-	echo -e " ${BWHITE}* Found logs here :${NC}"
-	echo -e "	--> Info Logs : ${YELLOW}$INFOLOGS${NC}"
-	echo -e "	--> Error Logs : ${YELLOW}$ERRORLOGS${NC}"
+	#echo -e " ${BWHITE}* Found logs here :${NC}"
+	#echo -e "	--> Info Logs : ${YELLOW}$INFOLOGS${NC}"
+	#echo -e "	--> Error Logs : ${YELLOW}$ERRORLOGS${NC}"
 	if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
 		mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
 		mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
@@ -702,6 +702,7 @@ function schedule_backup_seedbox() {
 		esac
 		echo $SCHEDULEBACKUP >> $TMPCRONFILE
 		cat "$TMPCRONFILE" >> "$CRONTABFILE"
+		echo ""
 		echo -e " ${GREEN}--> Backup successfully scheduled :${NC}"
 		echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
 		echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
