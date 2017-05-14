@@ -165,6 +165,13 @@ function upgrade_system() {
 		else
 			echo -e "	${YELLOW}--> Nginx.list already exist !${NC}"
 		fi
+		echo -e " ${BWHITE}* Installing Certbot${NC}"
+		apt-get install certbot -t jessie-backports -y > /dev/null 2>&1
+		if [[ "$?" == "0" ]]; then
+			echo -e " ${GREEN}* Certbot successfully installed !${NC}"
+		else
+			echo -e " ${RED}* Failed installing Certbot${NC}"
+		fi
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo " * Creating docker.list"
 		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
@@ -174,7 +181,12 @@ function upgrade_system() {
 		else
 			echo -e "		* ${RED}Error adding Key or repository !${NC}"
 		fi
+		echo " * Adding certbot repository"
+		apt-get install -y software-properties-common > /dev/null 2>&1
+		add-apt-repository ppa:certbot/certbot
 		apt-get update > /dev/null 2>&1
+		echo " * Installing certbot"
+		apt-get install certbot -y  > /dev/null 2>&1
 	fi
 	echo " * Updating sources and upgrading system"
 	apt-get update > /dev/null 2>&1
@@ -417,13 +429,6 @@ function create_reverse() {
 		if [[ "$DOMAIN" != "localhost" ]]; then
 			if (whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" 10 60) then
 				LESSL="y"
-				echo -e " ${BWHITE}* Installing Certbot${NC}"
-				apt-get install certbot -t jessie-backports -y > /dev/null 2>&1
-				if [[ "$?" == "0" ]]; then
-					echo -e " ${GREEN}* Certbot successfully installed !${NC}"
-				else
-					echo -e " ${RED}* Failed installing Certbot${NC}"
-				fi
 			else
 				LESSL="n"
 			fi
@@ -449,7 +454,6 @@ function create_reverse() {
 				sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
 				FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
 				"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
-				echo -e "		${BWHITE}--> Generating LE certificate files for $FQDN, please wait...${NC}"
 				generate_ssl_cert $CONTACTEMAIL $FQDN
 				if [[ "$?" == "0" ]]; then
 					echo -e "		${GREEN}* Certificate generation OK !${NC}"
@@ -476,10 +480,9 @@ function create_reverse() {
 }
 
 function generate_ssl_cert() {
-	CERTBOT="$PWD/seedbox-compose/includes/certbot/certbot-auto"
 	EMAILADDRESS=$1
 	DOMAINSSL=$2
-	echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
+	echo -e "		${BWHITE}--> Generating LE certificate files for $FQDN, please wait...${NC}"
 	certbot certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $EMAILADDRESS -d $DOMAINSSL
 }
 
