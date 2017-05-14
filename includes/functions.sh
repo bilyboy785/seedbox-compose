@@ -337,8 +337,7 @@ function create_user() {
 
 function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
-	echo -e "${BWHITE}Nginx, Jackett and Portainer will be installed by default !${NC}"
-	echo " --> Services wich will be installed : "
+	echo " --> Services will be installed : "
 	for app in $(cat includes/config/services-available);
 	do
 		service=$(echo $app | cut -d\- -f1)
@@ -380,7 +379,7 @@ function add_user_htpasswd() {
 }
 
 function install_services() {
-	touch $INSTALLEDFILE > /dev/null 2>&1
+	touch $INSTALLEDFILE$SEEDUSER > /dev/null 2>&1
 	if [[ -f "$FILEPORTPATH" ]]; then
 		declare -i PORT=$(cat $FILEPORTPATH | tail -1)
 	else
@@ -456,6 +455,9 @@ function create_reverse() {
 		service nginx stop > /dev/null 2>&1
 		for line in $(cat $SERVICESPERUSER);
 		do
+			SERVICE=$(echo $line | cut -d\- -f1)
+			PORT=$(echo $line | cut -d\- -f2)
+			FQDN=$(echo $line | cut -d\- -f3)
 			echo -e " ${BWHITE}--> [$line] - Creating reverse${NC}"
 			if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
 				generate_ssl_cert $CONTACTEMAIL $FQDN
