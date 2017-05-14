@@ -152,6 +152,7 @@ function checking_system() {
 			echo -e " ${BWHITE}* Creating sources.list${NC}"
 			rm /etc/apt/sources.list -R
 			cp "$TMPSOURCESDIR/debian.jessie" "$SOURCESLIST"
+			checking_errors $?
 			;;
 		"wheezy" )
 			echo -e "	${YELLOW}--> Please upgrade to Debian Jessie !${NC}"
@@ -173,9 +174,8 @@ function checking_system() {
 	echo -e " ${BWHITE}* Adding Docker key${NC}"
 	apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
 	checking_errors $?
-	echo -e " ${BWHITE}* Updating sources${NC}"
+	echo -e " ${BWHITE}* Updating & upgrading system${NC}"
 	apt-get update > /dev/null 2>&1
-	echo -e " ${BWHITE}* Upgrading system${NC}"
 	apt-get upgrade -y > /dev/null 2>&1
 	checking_errors $?
 	echo -e " ${BWHITE}* Installing certbot${NC}"
@@ -376,6 +376,8 @@ function install_services() {
 	fi
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		if (whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" 10 60) then
+			RSASSLKEY=$(whiptail --title "RSA Key Size" --inputbox \
+			"Secify RSA key size for your certificate" 7 50 "4096" 3>&1 1>&2 2>&3)
 			LESSL="y"
 		else
 			LESSL="n"
@@ -391,15 +393,16 @@ function install_services() {
 		sed -i "s|%PORT%|$PORT|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
+		sed -i "s|%IPADDRESS%|$IPADDRESS|g" $DOCKERCOMPOSEFILE
 		FQDNTMP="$line.$DOMAIN"
 		if [[ "$DOMAIN" != "localhost" ]]; then
 			FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
 			"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
-			NGINXSITE="/etc/nginx/conf.d/$line.$FQDN.conf"
+			NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
 			echo "$line-$PORT-$FQDN" >> $INSTALLEDFILE
 		else
-			NGINXSITE="/etc/nginx/conf.d/$line.$DOMAIN.conf"
-			echo "$line-$PORT-$DOMAIN" >> $INSTALLEDFILE
+			NGINXSITE="/etc/nginx/conf.d/$line.$SEEDUSER.conf"
+			echo "$line-$PORT-$SEEDUSER" >> $INSTALLEDFILE
 		fi
 		if [[ "$LESSL" = "y" ]]; then
 			NGINXPROXYFILE="$PWD/includes/nginxproxyssl/$line.conf"
@@ -481,7 +484,7 @@ function generate_ssl_cert() {
 	EMAILADDRESS=$1
 	DOMAINSSL=$2
 	echo -e "		${BWHITE}--> Generating LE certificate files for $FQDN, please wait...${NC}"
-	certbot certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $EMAILADDRESS -d $DOMAINSSL
+	bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size $RSASSLKEY --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
 }
 
 function new_seedbox_user() {

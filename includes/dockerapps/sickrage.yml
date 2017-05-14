@@ -9,7 +9,7 @@ sickrage-%USER%:
     - PGID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - %PORT%:8081
+    - %IPADDRESS%:%PORT%:8081
   volumes:
     - /home/%USER%/dockers/sickrage/config:/config
     - /home/%USER%/downloads/tv:/downloads

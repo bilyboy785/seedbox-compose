@@ -8,7 +8,7 @@ nextcloud-%USER%:
     - PUID=%UID%
     - PGID=%GID%
   ports:
-    - %PORT%:443
+    - %IPADDRESS%:%PORT%:443
   volumes:
     - /home/%USER%/dockers/nextcloud/config:/config
     - /home/%USER%/dockers/nextcloud/data:/data

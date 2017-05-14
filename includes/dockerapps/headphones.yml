@@ -9,7 +9,7 @@ headphones-%USER%:
     - PUID=%UID%
     - TZ=%TIMEZONE%
   ports:
-    - %PORT%:8181
+    - %IPADDRESS%:%PORT%:8181
   volumes:
     - /home/%USER%/dockers/headphones/config:/config:rw
     - /home/%USER%/downloads/music:/downloads
