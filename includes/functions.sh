@@ -392,9 +392,15 @@ function install_services() {
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		FQDNTMP="$line.$DOMAIN"
-		FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
-		"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
-		NGINXSITE="/etc/nginx/conf.d/$line.$FQDN.conf"
+		if [[ "$DOMAIN" != "localhost" ]]; then
+			FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
+			"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
+			NGINXSITE="/etc/nginx/conf.d/$line.$FQDN.conf"
+			echo "$line-$PORT-$FQDN" >> $INSTALLEDFILE
+		else
+			NGINXSITE="/etc/nginx/conf.d/$line.$DOMAIN.conf"
+			echo "$line-$PORT-$DOMAIN" >> $INSTALLEDFILE
+		fi
 		if [[ "$LESSL" = "y" ]]; then
 			NGINXPROXYFILE="$PWD/includes/nginxproxyssl/$line.conf"
 			touch $NGINXSITE
@@ -407,7 +413,6 @@ function install_services() {
 		sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXSITE
 		sed -i "s|%PORT%|$PORT|g" $NGINXSITE
 		sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
-		echo "$line-$PORT-$FQDN" >> $INSTALLEDFILE
 		PORT=$PORT+1
 		FQDN=""
 		FQDNTMP=""
