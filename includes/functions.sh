@@ -102,11 +102,12 @@ function install_base_packages() {
 	NUMPACKAGES=$(cat $PACKAGESFILE | wc -l)
 	for package in $(cat $PACKAGESFILE);
 	do
-		apt-get install -y $package ### > /dev/null 2>&1
+		apt-get install -y $package
 		echo $NUMPACKAGES
+		echo $package
 		NUMPACKAGES=$(($NUMPACKAGES+(100/$NUMPACKAGES)))
-	done 
-	} | whiptail --gauge "Please wait. Installing $package" 6 60 0
+	done
+	} | whiptail --gauge "Please wait during packages installation !" 6 60 0
 	if [[ $? = 0 ]]; then
 		echo -e "	${GREEN}--> Packages installation done !${NC}"
 	else
