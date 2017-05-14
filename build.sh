@@ -17,6 +17,7 @@ LASTPORT="8080"
 CURRENTDIR="$PWD"
 CONFDIR="/etc/seedboxcompose"
 PROFTPDCONF="/etc/proftpd/proftpd.conf"
+SOURCESLIST="/etc/apt/sources.list"
 DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 SERVICESAVAILABLE="includes/config/services-available"
 SERVICES="includes/config/services"
@@ -46,7 +47,7 @@ if [ $USER = "root" ] ; then
 			## Install base packages
 			install_base_packages
 		    ## Upgrading system
-			upgrade_system
+			checking_system
 			## Check for docker on system
 			install_docker
 			## Installing Nginx

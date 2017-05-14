@@ -120,96 +120,86 @@ function delete_htaccess() {
 	sed -ri 's///g' /etc/
 }
 
-function upgrade_system() {
-	DEBIANSOURCES="includes/sources.list/sources.list.debian"
-	UBUNTUSOURCES="includes/sources.list/sources.list.ubuntu"
-	DOCKERLIST="/etc/apt/sources.list.d/docker.list"
-	NGINXLIST="/etc/apt/sources.list.d/nginx.list"
-	SOURCESFOLDER="/etc/apt/sources.list"
-	DEBIANVERSION=$(cat /etc/debian_version | cut -d \. -f1)
-	SYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
-	echo ""
-	echo -e "${BLUE}### UPGRADING ###${NC}"
-	echo " * Checking system OS release"
-	echo -e "	${YELLOW}--> System detected : $SYSTEM${NC}"
-	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
-		echo -e "	${YELLOW}--> $SYSTEM version : $DEBIANVERSION${NC}"
-		if [[ $(grep -R "deb http://ftp.debian.org/debian jessie-backports main" /etc/apt/sources.list) != "" ]]; then
-			echo "deb http://ftp.debian.org/debian jessie-backports main" >> $SOURCESFOLDER
+function checking_system() {
+	echo -e "${BLUE}### CHECKING SYSTEM ###${NC}"
+	echo " * Checking system OS"
+	TMPSOURCESDIR="includes/sources.list"
+	TMPSYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
+	TMPCODENAME=$(lsb_release -sc)
+	TMPRELEASE=$(cat /etc/debian_version)
+	rm /etc/apt/sources.list -R
+	if [[ $(echo $TMPSYSTEM | grep -R "Debian") != "" ]]; then
+		SYSTEMOS="Debian"
+		if [[ $(echo $TMPRELEASE | grep "8") != "" ]]; then
+			SYSTEMRELEASE="8"
+			SYSTEMCODENAME="jessie"
+		elif [[ $(echo $TMPRELEASE | grep "7") != "" ]]; then
+			SYSTEMRELEASE="7"
+			SYSTEMCODENAME="wheezy"
 		fi
-		apt-get update > /dev/null 2>&1
-		if [[ "$DEBIANVERSION" -lt "8" ]]; then
-			sed -ri 's/deb\ cdrom/#deb\ cdrom/g' /etc/apt/sources.list
-			if [[ $(grep -R "deb http://ftp.debian.org/debian wheezy-backports main" /etc/apt/sources.list) != "" ]]; then
-				echo "deb http://ftp.debian.org/debian wheezy-backports main" >> $SOURCESFOLDER
+	elif [[ $(echo $TMPSYSTEM | grep -R "Ubuntu") != "" ]]; then
+		SYSTEMOS="Ubuntu"
+		if [[ $(echo $TMPCODENAME | grep "xenial") != "" ]]; then
+			SYSTEMRELEASE="16.04"
+			SYSTEMCODENAME="xenial"
+		elif [[ $(echo $TMPCODENAME | grep "yakkety") != "" ]]; then
+			SYSTEMRELEASE="16.10"
+			SYSTEMCODENAME="yakkety"
+		elif [[ $(echo $TMPCODENAME | grep "zesty") != "" ]]; then
+			SYSTEMRELEASE="17.14"
+			SYSTEMCODENAME="zesty"
+		fi
+	fi
+	echo -e "	${YELLOW}--> System OS : $SYSTEMOS${NC}"
+	echo -e "	${YELLOW}--> Release : $SYSTEMRELEASE${NC}"
+	echo -e "	${YELLOW}--> Codename : $SYSTEMCODENAME${NC}"
+	case $SYSTEMCODENAME in
+		"jessie" )
+			echo -e " ${BWHITE}* Creating sources.list${NC}"
+			cp "$TMPSOURCESDIR/debian.jessie" "$SOURCESLIST"
+			if [[ $(grep -R "deb http://ftp.debian.org/debian jessie-backports main" /etc/apt/sources.list) != "" ]]; then
+				echo "deb http://ftp.debian.org/debian jessie-backports main" >> $SOURCESFOLDER
 			fi
-			apt-get update > /dev/null 2>&1
-			apt-get install python-software-properties > /dev/null 2>&1
-		fi
-		echo " * Creating docker.list"
-		if [[ ! -f "$DOCKERLIST" ]]; then
-			echo "deb https://apt.dockerproject.org/repo debian-jessie main" > $DOCKERLIST
-			apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
-			if [[ $? = 0 ]]; then
-				echo -e "	${GREEN}--> Docker.list successfully created !${NC}"
-			else
-				echo -e "	${RED}--> Error adding the Key P80.POOL.SKS for Docker's Repo${NC}" 	
-			fi
-		else
-			echo -e "	${YELLOW}--> Docker.list already exist !${NC}"
-		fi
-		echo " * Creating nginx.list"
-		if [[ ! -f "$NGINXLIST" ]]; then
-			echo "deb http://nginx.org/packages/debian/ $(lsb_release -sc) nginx" > $NGINXLIST
-			wget -q -O - https://nginx.org/keys/nginx_signing.key | apt-key add - > /dev/null 2>&1
-			if [[ $? = 0 ]]; then
-				echo -e "	${GREEN}--> Nginx.list successfully created !${NC}"
-			else
-				echo -e "	${RED}--> Error adding the Key nginx_signing.key for Nginx Repo${NC}" 	
-			fi
-		else
-			echo -e "	${YELLOW}--> Nginx.list already exist !${NC}"
-		fi
-		echo -e " * Installing Certbot"
-		apt-get install certbot -t jessie-backports -y > /dev/null 2>&1
-		if [[ "$?" == "0" ]]; then
-			echo -e "	${GREEN}--> Certbot successfully installed !${NC}"
-		else
-			echo -e "	${RED}--> Failed installing Certbot${NC}"
-		fi
-	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
-		echo " * Creating docker.list"
-		apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
+			;;
+		"wheezy" )
+			echo -e "	${YELLOW}--> Please upgrade to Debian Jessie !${NC}"
+			;;
+		* )
+			echo -e "	${YELLOW}--> Please use a system based on Debian Jessie or Ubuntu !${NC}"
+			;;
+	esac
+	if [[ "$SYSTEMOS" == "Ubuntu" ]]; then
+		echo -e " ${BWHITE}* Creating repositories${NC}"
+		echo "deb http://nginx.org/packages/ubuntu/ $SYSTEMCODENAME nginx" >> $SOURCESLIST
+		echo "deb-src http://nginx.org/packages/ubuntu/ $SYSTEMCODENAME nginx" >> $SOURCESLIST
 		apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main' > /dev/null 2>&1
-		if [[ "$?" == "0" ]]; then
-			echo -e "	--> ${GREEN}Docker.list successfully added !${NC}"
-		else
-			echo -e "	--> ${RED}Error adding Key or repository !${NC}"
-		fi
-		echo " * Adding certbot repository"
-		apt-get install -y software-properties-common > /dev/null 2>&1
 		add-apt-repository ppa:certbot/certbot -y > /dev/null 2>&1
-		if [[ $? = 0 ]]; then
-			echo -e "	${GREEN}--> Certbot repository successfully added !${NC}"
-		else
-			echo -e "	${RED}--> Failed to add Certbot repository !${NC}"
-		fi
-		apt-get update > /dev/null 2>&1
-		echo " * Installing certbot"
-		apt-get install certbot -y  > /dev/null 2>&1
-		if [[ $? = 0 ]]; then
-			echo -e "	${GREEN}--> Certbot successfully installed !${NC}"
-		else
-			echo -e "	${RED}--> Failed to install Certbot !${NC}"
-		fi
 	fi
-	echo " * Updating sources and upgrading system"
+	echo -e " ${BWHITE}* Adding Nginx key${NC}"
+	wget -q http://nginx.org/keys/nginx_signing.key && apt-key add nginx_signing.key > /dev/null 2>&1
+	checking_errors $?
+	echo -e " ${BWHITE}* Adding Docker key${NC}"
+	apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D > /dev/null 2>&1
+	checking_errors $?
+	echo -e " ${BWHITE}* Updating sources${NC}"
 	apt-get update > /dev/null 2>&1
+	echo -e " ${BWHITE}* Upgrading system${NC}"
 	apt-get upgrade -y > /dev/null 2>&1
-	if [[ $? = 0 ]]; then
-		echo -e "	${GREEN}--> System upgraded successfully !${NC}"
+	echo " ${BWHITE}* Installing certbot${NC}"
+	if [[ "$SYSTEMOS" == "Ubuntu" ]]; then
+		apt-get install certbot -y  > /dev/null 2>&1
+	elif [[ "$SYSTEMOS" == "Debian" ]]; then
+		apt-get install certbot -t jessie-backports -y > /dev/null 2>&1
 	fi
-	echo ""
+	checking_errors $?
+}
+
+function checking_errors() {
+	if [[ "$1" == "0" ]]; then
+		echo -e "	${GREEN}--> Operation success !${NC}"
+	else
+		echo -e "	${RED}--> Operation failed !${NC}"
+	fi
 }
 
 function install_nginx() {
@@ -218,6 +208,7 @@ function install_nginx() {
 	if [[ ! -d "$NGINXDIR" ]]; then	
 		echo -e " * Installing Nginx"
 		apt-get install -y nginx > /dev/null 2>&1
+		checking_errors $?
 	else
 		echo -e " * Nginx is already installed !"
 	fi
@@ -231,6 +222,7 @@ function install_zsh() {
 	if [[ ! -d "$OHMYZSHDIR" ]]; then	
 		echo -e " * Installing ZSH"
 		apt-get install -y zsh > /dev/null 2>&1
+		checking_errors $?
 		echo -e " * Cloning Oh-My-ZSH"
 		wget -q https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O - | sh > /dev/null 2>&1
 		sed -i -e 's/^\ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"bira\"/g' ~/.zshrc > /dev/null 2>&1
@@ -349,7 +341,7 @@ function choose_services() {
 		echo "$service $desc off" >> /tmp/menuservices.txt
 	done
 	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
-	"Please select services you want to add for $SEEDUSER. Portainer & Jackett are installed by default !" 28 50 17 \
+	"Please select services you want to add for $SEEDUSER (Use space to select)" 28 50 17 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
 	SERVICESPERUSER="$SERVICESUSER$SEEDUSER"
 	touch $SERVICESPERUSER

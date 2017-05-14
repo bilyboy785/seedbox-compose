@@ -1,0 +1,15 @@
+deb http://security.debian.org/ jessie/updates main
+deb-src http://security.debian.org/ jessie/updates main
+
+deb http://deb.debian.org/debian jessie main
+deb-src http://deb.debian.org/debian jessie main
+
+deb http://deb.debian.org/debian jessie-updates main
+deb-src http://deb.debian.org/debian jessie-updates main
+
+deb http://ftp.debian.org/debian jessie-backports main
+
+deb http://nginx.org/packages/mainline/debian/ jessie nginx
+deb-src http://nginx.org/packages/mainline/debian/ jessie nginx
+
+deb https://apt.dockerproject.org/repo debian-jessie main
