@@ -95,18 +95,18 @@ function conf_dir() {
 function install_base_packages() {
 	echo ""
 	echo -e "${BLUE}### INSTALL BASE PACKAGES ###${NC}"
+	sed -ri 's/deb\ cdrom/#deb\ cdrom/g' /etc/apt/sources.list
 	whiptail --title "Base Package" --msgbox "Seedbox-Compose installer will now install base packages and update system" 10 60
 	echo " * Installing apache2-utils, unzip, git, curl ..."
-	# {
-	# NUMPACKAGES=$(cat $PACKAGESFILE | wc -l)
-	# for package in $(cat $PACKAGESFILE);
-	# do
-	# 	apt-get install -y $package ### > /dev/null 2>&1
-	# 	echo $NUMPACKAGES
-	# 	NUMPACKAGES=$(($NUMPACKAGES+(100/$NUMPACKAGES)))
-	# done 
-	# } | whiptail --gauge "Please wait during packages installation" 6 60 0
-	apt-get install -y gawk apache2-utils htop unzip dialog git apt-transport-https ca-certificates curl gnupg2 software-properties-common
+	{
+	NUMPACKAGES=$(cat $PACKAGESFILE | wc -l)
+	for package in $(cat $PACKAGESFILE);
+	do
+		apt-get install -y $package ### > /dev/null 2>&1
+		echo $NUMPACKAGES
+		NUMPACKAGES=$(($NUMPACKAGES+(100/$NUMPACKAGES)))
+	done 
+	} | whiptail --gauge "Please wait during packages installation" 6 60 0
 	if [[ $? = 0 ]]; then
 		echo -e "	${GREEN}--> Packages installation done !${NC}"
 	else
@@ -129,9 +129,9 @@ function upgrade_system() {
 	echo ""
 	echo -e "${BLUE}### UPGRADING ###${NC}"
 	echo " * Checking system OS release"
-	echo -e "	${BWHITE}--> System detected : $SYSTEM${NC}"
+	echo -e "	${YELLOW}--> System detected : $SYSTEM${NC}"
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
-		echo -e "	${BWHITE}--> $SYSTEM version : $DEBIANVERSION${NC}"
+		echo -e "	${YELLOW}--> $SYSTEM version : $DEBIANVERSION${NC}"
 		if [[ "$DEBIANVERSION" -lt "8" ]]; then
 			sed -ri 's/deb\ cdrom/#deb\ cdrom/g' /etc/apt/sources.list
 			apt-get update > /dev/null 2>&1
@@ -253,7 +253,7 @@ function define_parameters() {
 	else
 		DOMAIN="localhost"
 	fi
-	install_ftp_server
+	#install_ftp_server
 	echo ""
 }
 
@@ -297,8 +297,8 @@ function choose_services() {
 	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
 	"Please select services you want to add for $SEEDUSER. Portainer & Jackett are installed by default !" 25 50 15 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
-	touch $SERVICESUSER$SEEDUSER
 	SERVICESPERUSER="$SERVICESUSER$SEEDUSER"
+	touch $SERVICESPERUSER
 	cat $SERVICES >> $SERVICESPERUSER
 	for APPDOCKER in $SERVICESTOINSTALL
 	do
