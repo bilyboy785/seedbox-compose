@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 function under_developpment() {
 	clear
 	echo ""

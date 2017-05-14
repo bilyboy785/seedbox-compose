@@ -1,7 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 source includes/functions.sh
-# This line MUST be present in all scripts executed by cron!
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 ## PARAMETERS
 RED='\e[0;31m'
