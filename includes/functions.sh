@@ -15,7 +15,7 @@ function script_option() {
 	#echo ""
 	if [[ -d "$CONFDIR" ]]; then
 		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 20 65 10 \
-			"1" "Install Seedbox-Compose" \
+			"1" "Seedbox-Compose already installed !" \
 			"2" "New seedbox user" \
 			"3" "New htaccess user" \
 			"4" "Add docker Apps for user X" \
@@ -41,22 +41,16 @@ function script_option() {
 		  SCRIPT="ADDDOCKAPP"
 		  ;;
 		"5")
-		  echo -e "${BLUE}##########################################${NC}"
-		  echo -e "${BLUE}###        RESTART ALL DOCKERS         ###${NC}"
-		  echo -e "${BLUE}##########################################${NC}"
 		  SCRIPT="RESTARTDOCKERS"
 		;;
 		"6")
 		  SCRIPT="BACKUPCONF"
-		  echo -e "${BLUE}##########################################${NC}"
-		  echo -e "${BLUE}###        BACKUP DOCKERS CONF         ###${NC}"
-		  echo -e "${BLUE}##########################################${NC}"
 		;;
 		"7")
 		   SCRIPT="SCHEDULEBACKUP"
 		   echo -e "${BLUE}##########################################${NC}"
-		  echo -e "${BLUE}###           SCHEDULE BACKUP          ###${NC}"
-		  echo -e "${BLUE}##########################################${NC}"
+		   echo -e "${BLUE}###           SCHEDULE BACKUP          ###${NC}"
+		   echo -e "${BLUE}##########################################${NC}"
 		;;
 		"8")
 		   SCRIPT="INSTALLFTPSERVER"

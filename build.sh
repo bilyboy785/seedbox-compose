@@ -46,7 +46,7 @@ if [ $USER = "root" ] ; then
 			conf_dir
 			## Install base packages
 			install_base_packages
-		    ## Upgrading system
+		    ## Checking system version
 			checking_system
 			## Check for docker on system
 			install_docker
