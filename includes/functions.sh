@@ -346,11 +346,11 @@ function choose_services() {
 		echo "$service $desc off" >> /tmp/menuservices.txt
 	done
 	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
-	"Please select services you want to add for $SEEDUSER. Portainer & Jackett are installed by default !" 25 50 15 \
+	"Please select services you want to add for $SEEDUSER. Portainer & Jackett are installed by default !" 28 50 17 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
 	SERVICESPERUSER="$SERVICESUSER$SEEDUSER"
 	touch $SERVICESPERUSER
-	cat $SERVICES >> $SERVICESPERUSER
+	#cat $SERVICES >> $SERVICESPERUSER
 	for APPDOCKER in $SERVICESTOINSTALL
 	do
 		echo -e "	${GREEN}* $(echo $APPDOCKER | tr -d '"')${NC}"
@@ -450,11 +450,13 @@ function create_reverse() {
 		fi
 		for line in $(cat $SERVICESPERUSER);
 		do
-			echo $SERVICESPERUSER
-			NGINXSITE="/etc/nginx/conf.d/$line-$SEEDUSER.conf"
+			NGINXSITE="/etc/nginx/conf.d/$line"
 			FQDNTMP="$line.$DOMAIN"
 			echo -e " ${BWHITE}--> [$line] - Creating reverse${NC}"
 			if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
+				FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
+				"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
+				NGINXSITE="/etc/nginx/conf.d/$line.$FQDN.conf"
 				if [[ "$LESSL" = "y" ]]; then
 					NGINXPROXYFILE="includes/nginxproxyssl/$line.conf"
 					touch $NGINXSITE
@@ -467,8 +469,6 @@ function create_reverse() {
 				sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXSITE
 				sed -i "s|%PORT%|$PORT|g" $NGINXSITE
 				sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
-				FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
-				"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
 				generate_ssl_cert $CONTACTEMAIL $FQDN
 				if [[ "$?" == "0" ]]; then
 					echo -e "		${GREEN}* Certificate generation OK !${NC}"
@@ -629,13 +629,13 @@ function resume_seedbox() {
 	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
 	echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
 	echo ""
-	#echo -e " ${BWHITE}* Found logs here :${NC}"
-	#echo -e "	--> Info Logs : ${YELLOW}$INFOLOGS${NC}"
-	#echo -e "	--> Error Logs : ${YELLOW}$ERRORLOGS${NC}"
-	if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
-		mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
-		mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
-	fi
+	# echo -e " ${BWHITE}* Found logs here :${NC}"
+	# echo -e "	--> Info Logs : ${YELLOW}$INFOLOGS${NC}"
+	# echo -e "	--> Error Logs : ${YELLOW}$ERRORLOGS${NC}"
+	# if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
+	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
+	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
+	# fi
 }
 
 function backup_docker_conf() {
