@@ -9,7 +9,7 @@ jackett-%USER%:
     - PUID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - %PORT%:9117
+    - %IPADDRESS%:%PORT%:9117
   volumes:
     - /etc/localtime:/etc/locatime:ro
     - /home/%USER%/dockers/jackett/config:/config:rw

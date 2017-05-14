@@ -8,6 +8,6 @@ zerobin-%USER%:
     - UID=%UID%
     - GID=%GID%
   ports:
-    - %PORT%:8888
+    - %IPADDRESS%:%PORT%:8888
   volumes:
     - /home/%USER%/dockers/zerobin/data:/zerobin/data

@@ -10,7 +10,7 @@ plex-%USER%:
     - PGID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - 32400:32400
+    - %IPADDRESS%:32400:32400
     - 32400:32400/udp
     - 32469:32469
     - 32469:32469/udp

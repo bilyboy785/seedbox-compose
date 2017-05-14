@@ -9,7 +9,7 @@ radarr-%USER%:
     - PGID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - %PORT%:7878
+    - %IPADDRESS%:%PORT%:7878
   volumes:
     - /home/%USER%/dockers/radarr/config:/config
     - /home/%USER%/downloads/movies:/downloads

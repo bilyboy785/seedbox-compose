@@ -9,7 +9,7 @@ plexpy-%USER%:
     - PUID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - %PORT%:8181
+    - %IPADDRESS%:%PORT%:8181
   volumes:
     - /home/%USER%/dockers/plexpy/config:/config
     - /home/%USER%/dockers/plexply/logs:/logs:ro

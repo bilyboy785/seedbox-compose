@@ -9,7 +9,7 @@ couchpotato-%USER%:
     - PGID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - %PORT%:5050
+    - %IPADDRESS%:%PORT%:5050
   volumes:
     - /home/%USER%/dockers/couchpotato/config:/config
     - /home/%USER%/downloads/movies:/downloads

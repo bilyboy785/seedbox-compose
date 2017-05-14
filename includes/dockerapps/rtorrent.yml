@@ -9,7 +9,7 @@ rutorrent-%USER%:
     - GRP_ID=%GID%
     - PHP_MEM=1024M
   ports:
-    - "%PORT%:80"
+    - "%IPADDRESS%:%PORT%:80"
     - "49160:49160/udp"
     - "49161:49161"
   volumes:
