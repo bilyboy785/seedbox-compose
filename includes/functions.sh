@@ -135,6 +135,7 @@ function upgrade_system() {
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
 		echo -e "	${YELLOW}--> $SYSTEM version : $DEBIANVERSION${NC}"
 		echo "deb http://ftp.debian.org/debian jessie-backports main" >> $SOURCESFOLDER
+		apt-get update > /dev/null 2>&1
 		if [[ "$DEBIANVERSION" -lt "8" ]]; then
 			sed -ri 's/deb\ cdrom/#deb\ cdrom/g' /etc/apt/sources.list
 			echo "deb http://ftp.debian.org/debian wheezy-backports main" >> $SOURCESFOLDER
@@ -168,9 +169,9 @@ function upgrade_system() {
 		echo -e " ${BWHITE}* Installing Certbot${NC}"
 		apt-get install certbot -t jessie-backports -y > /dev/null 2>&1
 		if [[ "$?" == "0" ]]; then
-			echo -e " ${GREEN}* Certbot successfully installed !${NC}"
+			echo -e "	${GREEN}--> Certbot successfully installed !${NC}"
 		else
-			echo -e " ${RED}* Failed installing Certbot${NC}"
+			echo -e "	${RED}--> Failed installing Certbot${NC}"
 		fi
 	elif [[ $(echo $SYSTEM | grep "Ubuntu") ]]; then
 		echo " * Creating docker.list"
