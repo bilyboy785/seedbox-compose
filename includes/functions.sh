@@ -134,11 +134,12 @@ function upgrade_system() {
 	echo -e "	${YELLOW}--> System detected : $SYSTEM${NC}"
 	if [[ $(echo $SYSTEM | grep "Debian") != "" ]]; then
 		echo -e "	${YELLOW}--> $SYSTEM version : $DEBIANVERSION${NC}"
+		echo "deb http://ftp.debian.org/debian jessie-backports main" >> $SOURCESFOLDER
 		if [[ "$DEBIANVERSION" -lt "8" ]]; then
 			sed -ri 's/deb\ cdrom/#deb\ cdrom/g' /etc/apt/sources.list
+			echo "deb http://ftp.debian.org/debian wheezy-backports main" >> $SOURCESFOLDER
 			apt-get update > /dev/null 2>&1
 			apt-get install python-software-properties > /dev/null 2>&1
-			exit 1
 		fi
 		echo " * Creating docker.list"
 		if [[ ! -f "$DOCKERLIST" ]]; then
@@ -220,14 +221,19 @@ function install_docker() {
 		echo " * Installing Docker"
 		apt-get install -y docker-engine > /dev/null 2>&1
 		if [[ "$?" == "0" ]]; then
-			echo -e "	${GREEN}* Docker successfully installed"
+			echo -e "	${GREEN}* Docker successfully installed${NC}"
 		else
-			echo -e "	${GREEN}* Failed installing Docker !"
+			echo -e "	${RED}* Failed installing Docker !${NC}"
 		fi
 		service docker start > /dev/null 2>&1
 		echo " * Installing Docker-compose"
 		curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 		chmod +x /usr/local/bin/docker-compose
+		if [[ "$?" == "0" ]]; then
+			echo -e "	${GREEN}* Docker-Compose successfully installed${NC}"
+		else
+			echo -e "	${RED}* Failed installing Docker-Compose !${NC}"
+		fi
 		echo ""
 	else
 		echo " * Docker is already installed !"
@@ -409,10 +415,18 @@ function create_reverse() {
 		SITEFOLDER="/etc/nginx/conf.d/"
 		service nginx stop > /dev/null 2>&1
 		if [[ "$DOMAIN" != "localhost" ]]; then
-			#LESSL="y"
-			LESSL=$(whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" --yes-button "yes" --no-button "no" 10 60 3>&1 1>&2 2>&3)
-			echo "Use SSL ==> $LESSL"
-			exit 1
+			if (whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" 10 60) then
+				LESSL="y"
+				echo -e " ${BWHITE}* Installing Certbot${NC}"
+				apt-get install certbot -t jessie-backports -y > /dev/null 2>&1
+				if [[ "$?" == "0" ]]; then
+					echo -e " ${GREEN}* Certbot successfully installed !${NC}"
+				else
+					echo -e " ${RED}* Failed installing Certbot${NC}"
+				fi
+			else
+				LESSL="n"
+			fi
 		fi
 		for line in $(cat $SERVICESPERUSER);
 		do
@@ -421,7 +435,7 @@ function create_reverse() {
 			FQDNTMP="$line.$DOMAIN"
 			echo -e " ${BWHITE}--> [$line] - Creating reverse${NC}"
 			if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
-				if [[ "$LESSL" != "n" ]]; then
+				if [[ "$LESSL" = "y" ]]; then
 					NGINXPROXYFILE="includes/nginxproxyssl/$line.conf"
 					touch $NGINXSITE
 					cat $NGINXPROXYFILE >> $NGINXSITE
@@ -434,21 +448,14 @@ function create_reverse() {
 				sed -i "s|%PORT%|$PORT|g" $NGINXSITE
 				sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
 				FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
-				"Specify a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
-				case $LESSL in
-				"y")
-					echo -e "		${BWHITE}--> Generating LE certificate files for $FQDN, please wait...${NC}"
-					generate_ssl_cert $CONTACTEMAIL $FQDN
-					if [[ "$?" == "0" ]]; then
-						echo -e "		${GREEN}* Certificate generation OK !${NC}"
-					else
-						echo -e "		${RED}* Certificate generation failed !${NC}"
-					fi
-				;;
-				*)
-					echo -e "		${RED}* Nothing to do with LE !${NC}"
-				;;
-				esac
+				"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
+				echo -e "		${BWHITE}--> Generating LE certificate files for $FQDN, please wait...${NC}"
+				generate_ssl_cert $CONTACTEMAIL $FQDN
+				if [[ "$?" == "0" ]]; then
+					echo -e "		${GREEN}* Certificate generation OK !${NC}"
+				else
+					echo -e "		${RED}* Certificate generation failed !${NC}"
+				fi
 			fi
 			FQDN=""
 			FQDNTMP=""
@@ -473,7 +480,7 @@ function generate_ssl_cert() {
 	EMAILADDRESS=$1
 	DOMAINSSL=$2
 	echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
-	.$CERTBOT certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $EMAILADDRESS -d $DOMAINSSL
+	certbot certonly --quiet --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --email $EMAILADDRESS -d $DOMAINSSL
 }
 
 function new_seedbox_user() {

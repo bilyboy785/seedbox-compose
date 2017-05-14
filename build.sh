@@ -56,7 +56,7 @@ if [ $USER = "root" ] ; then
 			## Installing ZSH
 			install_zsh
 			## Check for LetsEncrypt packages on system
-			install_letsencrypt
+			#install_letsencrypt
 			## Defines parameters for dockers : password, domains and replace it in docker-compose file
 			define_parameters
 			## Choose wich services install
