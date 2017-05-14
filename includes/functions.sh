@@ -116,6 +116,7 @@ function install_base_packages() {
 
 function delete_htaccess() {
 	SITEENABLEDFOLDER="/etc/nginx/conf.d/"
+	sed -ri 's///g' /etc/
 }
 
 function upgrade_system() {
@@ -449,8 +450,12 @@ function create_reverse() {
 			fi
 			FQDN=""
 		done
-		echo -e "	--> ${YELLOW}Restarting Nginx...${NC}"
+		echo -e " --> ${YELLOW}Restarting Nginx...${NC}"
 		service nginx restart > /dev/null 2>&1
+		if [[ "$?" == "0" ]]; then
+			echo -e "	${GREEN}* Service nginx restarted !${NC}"
+		else
+			echo -e "	${RED}* Failed to restart Nginx !${NC}"
 	fi
 	USERDIR="/home/$SEEDUSER"
 	if [[ -d "$USERDIR" ]]; then
@@ -543,29 +548,29 @@ function install_ftp_server() {
 }
 
 function restart_docker_apps() {
-	DOCKERS=$(docker ps --format "{{.Names}}")
-	declare -i i=1
-	declare -a TABAPP
-	echo "	* [0] - All dockers (default)"
-	while [ $i -le $(echo "$DOCKERS" | wc -w) ]
-	do
-		APP=$(echo $DOCKERS | cut -d\  -f$i)
-		echo "	* [$i] - $APP"
-		$TABAPP[$i]=$APP
-		i=$i+1
-	done
-	read -p "Please enter the number you want to restart, let blank to default value (all) : " RESTARTAPP
-	case $RESTARTAPP in
-	"")
-	  docker restart $(docker ps)
-	  ;;
-	"0")
-	  docker restart $(docker ps)
-	  ;;
-	"1")
-	  echo $TABAPP[1]
-	  #docker restart TABAPP[1]
-	esac
+	# DOCKERS=$(docker ps --format "{{.Names}}")
+	# declare -i i=1
+	# declare -a TABAPP
+	# echo "	* [0] - All dockers (default)"
+	# while [ $i -le $(echo "$DOCKERS" | wc -w) ]
+	# do
+	# 	APP=$(echo $DOCKERS | cut -d\  -f$i)
+	# 	echo "	* [$i] - $APP"
+	# 	$TABAPP[$i]=$APP
+	# 	i=$i+1
+	# done
+	# read -p "Please enter the number you want to restart, let blank to default value (all) : " RESTARTAPP
+	# case $RESTARTAPP in
+	# "")
+	#   docker restart $(docker ps)
+	#   ;;
+	# "0")
+	#   docker restart $(docker ps)
+	#   ;;
+	# "1")
+	#   echo $TABAPP[1]
+	#   #docker restart TABAPP[1]
+	# esac
 }
 
 function resume_seedbox() {
@@ -598,8 +603,10 @@ function resume_seedbox() {
 	echo -e " ${BWHITE}* Found logs here :${NC}"
 	echo -e "	--> Info Logs : ${YELLOW}$INFOLOGS${NC}"
 	echo -e "	--> Error Logs : ${YELLOW}$ERRORLOGS${NC}"
-	mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
-	mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
+	if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
+		mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
+		mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
+	fi
 }
 
 function backup_docker_conf() {

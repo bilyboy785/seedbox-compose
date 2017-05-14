@@ -74,7 +74,7 @@ if [ $USER = "root" ] ; then
 			## Backup dockers app Configuration
 			backup_docker_conf
 			## Display Teamspeak IDs
-			access_token_ts
+			##access_token_ts
 	    	else
 			clear
 			echo -e " ${RED}--> Seedbox-Compose already installed !${NC}"
