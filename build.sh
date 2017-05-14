@@ -51,6 +51,7 @@ if [ $USER = "root" ] ; then
 			## Check for docker on system
 			install_docker
 			## Installing base packages
+			install_nginx
 			base_packages
 			## Check for LetsEncrypt packages on system
 			install_letsencrypt

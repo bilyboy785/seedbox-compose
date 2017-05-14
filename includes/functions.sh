@@ -182,6 +182,18 @@ function upgrade_system() {
 	echo ""
 }
 
+function install_nginx() {
+	echo -e "${BLUE}### NGINX ###${NC}"
+	NGINXDIR="/etc/nginx/"
+	if [[ ! -d "$NGINXDIR" ]]; then	
+		echo -e " * Installing Nginx"
+		apt-get install -y nginx > /dev/null 2>&1
+	else
+		echo -e " * Nginx is already installed !"
+	fi
+	echo ""
+}
+
 function base_packages() {
 	echo -e "${BLUE}### ZSH-OHMYZSH ###${NC}"
 	ZSHDIR="/usr/share/zsh"
@@ -342,7 +354,7 @@ function install_services() {
 	fi
 	for line in $(cat $SERVICESPERUSER);
 	do
-		REVERSEPROXYNGINX="/etc/nginx/sites-enabled/$line.$SEEDUSER.conf"
+		REVERSEPROXYNGINX="/etc/nginx/sites-enabled/$line-$SEEDUSER.conf"
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
