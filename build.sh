@@ -72,7 +72,8 @@ if [ $USER = "root" ] ; then
 			## Resuming seedbox-compose installation
 			resume_seedbox
 			## Backup dockers app Configuration
-			backup_docker_conf
+			#backup_docker_conf
+			schedule_backup_seedbox
 			## Display Teamspeak IDs
 			##access_token_ts
 	    	else

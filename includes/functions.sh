@@ -669,49 +669,51 @@ function backup_docker_conf() {
 }
 
 function schedule_backup_seedbox() {
-	if [[ "$SEEDUSER" == "" ]]; then
-		SEEDUSER=$(whiptail --title "Username" --inputbox \
-		"Please enter your username :" 7 50 \
-		3>&1 1>&2 2>&3)
-	fi
-	if [[ -d "/home/$SEEDUSER" ]]; then
-		BACKUPTYPE=$(whiptail --title "Backup type" --menu "Choose a scheduling backup type" 12 60 4 \
-			"1" "Daily backup" \
-			"2" "Weekly backup" \
-			"3" "Monthly backup" 3>&1 1>&2 2>&3)
-		BACKUPDIR=$(whiptail --title "Backup dir" --inputbox \
-			"Please choose backup destination" 7 65 "/var/archives" \
+	if (whiptail --title "Backup Dockers conf" --yesno "Do you want to schedule a configuration backup ?" 10 60) then
+		if [[ "$SEEDUSER" == "" ]]; then
+			SEEDUSER=$(whiptail --title "Username" --inputbox \
+			"Please enter your username :" 7 50 \
 			3>&1 1>&2 2>&3)
-		BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
-		DOCKERDIR="/home/$SEEDUSER"
-		CRONTABFILE="/etc/crontab"
-		TMPCRONFILE="/tmp/crontab"
-		case $BACKUPTYPE in
-		"1")
-			SCHEDULEBACKUP="@daily tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-			BACKUPDESC="Backup every day"
-		;;
-		"2")
-			SCHEDULEBACKUP="@weekly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-			BACKUPDESC="Backup every weeks"
-		;;
-		"3")
-			SCHEDULEBACKUP="@monthly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-			BACKUPDESC="Backup every months"
-		;;
-		esac
-		echo $SCHEDULEBACKUP >> $TMPCRONFILE
-		cat "$TMPCRONFILE" >> "$CRONTABFILE"
-		echo ""
-		echo -e " ${GREEN}--> Backup successfully scheduled :${NC}"
-		echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
-		echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
-		echo -e "	${BWHITE}* For $SEEDUSER ${NC}"
-		echo ""
-		rm $TMPCRONFILE
-	else
-		echo -e " ${YELLOW}* Please install Seedbox for $SEEDUSER before backup${NC}"
-		echo ""
+		fi
+		if [[ -d "/home/$SEEDUSER" ]]; then
+			BACKUPTYPE=$(whiptail --title "Backup type" --menu "Choose a scheduling backup type" 12 60 4 \
+				"1" "Daily backup" \
+				"2" "Weekly backup" \
+				"3" "Monthly backup" 3>&1 1>&2 2>&3)
+			BACKUPDIR=$(whiptail --title "Backup dir" --inputbox \
+				"Please choose backup destination" 7 65 "/var/archives" \
+				3>&1 1>&2 2>&3)
+			BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
+			DOCKERDIR="/home/$SEEDUSER"
+			CRONTABFILE="/etc/crontab"
+			TMPCRONFILE="/tmp/crontab"
+			case $BACKUPTYPE in
+			"1")
+				SCHEDULEBACKUP="@daily tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+				BACKUPDESC="Backup every day"
+			;;
+			"2")
+				SCHEDULEBACKUP="@weekly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+				BACKUPDESC="Backup every weeks"
+			;;
+			"3")
+				SCHEDULEBACKUP="@monthly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+				BACKUPDESC="Backup every months"
+			;;
+			esac
+			echo $SCHEDULEBACKUP >> $TMPCRONFILE
+			cat "$TMPCRONFILE" >> "$CRONTABFILE"
+			echo ""
+			echo -e " ${GREEN}--> Backup successfully scheduled :${NC}"
+			echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
+			echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
+			echo -e "	${BWHITE}* For $SEEDUSER ${NC}"
+			echo ""
+			rm $TMPCRONFILE
+		else
+			echo -e " ${YELLOW}* Please install Seedbox for $SEEDUSER before backup${NC}"
+			echo ""
+		fi
 	fi
 }
 
