@@ -513,70 +513,70 @@ function new_seedbox_user() {
 	backup_docker_conf
 }
 
-function add_docker_app() {
-	#echo -e "${BLUE}##########################################${NC}"
-	#echo -e "${BLUE}###           ADD DOCKER APPS          ###${NC}"
-	#echo -e "${BLUE}##########################################${NC}"
-	#declare -i NUMUSER=0
-	#declare -a seedboxusers=()
-	#for line in $(cat $USERSFILE);
-	#do
-		#seedboxusers[${#seedboxusers[*]}]=$line
-		#NUMUSER=$NUMUSER+1
-	#done
-	#NBUSERS=$(${#nomtableau[*]})
-	#SEEDUSER=$(whiptail --title "Choose username" --menu \
-		#"Please select user to add dockers app" 15 50 4 \
-		#${seedboxusers[0]} " " 3>&1 1>&2 2>&3)
-	#echo -e " ${BWHITE}* Adding apps for $SEEDUSER"
-}
+# function add_docker_app() {
+# 	echo -e "${BLUE}##########################################${NC}"
+# 	echo -e "${BLUE}###           ADD DOCKER APPS          ###${NC}"
+# 	echo -e "${BLUE}##########################################${NC}"
+# 	declare -i NUMUSER=0
+# 	declare -a seedboxusers=()
+# 	for line in $(cat $USERSFILE);
+# 	do
+# 		seedboxusers[${#seedboxusers[*]}]=$line
+# 		NUMUSER=$NUMUSER+1
+# 	done
+# 	NBUSERS=$(${#nomtableau[*]})
+# 	SEEDUSER=$(whiptail --title "Choose username" --menu \
+# 		"Please select user to add dockers app" 15 50 4 \
+# 		${seedboxusers[0]} " " 3>&1 1>&2 2>&3)
+# 	echo -e " ${BWHITE}* Adding apps for $SEEDUSER"
+# }
 
-function delete_dockers() {
-	echo -e "${BLUE}##########################################${NC}"
-	echo -e "${BLUE}###        CLEANING DOCKER APPS        ###${NC}"
-	echo -e "${BLUE}##########################################${NC}"
-	echo " * Stopping dockers..."
-	docker stop $(docker ps) > /dev/null 2>&1
-	echo " * Removing dockers..."
-	docker rm $(docker ps -a) > /dev/null 2>&1
-	if (whiptail --title "Data deleting" --yesno "Do you want to delete all docker's configuration files, data and user ?" 10 60) then
-		if [[ "$SEEDUSER" == "" ]]; then
-			SEEDUSER=$(whiptail --title "Username" --inputbox "Specify user to delete all his conf files" 10 60 Morgan 3>&1 1>&2 2>&3)
-		fi
-		DOCKERFOLDER="/home/$SEEDUSER/dockers/"
-		echo "		* Deleting user..."
-		userdel $SEEDUSER
-		if [[ -d "$DOCKERFOLDER" ]]; then
-			echo "		* Deleting files..."
-			rm $DOCKERFOLDER -R
-			rm $CONFDIR -R
-		fi
-	else
-		echo -e "	${BWHITE}* Nothing will be deleted !${NC}"
-	fi
-	echo ""
-}
+# function delete_dockers() {
+# 	echo -e "${BLUE}##########################################${NC}"
+# 	echo -e "${BLUE}###        CLEANING DOCKER APPS        ###${NC}"
+# 	echo -e "${BLUE}##########################################${NC}"
+# 	echo " * Stopping dockers..."
+# 	docker stop $(docker ps) > /dev/null 2>&1
+# 	echo " * Removing dockers..."
+# 	docker rm $(docker ps -a) > /dev/null 2>&1
+# 	if (whiptail --title "Data deleting" --yesno "Do you want to delete all docker's configuration files, data and user ?" 10 60) then
+# 		if [[ "$SEEDUSER" == "" ]]; then
+# 			SEEDUSER=$(whiptail --title "Username" --inputbox "Specify user to delete all his conf files" 10 60 Morgan 3>&1 1>&2 2>&3)
+# 		fi
+# 		DOCKERFOLDER="/home/$SEEDUSER/dockers/"
+# 		echo "		* Deleting user..."
+# 		userdel $SEEDUSER
+# 		if [[ -d "$DOCKERFOLDER" ]]; then
+# 			echo "		* Deleting files..."
+# 			rm $DOCKERFOLDER -R
+# 			rm $CONFDIR -R
+# 		fi
+# 	else
+# 		echo -e "	${BWHITE}* Nothing will be deleted !${NC}"
+# 	fi
+# 	echo ""
+# }
 
-function install_ftp_server() {
-	if [[ ! -d "$PROFTPDCONF" ]]; then
-		if (whiptail --title "Use FTP Server" --yesno "Do you want to install FTP server ?" 7 50) then
-			FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
-			"Please enter a name for your FTP Server :" 7 50 "SeedBox" \
-			3>&1 1>&2 2>&3)
-			apt-get install proftpd -y
-			BASEPROFTPDFILE="includes/config/proftpd.conf"
-			mv "$PROFTPDCONF" "$PROFTPDCONF.bak"
-	 		cat "$BASEPROFTPDFILE" >> "$PROFTPDCONF"
-	 		sed -i -e "s/ServerName\ \"Debian\"/$FTPSERVERNAME/g" "$PROFTPDCONF"
-	 		service proftpd restart
-		fi
-	else
-		echo -e "${BLUE}### INSTALL FTP SERVER ###${NC}"
-		echo -e "	${RED}* Proftpd is already installed !${NC}"
-	fi
-}
+# function install_ftp_server() {
+# 	if [[ ! -d "$PROFTPDCONF" ]]; then
+# 		if (whiptail --title "Use FTP Server" --yesno "Do you want to install FTP server ?" 7 50) then
+# 			FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
+# 			"Please enter a name for your FTP Server :" 7 50 "SeedBox" \
+# 			3>&1 1>&2 2>&3)
+# 			apt-get install proftpd -y
+# 			BASEPROFTPDFILE="includes/config/proftpd.conf"
+# 			mv "$PROFTPDCONF" "$PROFTPDCONF.bak"
+# 	 		cat "$BASEPROFTPDFILE" >> "$PROFTPDCONF"
+# 	 		sed -i -e "s/ServerName\ \"Debian\"/$FTPSERVERNAME/g" "$PROFTPDCONF"
+# 	 		service proftpd restart
+# 		fi
+# 	else
+# 		echo -e "${BLUE}### INSTALL FTP SERVER ###${NC}"
+# 		echo -e "	${RED}* Proftpd is already installed !${NC}"
+# 	fi
+# }
 
-function restart_docker_apps() {
+#function restart_docker_apps() {
 	# DOCKERS=$(docker ps --format "{{.Names}}")
 	# declare -i i=1
 	# declare -a TABAPP
@@ -600,7 +600,7 @@ function restart_docker_apps() {
 	#   echo $TABAPP[1]
 	#   #docker restart TABAPP[1]
 	# esac
-}
+#}
 
 function resume_seedbox() {
 	echo ""
