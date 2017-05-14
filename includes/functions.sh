@@ -652,14 +652,12 @@ function backup_docker_conf() {
 	else
 		echo -e "	${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
 	fi
+	echo ""
 	schedule_backup_seedbox
 	echo ""
 }
 
 function schedule_backup_seedbox() {
-	echo -e "${BLUE}##########################################${NC}"
-	echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"
-	echo -e "${BLUE}##########################################${NC}"
 	if (whiptail --title "Backup Dockers conf" --yesno "Do you want to schedule a configuration backup ?" 10 60) then
 		if [[ "$SEEDUSER" == "" ]]; then
 			SEEDUSER=$(whiptail --title "Username" --inputbox \

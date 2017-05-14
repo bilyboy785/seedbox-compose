@@ -5,7 +5,7 @@ portainer-%USER%:
   image: portainer/portainer
   container_name: portainer-%USER%
   ports:
-    - %IPADDRESS%:%PORT%:9000
+    - %PORT%:9000
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
   privileged: true
