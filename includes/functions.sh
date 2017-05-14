@@ -410,7 +410,7 @@ function create_reverse() {
 		service nginx stop > /dev/null 2>&1
 		for line in $(cat $SERVICESPERUSER);
 		do
-			FQDN="$line.$DOMAIN"
+			FQDNTMP="$line.$DOMAIN"
 			if [[ "$line" != "teamspeak" ]]; then
 				FILE="$line-$SEEDUSER.conf"
 				SITEENABLED="$SITEFOLDER$FILE"
@@ -420,36 +420,25 @@ function create_reverse() {
 				else
 					REVERSEFOLDER="includes/nginxproxy/"
 				fi
-				#cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
-				SUBDOMAINVAR=$(whiptail --title "SSL Subdomain" --inputbox \
-				"Specify a different subdomain for $line ? default :" 7 50 "$FQDN" \
-				3>&1 1>&2 2>&3)
+				FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
+				"Specify a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
 				case $LESSL in
 				"y")
-					if [[ "$SUBDOMAINVAR" == "" ]]; then
-						echo -e "		${BWHITE}--> Generating LE certificate files for $FQDN, please wait...${NC}"
-						generate_ssl_cert $CONTACTEMAIL $FQDN
-						if [[ "$?" == "0" ]]; then
-							echo -e "		${GREEN}* Certificate generation OK !${NC}"
-						else
-							echo -e "		${RED}* Certificate generation failed !${NC}"
-						fi
+					echo -e "		${BWHITE}--> Generating LE certificate files for $FQDN, please wait...${NC}"
+					generate_ssl_cert $CONTACTEMAIL $FQDN
+					if [[ "$?" == "0" ]]; then
+						echo -e "		${GREEN}* Certificate generation OK !${NC}"
 					else
-						FQDN="$SUBDOMAINVAR.$DOMAIN"
-						echo -e "		${BWHITE}--> Generating LE certificate files for $FQDN, please wait...${NC}"
-						generate_ssl_cert $CONTACTEMAIL $FQDN
-						echo -e "		${BWHITE}--> Replacing domain name in sites-enabled...${NC}"
-						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
-						if [[ "$?" == "0" ]]; then
-							echo -e "		${GREEN}* Certificate generation OK !${NC}"
-						else
-							echo -e "		${RED}* Certificate generation failed !${NC}"
-						fi
+						echo -e "		${RED}* Certificate generation failed !${NC}"
 					fi
+				;;
+				*)
+					echo -e "		${RED}* Nothing to do with LE !${NC}"
 				;;
 				esac
 			fi
 			FQDN=""
+			FQDNTMP=""
 		done
 		echo -e " --> ${YELLOW}Restarting Nginx...${NC}"
 		service nginx restart > /dev/null 2>&1
@@ -457,6 +446,7 @@ function create_reverse() {
 			echo -e "	${GREEN}* Service nginx restarted !${NC}"
 		else
 			echo -e "	${RED}* Failed to restart Nginx !${NC}"
+		fi
 	fi
 	USERDIR="/home/$SEEDUSER"
 	if [[ -d "$USERDIR" ]]; then
