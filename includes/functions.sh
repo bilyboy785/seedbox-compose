@@ -121,7 +121,6 @@ function checking_system() {
 	TMPSYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	TMPCODENAME=$(lsb_release -sc)
 	TMPRELEASE=$(cat /etc/debian_version)
-	rm /etc/apt/sources.list -R
 	if [[ $(echo $TMPSYSTEM | grep -R "Debian") != "" ]]; then
 		SYSTEMOS="Debian"
 		if [[ $(echo $TMPRELEASE | grep "8") != "" ]]; then
@@ -150,10 +149,8 @@ function checking_system() {
 	case $SYSTEMCODENAME in
 		"jessie" )
 			echo -e " ${BWHITE}* Creating sources.list${NC}"
+			rm /etc/apt/sources.list -R
 			cp "$TMPSOURCESDIR/debian.jessie" "$SOURCESLIST"
-			if [[ $(grep -R "deb http://ftp.debian.org/debian jessie-backports main" /etc/apt/sources.list) != "" ]]; then
-				echo "deb http://ftp.debian.org/debian jessie-backports main" >> $SOURCESFOLDER
-			fi
 			;;
 		"wheezy" )
 			echo -e "	${YELLOW}--> Please upgrade to Debian Jessie !${NC}"
