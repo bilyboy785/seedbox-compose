@@ -335,7 +335,9 @@ function install_services() {
 		declare -i PORT=$FIRSTPORT
 	fi
 	if [[ "$DOMAIN" != "localhost" ]]; then
-		LESSL=$(whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" --yes-button "y" --no-button "n" 10 60 3>&1 1>&2 2>&3)
+		LESSL="y"
+		#LESSL="$(whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" --yes-button "yes" --no-button "no" 10 60 3>&1 1>&2 2>&3)
+		#echo $LESSL"
 	fi
 	for line in $(cat $SERVICESPERUSER);
 	do
@@ -350,9 +352,11 @@ function install_services() {
 		if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
 			if [[ "$LESSL" != "n" ]]; then
 				NGINXPROXYFILE="includes/nginxproxyssl/$line.conf"
+				touch $REVERSEPROXYNGINX
 				cat $NGINXPROXYFILE >> $REVERSEPROXYNGINX
 			else
 				NGINXPROXYFILE="includes/nginxproxy/$line.conf"
+				touch $REVERSEPROXYNGINX
 				cat $NGINXPROXYFILE >> $REVERSEPROXYNGINX
 			fi
 			sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $REVERSEPROXYNGINX
@@ -395,52 +399,33 @@ function create_reverse() {
 		for line in $(cat $SERVICESPERUSER);
 		do
 			if [[ "$line" != "teamspeak" ]]; then
-				FILE=$line.conf
-				SITEENABLED="$SITEFOLDER$line.conf"
+				FILE="$line.$SEEDUSER.conf"
+				SITEENABLED="$SITEFOLDER$FILE"
 				echo " --> [$line] - Creating reverse"
 				if [[ "$LESSL" != "n" ]]; then
 					REVERSEFOLDER="includes/nginxproxyssl/"
 				else
 					REVERSEFOLDER="includes/nginxproxy/"
 				fi
-				cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
+				#cat $REVERSEFOLDER$FILE >> $SITEFOLDER$FILE
 				SUBDOMAINVAR=$(whiptail --title "SSl Subdomain" --inputbox \
-				"Specify a different subdomain for $line ? default :" 7 50 "$line.$DOMAIN" \
+				"Specify a different subdomain for $line ? default :" 7 50 "$FQDN" \
 				3>&1 1>&2 2>&3)
 				case $LESSL in
 				"y")
 					if [[ "$SUBDOMAINVAR" == "" ]]; then
-						echo -e "		${BWHITE}--> Generating LE certificate files for $line.$DOMAIN, please wait...${NC}"
-						generate_ssl_cert "$CONTACTEMAIL" "$line.$DOMAIN"
+						FQDN="$line.$DOMAIN"
+						echo -e "		${BWHITE}--> Generating LE certificate files for $FQDN, please wait...${NC}"
+						generate_ssl_cert $CONTACTEMAIL $FQDN
 						if [[ "$?" == "0" ]]; then
 							echo -e "		${GREEN}* Certificate generation OK !${NC}"
 						else
 							echo -e "		${RED}* Certificate generation failed !${NC}"
 						fi
 					else
-						echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
-						generate_ssl_cert "$CONTACTEMAIL" "$SUBDOMAINVAR.$DOMAIN"
-						echo -e "		${BWHITE}--> Replacing domain name in sites-enabled...${NC}"
-						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
-						if [[ "$?" == "0" ]]; then
-							echo -e "		${GREEN}* Certificate generation OK !${NC}"
-						else
-							echo -e "		${RED}* Certificate generation failed !${NC}"
-						fi
-					fi
-				;;
-				"")
-					if [[ "$SUBDOMAINVAR" == "" ]]; then
-						echo -e "		${BWHITE}--> Generating LE certificate files for $line.$DOMAIN, please wait...${NC}"
-						generate_ssl_cert "$CONTACTEMAIL" "$line.$DOMAIN"
-						if [[ "$?" == "0" ]]; then
-							echo -e "		${GREEN}* Certificate generation OK !${NC}"
-						else
-							echo -e "		${RED}* Certificate generation failed !${NC}"
-						fi
-					else
-						echo -e "		${BWHITE}--> Generating LE certificate files for $SUBDOMAINVAR.$DOMAIN, please wait...${NC}"
-						generate_ssl_cert "$CONTACTEMAIL" "$SUBDOMAINVAR.$DOMAIN"
+						FQDN="$SUBDOMAINVAR.$DOMAIN"
+						echo -e "		${BWHITE}--> Generating LE certificate files for $FQDN, please wait...${NC}"
+						generate_ssl_cert $CONTACTEMAIL $FQDN
 						echo -e "		${BWHITE}--> Replacing domain name in sites-enabled...${NC}"
 						sed -i "s|$line.$DOMAIN|$SUBDOMAINVAR.$DOMAIN|g" $SITEENABLED
 						if [[ "$?" == "0" ]]; then
@@ -484,21 +469,21 @@ function new_seedbox_user() {
 }
 
 function add_docker_app() {
-	echo -e "${BLUE}##########################################${NC}"
-	echo -e "${BLUE}###           ADD DOCKER APPS          ###${NC}"
-	echo -e "${BLUE}##########################################${NC}"
-	declare -i NUMUSER=0
-	declare -a seedboxusers=()
-	for line in $(cat $USERSFILE);
-	do
-		seedboxusers[${#seedboxusers[*]}]=$line
+	#echo -e "${BLUE}##########################################${NC}"
+	#echo -e "${BLUE}###           ADD DOCKER APPS          ###${NC}"
+	#echo -e "${BLUE}##########################################${NC}"
+	#declare -i NUMUSER=0
+	#declare -a seedboxusers=()
+	#for line in $(cat $USERSFILE);
+	#do
+		#seedboxusers[${#seedboxusers[*]}]=$line
 		#NUMUSER=$NUMUSER+1
-	done
-	NBUSERS=$(${#nomtableau[*]})
-	SEEDUSER=$(whiptail --title "Choose username" --menu \
-		"Please select user to add dockers app" 15 50 4 \
-		${seedboxusers[0]} " " 3>&1 1>&2 2>&3)
-	echo -e " ${BWHITE}* Adding apps for $SEEDUSER"
+	#done
+	#NBUSERS=$(${#nomtableau[*]})
+	#SEEDUSER=$(whiptail --title "Choose username" --menu \
+		#"Please select user to add dockers app" 15 50 4 \
+		#${seedboxusers[0]} " " 3>&1 1>&2 2>&3)
+	#echo -e " ${BWHITE}* Adding apps for $SEEDUSER"
 }
 
 function delete_dockers() {
@@ -533,11 +518,11 @@ function install_ftp_server() {
 			FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
 			"Please enter a name for your FTP Server :" 7 50 "SeedBox" \
 			3>&1 1>&2 2>&3)
-			apt-get install proftpd -y > /dev/null 2>&1
+			apt-get install proftpd -y
 			BASEPROFTPDFILE="includes/config/proftpd.conf"
 			mv "$PROFTPDCONF" "$PROFTPDCONF.bak"
 	 		cat "$BASEPROFTPDFILE" >> "$PROFTPDCONF"
-	 		sed -i -e "s/ServerName\ "Debian"/$FTPSERVERNAME/g" "$PROFTPDCONF"
+	 		sed -i -e "s/ServerName\ \"Debian\"/$FTPSERVERNAME/g" "$PROFTPDCONF"
 	 		service proftpd restart
 		fi
 	else
