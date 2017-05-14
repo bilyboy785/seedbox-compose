@@ -101,7 +101,7 @@ function install_base_packages() {
 	NUMPACKAGES=$(cat $PACKAGESFILE | wc -l)
 	for package in $(cat $PACKAGESFILE);
 	do
-		apt-get install -y $package ## > /dev/null 2>&1
+		apt-get install -y $package ### > /dev/null 2>&1
 		echo $NUMPACKAGES
 		NUMPACKAGES=$(($NUMPACKAGES+(100/$NUMPACKAGES)))
 	done 
@@ -383,25 +383,6 @@ function valid_htpasswd() {
 	HTTEMPFOLDER="/tmp/"
 	HTFILE=".htpasswd"
 	cat $HTTEMPFOLDER$HTFILE >> $HTFOLDER$HTFILE
-}
-
-function add_user() {
-	if [ $(id -u) -eq 0 ]; then
-		read -p "Enter username : " USERNAME
-		read -s -p "Enter password : " PASSWORD
-		egrep "^$USERNAME" /etc/passwd >/dev/null
-		if [ $? -eq 0 ]; then
-			echo "$USERNAME exists!"
-			exit 1
-		else
-			PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
-			useradd -m -p $PASS $USERNAME
-			[ $? -eq 0 ] && echo "User has been added to system !" || echo "Failed to add a user !"
-		fi
-	else
-		echo "Only root may add a user to the system"
-		exit 1
-	fi
 }
 
 function create_reverse() {
