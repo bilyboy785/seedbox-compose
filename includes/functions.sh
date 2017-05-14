@@ -334,7 +334,7 @@ function choose_services() {
 		echo "$service $desc off" >> /tmp/menuservices.txt
 	done
 	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
-	"Please select services you want to add for $SEEDUSER (Use space to select)" 28 50 17 \
+	"Please select services you want to add for $SEEDUSER (Use space to select)" 28 65 17 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
 	SERVICESPERUSER="$SERVICESUSER$SEEDUSER"
 	touch $SERVICESPERUSER
@@ -413,7 +413,7 @@ function install_services() {
 			touch $NGINXSITE
 			cat $NGINXPROXYFILE >> $NGINXSITE
 		fi
-		sed -i "s|%DOMAIN%|$line.$DOMAIN|g" $NGINXSITE
+		sed -i "s|%DOMAIN%|$FQDN|g" $NGINXSITE
 		sed -i "s|%PORT%|$PORT|g" $NGINXSITE
 		sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
 		PORT=$PORT+1
@@ -456,7 +456,7 @@ function create_reverse() {
 			SERVICE=$(echo $line | cut -d\- -f1)
 			PORT=$(echo $line | cut -d\- -f2)
 			FQDN=$(echo $line | cut -d\- -f3)
-			echo -e " ${BWHITE}--> [$line] - Creating reverse${NC}"
+			echo -e " ${BWHITE}--> [$SERVICE] - Creating reverse${NC}"
 			if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
 				generate_ssl_cert $CONTACTEMAIL $FQDN
 				if [[ "$?" == "0" ]]; then
@@ -484,7 +484,7 @@ function create_reverse() {
 function generate_ssl_cert() {
 	EMAILADDRESS=$1
 	DOMAINSSL=$2
-	echo -e "		${BWHITE}--> Generating LE certificate files for $FQDN, please wait...${NC}"
+	echo -e "		${BWHITE}--> Generating LE certificate files for $DOMAINSSL, please wait...${NC}"
 	bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size $RSASSLKEY --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
 }
 
