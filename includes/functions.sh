@@ -383,6 +383,7 @@ function install_services() {
 			LESSL="n"
 		fi
 	fi
+	DOCKERCOMPOSEFILE="/home/$SEEDUSER/docker-compose.yml"
 	for line in $(cat $SERVICESPERUSER);
 	do
 		REVERSEPROXYNGINX="/etc/nginx/conf.d/$line-$SEEDUSER.conf"
@@ -485,7 +486,7 @@ function create_reverse() {
 function generate_ssl_cert() {
 	EMAILADDRESS=$1
 	DOMAINSSL=$2
-	echo -e "	${BWHITE}--> Generating LE certificate files for $DOMAINSSL, please wait...${NC}"
+	echo -e "	${BWHITE}--> Generating LE certificate files for $DOMAINSSL, please wait... and wait again !${NC}"
 	bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size $RSASSLKEY --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
 }
 
