@@ -32,9 +32,8 @@ function script_option() {
 		  clear
 		  echo ""
 		  echo -e "${YELLOW}### Seedbox-Compose already installed !###${NC}"
-		  echo " "
-		  if (whiptail --title "Seedbox already installed" --yesno "You're in trouble with Seedbox-compose ? Delete files and configuration to run install again ?" 7 75) then
-				echo "OK DELETING"
+		  if (whiptail --title "Seedbox already installed" --yesno "You're in trouble with Seedbox-compose ? Delete files and configuration to run install again ?" 7 90) then
+				uninstall_seedbox
 			else
 				echo "NOTHING"
 			fi
@@ -730,5 +729,20 @@ function access_token_ts() {
 		else
 			echo -e "	--> Check teamspeak's Logs with ${BWHITE}docker logs teamspeak${NC}"
 		fi
+	fi
+}
+
+function uninstall_seedbox() {
+	echo -e "${BLUE}##########################################${NC}"
+	echo -e "${BLUE}###          UNINSTALL SEEDBOX         ###${NC}"
+	echo -e "${BLUE}##########################################${NC}"
+	if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
+		if (whiptail --title "Dockers configuration" --yesno "Do you want to keep your Dockers configuration ?" 7 75) then
+			echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
+		else
+			echo -e " ${BWHITE}* All files and dockers will be deleted except your dockers configuration${NC}"
+		fi
+	else
+		echo -e " ${BWHITE}* Nice ! Keep me in safe <3 !${NC}"
 	fi
 }

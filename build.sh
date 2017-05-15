@@ -25,7 +25,6 @@ SERVICESUSER="/etc/seedboxcompose/services-"
 FILEPORTPATH="/etc/seedboxcompose/ports.pt"
 PACKAGESFILE="includes/config/packages"
 USERSFILE="/etc/seedboxcompose/users"
-#DOCKERCOMPOSEFILE="/etc/seedboxcompose/docker-compose.yml"
 INFOLOGS="/var/log/seedboxcompose.info.log"
 ERRORLOGS="/var/log/seedboxcompose.error.log"
 
