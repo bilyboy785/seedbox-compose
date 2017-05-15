@@ -122,7 +122,7 @@ function checking_system() {
 	TMPSYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	TMPCODENAME=$(lsb_release -sc)
 	TMPRELEASE=$(cat /etc/debian_version)
-	if [[ $(echo $TMPSYSTEM | grep -R "Debian") != "" ]]; then
+	if [[ $(echo $TMPSYSTEM | grep -R "Debian") == "Debian GNU/Linux" ]]; then
 		SYSTEMOS="Debian"
 		if [[ $(echo $TMPRELEASE | grep "8") != "" ]]; then
 			SYSTEMRELEASE="8"
@@ -131,7 +131,7 @@ function checking_system() {
 			SYSTEMRELEASE="7"
 			SYSTEMCODENAME="wheezy"
 		fi
-	elif [[ $(echo $TMPSYSTEM | grep -R "Ubuntu") != "" ]]; then
+	elif [[ $(echo $TMPSYSTEM | grep -R "Ubuntu") == "Ubuntu" ]]; then
 		SYSTEMOS="Ubuntu"
 		if [[ $(echo $TMPCODENAME | grep "xenial") != "" ]]; then
 			SYSTEMRELEASE="16.04"
@@ -185,6 +185,7 @@ function checking_system() {
 		apt-get install certbot -t jessie-backports -y > /dev/null 2>&1
 	fi
 	checking_errors $?
+	echo ""
 }
 
 function checking_errors() {
@@ -395,8 +396,8 @@ function install_services() {
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%IPADDRESS%|$IPADDRESS|g" $DOCKERCOMPOSEFILE
-		FQDNTMP="$line.$DOMAIN"
 		if [[ "$DOMAIN" != "localhost" ]]; then
+			FQDNTMP="$line.$DOMAIN"
 			FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
 			"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
 			if [[ "$LESSL" = "y" ]]; then
@@ -414,7 +415,6 @@ function install_services() {
 			sed -i "s|%PORT%|$PORT|g" $NGINXSITE
 			sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
 		elif [[ "$DOMAIN" == "localhost" ]]; then
-			#NGINXSITE="/etc/nginx/conf.d/$line.$SEEDUSER.conf"
 			echo "$line-$PORT-$SEEDUSER" >> $INSTALLEDFILE
 		fi
 		PORT=$PORT+1
