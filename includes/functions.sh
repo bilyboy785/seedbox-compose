@@ -14,7 +14,7 @@ function script_option() {
 	#echo "Choose an option to launch the script (1, 2...) : "
 	#echo ""
 	if [[ -d "$CONFDIR" ]]; then
-		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 22 65 11 \
+		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 20 65 11 \
 			"1" "Seedbox-Compose already installed !" \
 			"2" "New seedbox user" \
 			"3" "New htaccess user" \
