@@ -20,7 +20,7 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
 
  * **Seedbox manager**
    * HTPCManager
-   * **SOON** : Maximux
+   * **SOON** : Muximux
 
  * **Media Server**
    * Plex Media Server

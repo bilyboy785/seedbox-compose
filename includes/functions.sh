@@ -428,7 +428,7 @@ function install_services() {
 function docker_compose() {
 	echo -e "${BLUE}### DOCKERCOMPOSE ###${NC}"
 	ACTDIR="$PWD"
-	cd /etc/seedboxcompose/
+	cd /home/$SEEDUSER/
 	echo " * Starting docker..."
 	service docker restart
 	echo " * Docker-composing, it may takes a long..."
