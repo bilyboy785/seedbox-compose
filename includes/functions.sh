@@ -32,7 +32,12 @@ function script_option() {
 		  clear
 		  echo ""
 		  echo -e "${YELLOW}### Seedbox-Compose already installed !###${NC}"
-		  echo ""
+		  echo " "
+		  if (whiptail --title "Seedbox already installed" --yesno "You're in trouble with Seedbox-compose ? Delete files and configuration to run install again ?" 7 75) then
+				echo "OK DELETING"
+			else
+				echo "NOTHING"
+			fi
 		  ;;
 		"2")
 		  SCRIPT="NEWSEEDBOXUSER"
