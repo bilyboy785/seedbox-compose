@@ -10,13 +10,17 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
 ### Movies automation
  * Couchpotato
  * Radarr
+
 ### TVShows automation
  * Sickrage
  * Sonarr
+
 ### Music automation
  * Headphones 
+
 ### Seedbox manager
  * HTPCManager
+ 
 ### Media Server
  * Plex Media Server
 
