@@ -122,7 +122,7 @@ function checking_system() {
 	TMPSYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	TMPCODENAME=$(lsb_release -sc)
 	TMPRELEASE=$(cat /etc/debian_version)
-	if [[ $(echo $TMPSYSTEM | grep -R "Debian") == "Debian GNU/Linux" ]]; then
+	if [[ $(echo $TMPSYSTEM | sed 's/\"//g') == "Debian GNU/Linux" ]]; then
 		SYSTEMOS="Debian"
 		if [[ $(echo $TMPRELEASE | grep "8") != "" ]]; then
 			SYSTEMRELEASE="8"
@@ -131,7 +131,7 @@ function checking_system() {
 			SYSTEMRELEASE="7"
 			SYSTEMCODENAME="wheezy"
 		fi
-	elif [[ $(echo $TMPSYSTEM | grep -R "Ubuntu") == "Ubuntu" ]]; then
+	elif [[ $(echo $TMPSYSTEM | sed 's/\"//g') == "Ubuntu" ]]; then
 		SYSTEMOS="Ubuntu"
 		if [[ $(echo $TMPCODENAME | grep "xenial") != "" ]]; then
 			SYSTEMRELEASE="16.04"
