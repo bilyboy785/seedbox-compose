@@ -29,7 +29,10 @@ function script_option() {
 		echo ""
 		case $ACTION in
 		"1")
-		  SCRIPT="INSTALL"
+		  clear
+		  echo ""
+		  echo -e "${YELLOW}### Seedbox-Compose already installed !###${NC}"
+		  echo ""
 		  ;;
 		"2")
 		  SCRIPT="NEWSEEDBOXUSER"
