@@ -39,38 +39,8 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
    * Jackett - Torrent Providers finder
 
 
-## Installation
- * First, you need to create DNS entry type A for each service you want to install : **service.domain.tld** (look at the services table)
- * Second, install git and clone this repo into a fresh Debian/Ubuntu server :
-```shell
-apt install git
-git clone https://github.com/bilyboy785/seedbox-compose.git /root/seedbox-compose
-```
- * Launch the script :
-```shell
-cd /root/seedbox-compose
-./build.sh
-```
-
-## Services configuration
-### Sonarr / Sickrage
-
-### Radarr / Couchpotato
-
-### Jackett
-
-### Teamspeak
-To access and configure Teamspeak, you need to have the Token Access and ServerAdmin password. There are stored in logs of TS docker. You can access it with :
-```shell
-docker logs teamspeak
-```
-
-During docker-compose action, i stored your IDs in your **/home/user/dockers/teamspeak/idteamspeak**. Check this file before launching Teamspeak.
-
-## Add new user
-### Add htaccess user
-
-### Add user with separate dockers
+## Installation & Configuration
+For all instructions and configuration tips, follow the (Wiki)[https://github.com/bilyboy785/seedbox-compose/wiki]
 
 ## Sources
  * [portainer/portainer](https://hub.docker.com/r/portainer/portainer/)
