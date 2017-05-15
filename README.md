@@ -23,12 +23,20 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
    * **SOON** : Maximux
 
  * **Media Server**
-  * Plex Media Server
+   * Plex Media Server
 
  * **WebUID Manager**
    * Portainer - Manager for Dockers
    * PlexPy - Manager for Plex Media Server
+   * H5ai - WebUI to access files
 
+ * **Torrent Client**
+   * Rtorrent/Rutorrent
+   * Transmission
+ 
+ * **Utilities**
+   * Zerobin - Code paste
+   * Jackett - Torrent Providers finder
 
 
 ## Installation
