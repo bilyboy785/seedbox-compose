@@ -7,22 +7,20 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
  * [ ] CentOS
  
 ## Services availables in this docker-compose
+### Movies automation
+ * Couchpotato
+ * Radarr
+### TVShows automation
+ * Sickrage
+ * Sonarr
+### Music automation
+ * Headphones 
+### Seedbox manager
+ * HTPCManager
+### Media Server
+ * Plex Media Server
 
-Service                | Status      |   Default subdomain
----------------------- | ----------- | ----------------------
-Nginx                  | Installed   |  /                                              
-Rtorrent/RuTorrent     | Installed   |  rtorrent.domain.tld                  
-Jackett                | Installed   |  jackett.domain.tld                
-UI for Docker          | Installed   |  docker.domain.tld                  
-Radarr                 | Optional    |  radarr.domain.tld                  
-Sonarr                 | Optional    |  sonarr.domain.tld    
-Sickrage               | Optional    |  sickrage.domain.tld 
-Couchpotato            | Optional    |  couchpotato.domain.tld               
-PlexMediaServer        | Optional    |  plex.domain.tld
-Headphones.            | Optional    |  headphones.domain.tld                  
-PlexPy                 | Optional    |  plexpy.domain.tld                 
-Zerobin                | Optional    |  zerobin.domain.tld                 
-Teamspeak              | Optional    |  ---                                   
+
 
 ## Installation
  * First, you need to create DNS entry type A for each service you want to install : **service.domain.tld** (look at the services table)
