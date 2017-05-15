@@ -14,7 +14,7 @@ function script_option() {
 	#echo "Choose an option to launch the script (1, 2...) : "
 	#echo ""
 	if [[ -d "$CONFDIR" ]]; then
-		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 20 65 10 \
+		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 22 65 11 \
 			"1" "Seedbox-Compose already installed !" \
 			"2" "New seedbox user" \
 			"3" "New htaccess user" \
@@ -157,9 +157,6 @@ function checking_system() {
 		"wheezy" )
 			echo -e "	${YELLOW}--> Please upgrade to Debian Jessie !${NC}"
 			;;
-		* )
-			echo -e "	${YELLOW}--> Please use a system based on Debian Jessie or Ubuntu !${NC}"
-			;;
 	esac
 	if [[ "$SYSTEMOS" == "Ubuntu" ]]; then
 		echo -e " ${BWHITE}* Creating repositories${NC}"
@@ -167,6 +164,7 @@ function checking_system() {
 		echo "deb-src http://nginx.org/packages/ubuntu/ $SYSTEMCODENAME nginx" >> $SOURCESLIST
 		apt-add-repository 'deb https://apt.dockerproject.org/repo ubuntu-xenial main' > /dev/null 2>&1
 		add-apt-repository ppa:certbot/certbot -y > /dev/null 2>&1
+		checking_errors $?
 	fi
 	echo -e " ${BWHITE}* Adding Nginx key${NC}"
 	wget -q http://nginx.org/keys/nginx_signing.key && apt-key add nginx_signing.key > /dev/null 2>&1
