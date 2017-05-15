@@ -11,18 +11,23 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
    * Couchpotato
    * Radarr
 
-### TVShows automation
- * Sickrage
- * Sonarr
+ * **TVShows automation**
+   * Sickrage
+   * Sonarr
 
-### Music automation
- * Headphones 
+ * **Music automation**
+   * Headphones 
 
-### Seedbox manager
- * HTPCManager
+ * **Seedbox manager**
+   * HTPCManager
+   * **SOON** : Maximux
 
-### Media Server
- * Plex Media Server
+ * **Media Server**
+  * Plex Media Server
+
+ * **WebUID Manager**
+   * Portainer - Manager for Dockers
+   * PlexPy - Manager for Plex Media Server
 
 
 
