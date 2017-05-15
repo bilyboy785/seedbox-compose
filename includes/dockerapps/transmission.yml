@@ -9,7 +9,7 @@ transmission-%USER%:
     - PUID=%UID%
     - TZ=%TIMEZONE%
   ports:
-    - %IPADDRESS%:%PORT%:9091
+    - %PORT%:9091
     - 51413:51413
     - 51413:51413/udp
   volumes:
