@@ -7,7 +7,7 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
  * [ ] CentOS
  
 ## Services availables in this docker-compose
- * Movies automation
+ * **Movies automation**
    * Couchpotato
    * Radarr
 
