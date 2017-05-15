@@ -386,7 +386,7 @@ function install_services() {
 	DOCKERCOMPOSEFILE="/home/$SEEDUSER/docker-compose.yml"
 	for line in $(cat $SERVICESPERUSER);
 	do
-		REVERSEPROXYNGINX="/etc/nginx/conf.d/$line-$SEEDUSER.conf"
+		#REVERSEPROXYNGINX="/etc/nginx/conf.d/$line-$SEEDUSER.conf"
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
@@ -410,13 +410,13 @@ function install_services() {
 				touch $NGINXSITE
 				cat $NGINXPROXYFILE >> $NGINXSITE
 			fi
+			sed -i "s|%DOMAIN%|$FQDN|g" $NGINXSITE
+			sed -i "s|%PORT%|$PORT|g" $NGINXSITE
+			sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
 		elif [[ "$DOMAIN" == "localhost" ]]; then
-			NGINXSITE="/etc/nginx/conf.d/$line.$SEEDUSER.conf"
+			#NGINXSITE="/etc/nginx/conf.d/$line.$SEEDUSER.conf"
 			echo "$line-$PORT-$SEEDUSER" >> $INSTALLEDFILE
 		fi
-		sed -i "s|%DOMAIN%|$FQDN|g" $NGINXSITE
-		sed -i "s|%PORT%|$PORT|g" $NGINXSITE
-		sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
 		PORT=$PORT+1
 		FQDN=""
 		FQDNTMP=""
