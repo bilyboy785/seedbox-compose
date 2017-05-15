@@ -40,7 +40,7 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
 
 
 ## Installation & Configuration
-For all instructions and configuration tips, follow the (Wiki)[https://github.com/bilyboy785/seedbox-compose/wiki]
+For all instructions and configuration tips, follow the [Wiki](https://github.com/bilyboy785/seedbox-compose/wiki)
 
 ## Sources
  * [portainer/portainer](https://hub.docker.com/r/portainer/portainer/)
