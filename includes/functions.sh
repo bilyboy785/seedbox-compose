@@ -553,7 +553,7 @@ function new_seedbox_user() {
 
 function install_ftp_server() {
 	echo -e "${BLUE}### INSTALL FTP SERVER ###${NC}"
-	if [[ ! -f "$PROFTPDCONF" ]]; then
+	if [[ ! -f "/etc/proftpd/proftpd.conf" ]]; then
 		# if (whiptail --title "Use FTP Server" --yesno "Do you want to install FTP server ?" 7 50) then
 		# 	FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
 		# 	"Please enter a name for your FTP Server :" 7 50 "SeedBox" 3>&1 1>&2 2>&3)
