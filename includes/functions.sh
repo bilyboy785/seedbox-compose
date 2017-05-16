@@ -404,7 +404,7 @@ function install_services() {
 		if [[ "$DOMAIN" != "localhost" ]]; then
 			FQDNTMP="$line.$DOMAIN"
 			FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
-			"Do you want to use a different subdomain for $line ? default :" 7 50 "$FQDNTMP" 3>&1 1>&2 2>&3)
+			"Do you want to use a different subdomain for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
 			if [[ "$LESSL" = "y" ]]; then
 				NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
 				NGINXPROXYFILE="$PWD/includes/nginxproxyssl/$line.conf"
