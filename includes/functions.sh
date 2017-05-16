@@ -576,6 +576,7 @@ function install_ftp_server() {
 	else
 		echo "existe"
 	fi
+	echo ""
 }
 
 # function install_ftp_server() {
