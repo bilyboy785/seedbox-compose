@@ -562,9 +562,9 @@ function install_ftp_server() {
 			checking_errors $?
 			BASEPROFTPDFILE="includes/config/proftpd.conf"
 			echo -e "	${BWHITE}* Creating configuration file...${NC}"
-			mv "$PROFTPDCONF" "$PROFTPDCONF.bak"
-	 		cat "$BASEPROFTPDFILE" >> "$PROFTPDCONF"
-	 		sed -i -e "s/ServerName\ \"Debian\"/$FTPSERVERNAME/g" "$PROFTPDCONF"
+			# mv "$PROFTPDCONF" "$PROFTPDCONF.bak"
+	 	# 	cat "$BASEPROFTPDFILE" >> "$PROFTPDCONF"
+	 	# 	sed -i -e "s/ServerName\ \"Debian\"/$FTPSERVERNAME/g" "$PROFTPDCONF"
 	 		checking_errors $?
 	 		echo -e "	${BWHITE}* Restarting service...${NC}"
 	 		service proftpd restart
