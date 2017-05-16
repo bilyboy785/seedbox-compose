@@ -25,7 +25,7 @@ function script_option() {
 			"8" "Install FTP Server" \
 			"9" "Generate SSL certificate" \
 			"10" "Disable htaccess protection" \
-			"11" "Delete and clean dockers"  3>&1 1>&2 2>&3)
+			"11" "Uninstall Seedbox-Compose"  3>&1 1>&2 2>&3)
 		echo ""
 		case $ACTION in
 		"1")
@@ -69,7 +69,7 @@ function script_option() {
 		   SCRIPT="DELETEHTACCESS"
 		;;
 		"11")
-		  SCRIPT="DELETEDOCKERS"
+		  SCRIPT="UNINSTALL"
 		;;
 		esac
 	else
@@ -737,16 +737,33 @@ function uninstall_seedbox() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###          UNINSTALL SEEDBOX         ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
-	if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
-		if (whiptail --title "Dockers configuration" --yesno "Do you want to keep your Dockers configuration ?" 7 75) then
-			echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
-			echo -e "	${RED}--> Under developpment${NC}"
-		else
-			echo -e " ${BWHITE}* All files and dockers will be deleted except your dockers configuration${NC}"
-			echo -e "	${RED}--> Under developpment${NC}"
-		fi
-	else
-		echo -e " ${BWHITE}* Nice ! Keep me in safe <3 !${NC}"
-	fi
+	ACTION=$(whiptail --title "Seedbox-Compose" --menu "Choose what you want uninstall" 10 75 2 \
+			"1" "Full uninstall (all files and dockers)" \
+			"2" "User uninstall (delete a suer)" 3>&1 1>&2 2>&3)
+		echo ""
+		case $ACTION in
+		"1")
+		  	if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
+				if (whiptail --title "Dockers configuration" --yesno "Do you want to backup your Dockers configuration ?" 7 75) then
+					echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
+					echo -e "	${RED}--> Under developpment${NC}"
+				else
+					echo -e " ${BWHITE}* Everything will be deleted !${NC}"
+					echo -e "	${RED}--> Under developpment${NC}"
+				fi
+			fi
+		;;
+		"2")
+			if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
+				if (whiptail --title "Dockers configuration" --yesno "Do you want to backup your Dockers configuration ?" 7 75) then
+					echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
+					echo -e "	${RED}--> Under developpment${NC}"
+				else
+					echo -e " ${BWHITE}* Everything will be deleted !${NC}"
+					echo -e "	${RED}--> Under developpment${NC}"
+				fi
+			fi
+		;;
+		esac
 	echo ""
 }

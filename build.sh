@@ -97,9 +97,10 @@ if [ $USER = "root" ] ; then
 			under_developpment
 	    	#restart_docker_apps
 	  	;;
-		"DELETEDOCKERS")
-			under_developpment
+		"UNINSTALL")
+			#under_developpment
 	    	#delete_dockers
+	    	uninstall_seedbox
 	  	;;
 		"BACKUPCONF")
 	    	backup_docker_conf
