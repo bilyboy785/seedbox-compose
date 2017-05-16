@@ -570,6 +570,8 @@ function install_ftp_server() {
 	 		echo -e "	${BWHITE}* Restarting service...${NC}"
 	 		service proftpd restart
 	 		checking_errors $?
+	 	else
+	 		echo -e "	${BWHITE}* Fine, nothing will be installed !${NC}"
 		fi
 	else
 		echo "existe"
