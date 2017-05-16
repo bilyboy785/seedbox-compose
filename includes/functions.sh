@@ -588,7 +588,7 @@ function install_ftp_server() {
 					openssl genrsa -des3 -passout pass:$FTPSPASSWORD -out /etc/ssl/private/$FTPSDOMAIN.key 2048 -noout > /dev/null 2>&1
 					checking_errors $?
 					echo -e " ${BWHITE}* Removing passphrase from key...${NC}"
-					openssl rsa -in /etc/ssl/private/$FTPSDOMAIN.key -passin pass:pwsio -out /etc/ssl/private/$FTPSDOMAIN.key > /dev/null 2>&1
+					openssl rsa -in /etc/ssl/private/$FTPSDOMAIN.key -passin pass:$FTPSPASSWORD -out /etc/ssl/private/$FTPSDOMAIN.key > /dev/null 2>&1
 					checking_errors $?
 					echo -e " ${BWHITE}* Generating Certificate file...${NC}"
 					openssl req -new -x509 -key /etc/ssl/private/$FTPSDOMAIN.key -out /etc/ssl/certs/$FTPSDOMAIN.crt -passin pass:$FTPSPASSWORD \
