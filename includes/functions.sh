@@ -553,27 +553,27 @@ function new_seedbox_user() {
 
 function install_ftp_server() {
 	echo -e "${BLUE}### INSTALL FTP SERVER ###${NC}"
-	# if [[ ! -f "/etc/proftpd/proftpd.conf" ]]; then
-	# 	# if (whiptail --title "Use FTP Server" --yesno "Do you want to install FTP server ?" 7 50) then
-	# 	# 	FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
-	# 	# 	"Please enter a name for your FTP Server :" 7 50 "SeedBox" 3>&1 1>&2 2>&3)
-	# 	# 	echo -e "	${BWHITE}* Installing proftpd...${NC}"
-	# 	# 	#apt-get install proftpd -y > /dev/null 2>&1
-	# 	# 	#checking_errors $?
-	# 	# 	BASEPROFTPDFILE="includes/config/proftpd.conf"
-	# 	# 	echo -e "	${BWHITE}* Creating configuration file...${NC}"
-	# 	# 	# mv "$PROFTPDCONF" "$PROFTPDCONF.bak"
-	#  # 	# 	cat "$BASEPROFTPDFILE" >> "$PROFTPDCONF"
-	#  # 	# 	sed -i -e "s/ServerName\ \"Debian\"/$FTPSERVERNAME/g" "$PROFTPDCONF"
-	#  # 		#checking_errors $?
-	#  # 		echo -e "	${BWHITE}* Restarting service...${NC}"
-	#  # 		service proftpd restart
-	#  # 		#checking_errors $?
-	# 	# fi
-	# 	echo "OK"
-	# else
-	# 	echo -e "	${RED}* Proftpd is already installed !${NC}"
-	# fi
+	if [[ ! -d "/etc/proftpd/" ]]; then
+		# if (whiptail --title "Use FTP Server" --yesno "Do you want to install FTP server ?" 7 50) then
+		# 	FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
+		# 	"Please enter a name for your FTP Server :" 7 50 "SeedBox" 3>&1 1>&2 2>&3)
+		# 	echo -e "	${BWHITE}* Installing proftpd...${NC}"
+		# 	#apt-get install proftpd -y > /dev/null 2>&1
+		# 	#checking_errors $?
+		# 	BASEPROFTPDFILE="includes/config/proftpd.conf"
+		# 	echo -e "	${BWHITE}* Creating configuration file...${NC}"
+		# 	# mv "$PROFTPDCONF" "$PROFTPDCONF.bak"
+	 # 	# 	cat "$BASEPROFTPDFILE" >> "$PROFTPDCONF"
+	 # 	# 	sed -i -e "s/ServerName\ \"Debian\"/$FTPSERVERNAME/g" "$PROFTPDCONF"
+	 # 		#checking_errors $?
+	 # 		echo -e "	${BWHITE}* Restarting service...${NC}"
+	 # 		service proftpd restart
+	 # 		#checking_errors $?
+		# fi
+		echo "OK"
+	else
+		echo -e "	${RED}* Proftpd is already installed !${NC}"
+	fi
 }
 
 #function restart_docker_apps() {
