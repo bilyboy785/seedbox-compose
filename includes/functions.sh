@@ -626,10 +626,12 @@ function resume_seedbox() {
 	# echo -e " ${BWHITE}* Found logs here :${NC}"
 	# echo -e "	--> Info Logs : ${YELLOW}$INFOLOGS${NC}"
 	# echo -e "	--> Error Logs : ${YELLOW}$ERRORLOGS${NC}"
-	# if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
-	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
-	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
-	# fi
+	if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
+		mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
+		mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
+	fi
+	chown $SEEDUSER: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
+	chmod 775: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
 }
 
 function backup_docker_conf() {

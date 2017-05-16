@@ -10,3 +10,4 @@ curl
 gnupg2
 software-properties-common
 locate
+tree
