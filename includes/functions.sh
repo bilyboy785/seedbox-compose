@@ -587,6 +587,7 @@ function install_ftp_server() {
 	 	 	echo -e "	${BWHITE}* Restarting service...${NC}"
 	 	 	service proftpd restart
 	 		checking_errors $?
+	 	fi
 	fi
 }
 
