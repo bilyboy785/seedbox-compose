@@ -9,6 +9,6 @@ manager-%USER%:
     - PUID=%UID%
     - TZ=%TIMEZONE%
   ports:
-    - %IPADDRESS%:%PORT%:8085
+    - %PORT%:8085
   volumes:
     - /home/%USER%/dockers/manager/config:/config:rw

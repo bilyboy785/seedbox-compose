@@ -566,6 +566,9 @@ function install_ftp_server() {
 					"Please enter your email address :" 7 50 "$CONTACTEMAIL" 3>&1 1>&2 2>&3)
 					LEDOMAIN=$(whiptail --title "LE Domain" --inputbox \
 					"Please enter your domain for FTP access :" 7 50 "ftp.$DOMAIN" 3>&1 1>&2 2>&3)
+					echo -e " ${BWHITE}* Stoping nginx...${NC}"
+					service nginx stop
+					checking_errors $?
 					echo -e " ${BWHITE}* Generating certificate...${NC}"
 					generate_ssl_cert $LEEMAIL $LEDOMAIN
 					checking_errors $?
@@ -649,8 +652,11 @@ function install_ftp_server() {
 	 	 	cat "$BASEPROFTPDFILE" >> "$PROFTPDFOLDER$PROFTPDCONFFILE"
 	 	 	sed -i -e "s/ServerName\ \"Debian\"/ServerName\ \"$FTPSERVERNAME\"/g" "$PROFTPDFOLDER$PROFTPDCONFFILE"
 	 	 	checking_errors $?
-	 	 	echo -e " ${BWHITE}* Restarting service...${NC}"
+	 	 	echo -e " ${BWHITE}* Restarting proftpd...${NC}"
 	 	 	service proftpd restart
+	 		checking_errors $?
+	 		echo -e " ${BWHITE}* Restarting nginx...${NC}"
+	 	 	service nginx restart
 	 		checking_errors $?
 	 	fi
 	fi

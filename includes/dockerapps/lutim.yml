@@ -12,7 +12,7 @@ lutim-%USER%:
     - CONTACT=%EMAIL%
     - MAX_FILE_SIZE=250000000
   ports:
-    - %IPADDRESS%:%PORT%:8181
+    - %PORT%:8181
   volumes:
     - /home/%USER%/dockers/lutim/data:/data
     - /home/%USER%/dockers/lutim/files:/lutim/files
