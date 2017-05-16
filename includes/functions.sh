@@ -86,9 +86,7 @@ function script_option() {
 }
 
 function conf_dir() {
-	#echo -e "${BLUE}### CHECKING SEEDBOX-COMPOSE INSTALL ###${NC}"
 	if [[ ! -d "$CONFDIR" ]]; then
-		#echo -e "	${BWHITE}--> Seedbox-Compose not detected : Let's get started !${NC}"
 		mkdir $CONFDIR > /dev/null 2>&1
 	fi
 }
@@ -105,15 +103,10 @@ function install_base_packages() {
 	do
 		apt-get install -y $package
 		echo $NUMPACKAGES
-		echo $package
 		NUMPACKAGES=$(($NUMPACKAGES+(100/$NUMPACKAGES)))
 	done
-	} | whiptail --gauge "Please wait during packages installation !" 6 60 0
-	if [[ $? = 0 ]]; then
-		echo -e "	${GREEN}--> Packages installation done !${NC}"
-	else
-		echo -e "	${RED}--> Error while installing packages, please see logs${NC}"
-	fi
+	} | whiptail --gauge "Please wait during packages installation !" 6 70 0
+	checking_errors $?
 	echo ""
 }
 
