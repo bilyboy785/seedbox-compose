@@ -558,17 +558,17 @@ function install_ftp_server() {
 			FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
 			"Please enter a name for your FTP Server :" 7 50 "SeedBox" 3>&1 1>&2 2>&3)
 			echo -e "	${BWHITE}* Installing proftpd...${NC}"
-			apt-get install proftpd -y > /dev/null 2>&1
-			checking_errors $?
+			#apt-get install proftpd -y > /dev/null 2>&1
+			#checking_errors $?
 			BASEPROFTPDFILE="includes/config/proftpd.conf"
 			echo -e "	${BWHITE}* Creating configuration file...${NC}"
 			# mv "$PROFTPDCONF" "$PROFTPDCONF.bak"
 	 	# 	cat "$BASEPROFTPDFILE" >> "$PROFTPDCONF"
 	 	# 	sed -i -e "s/ServerName\ \"Debian\"/$FTPSERVERNAME/g" "$PROFTPDCONF"
-	 		checking_errors $?
+	 		#checking_errors $?
 	 		echo -e "	${BWHITE}* Restarting service...${NC}"
 	 		service proftpd restart
-	 		checking_errors $?
+	 		#checking_errors $?
 		fi
 	else
 		echo -e "	${RED}* Proftpd is already installed !${NC}"
@@ -635,8 +635,8 @@ function resume_seedbox() {
 		mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
 		mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
 	fi
-	chown $SEEDUSER: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
-	chmod 775: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
+	#chown $SEEDUSER: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
+	#chmod 775: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
 }
 
 function backup_docker_conf() {
