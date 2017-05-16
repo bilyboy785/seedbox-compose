@@ -9,7 +9,7 @@ sonarr-%USER%:
     - PGID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - %IPADDRESS%:%PORT%:8989
+    - %PORT%:8989
   volumes:
     - /etc/localtime:/etc/localtime:ro
     - /home/%USER%/dockers/sonarr/config:/config
