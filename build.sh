@@ -34,6 +34,7 @@ if [ $USER = "root" ] ; then
 	case $SCRIPT in
 		"INSTALL")
 	    	if [[ ! -d "/etc/seedboxcompose/" ]]; then
+	    		clear
 		  		echo -e "${BLUE}##########################################${NC}"
 		  		echo -e "${BLUE}###    INSTALLING SEEDBOX-COMPOSE      ###${NC}"
 		  		echo -e "${BLUE}##########################################${NC}"

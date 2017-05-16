@@ -262,6 +262,7 @@ function install_letsencrypt() {
 	if [[ ! -d "$LEDIR" ]]; then
 		echo " * Installing Lets'Encrypt"
 		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt > /dev/null 2>&1
+		checking_errors $?
 		echo ""
 	else
 		echo " * Let's Encrypt is already installed !"
@@ -291,7 +292,6 @@ function define_parameters() {
 	else
 		DOMAIN="localhost"
 	fi
-	#install_ftp_server
 	echo ""
 }
 
@@ -398,7 +398,7 @@ function install_services() {
 			FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
 			"Do you want to use a different subdomain for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
 			NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
-			if [[ "$LESSL" = "y" ]]; then
+			if [[ "$LESSL" == "y" ]]; then
 				NGINXPROXYFILE="/opt/seedbox-compose/includes/nginxproxyssl/$line.conf"
 			else
 				NGINXPROXYFILE="/opt/seedbox-compose/includes/nginxproxy/$line.conf"
@@ -447,14 +447,16 @@ function create_reverse() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
 		SITEFOLDER="/etc/nginx/conf.d/"
+		echo -e " ${BWHITE}* Stopping nginx${NC}"
 		service nginx stop > /dev/null 2>&1
+		checking_errors $?
 		for line in $(cat $INSTALLEDFILE);
 		do
 			SERVICE=$(echo $line | cut -d\- -f1)
 			PORT=$(echo $line | cut -d\- -f2)
 			FQDN=$(echo $line | cut -d\- -f3)
 			echo -e " ${BWHITE}--> [$SERVICE] - Creating reverse${NC}"
-			if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]]; then
+			if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]] && [[ "$LESSL" == "y" ]]; then
 				generate_ssl_cert $CONTACTEMAIL $FQDN
 				checking_errors $?
 			fi
@@ -655,32 +657,6 @@ function install_ftp_server() {
 	echo ""
 }
 
-# function install_ftp_server() {
-# 	echo -e "${BLUE}### INSTALL FTP SERVER ###${NC}"
-# 	PROFTPDFOLDER="/etc/proftpd/"
-# 	if [[ -d "$PROFTPDFOLDER" ]]; then
-# 		# if (whiptail --title "Use FTP Server" --yesno "Do you want to install FTP server ?" 7 50) then
-# 		# 	FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
-# 		# 	"Please enter a name for your FTP Server :" 7 50 "SeedBox" 3>&1 1>&2 2>&3)
-# 		# 	echo -e "	${BWHITE}* Installing proftpd...${NC}"
-# 		# 	#apt-get install proftpd -y > /dev/null 2>&1
-# 		# 	#checking_errors $?
-# 		# 	BASEPROFTPDFILE="includes/config/proftpd.conf"
-# 		# 	echo -e "	${BWHITE}* Creating configuration file...${NC}"
-# 		# 	# mv "$PROFTPDCONF" "$PROFTPDCONF.bak"
-# 	 # 	# 	cat "$BASEPROFTPDFILE" >> "$PROFTPDCONF"
-# 	 # 	# 	sed -i -e "s/ServerName\ \"Debian\"/$FTPSERVERNAME/g" "$PROFTPDCONF"
-# 	 # 		#checking_errors $?
-# 	 # 		echo -e "	${BWHITE}* Restarting service...${NC}"
-# 	 # 		service proftpd restart
-# 	 # 		#checking_errors $?
-# 		# fi
-# 		echo "OK"
-# 	else
-# 		echo -e "	${RED}* Proftpd is already installed !${NC}"
-# 	fi
-# }
-
 #function restart_docker_apps() {
 	# DOCKERS=$(docker ps --format "{{.Names}}")
 	# declare -i i=1
@@ -741,9 +717,6 @@ function resume_seedbox() {
 	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
 	echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
 	echo ""
-	# echo -e " ${BWHITE}* Found logs here :${NC}"
-	# echo -e "	--> Info Logs : ${YELLOW}$INFOLOGS${NC}"
-	# echo -e "	--> Error Logs : ${YELLOW}$ERRORLOGS${NC}"
 	# if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
 	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
 	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
