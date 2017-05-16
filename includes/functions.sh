@@ -552,7 +552,9 @@ function new_seedbox_user() {
 # }
 
 function install_ftp_server() {
-	echo -e "${BLUE}### INSTALL FTP SERVER###${NC}"
+	echo -e "${BLUE}##########################################${NC}"
+	echo -e "${BLUE}###          INSTALL FTP SERVER        ###${NC}"
+	echo -e "${BLUE}##########################################${NC}"
 	PROFTPDFOLDER="/etc/proftpd/"
 	PROFTPDCONFFILE="proftpd.conf"
 	BASEPROFTPDFILE="includes/config/proftpd.conf"
@@ -580,8 +582,8 @@ function install_ftp_server() {
 		if (whiptail --title "FTP Server" --yesno "FTP Server already exist ! Do you want to reconfigure service ?" 7 75) then
 			FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
 			"Please enter a name for your FTP Server :" 7 50 "SeedBox" 3>&1 1>&2 2>&3)
-			echo -e " ${BWHITE}* Reconfigure... !${NC}"
-			echo -e " ${BWHITE}* Cleaning files... !${NC}"
+			echo -e " ${BWHITE}* Reconfigure... ${NC}"
+			echo -e " ${BWHITE}* Cleaning files... ${NC}"
 			if [[ -f "$PROFTPDBAKCONF" ]]; then
 				rm $PROFTPDBAKCONF -R
 				checking_errors $?

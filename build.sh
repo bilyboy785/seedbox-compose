@@ -62,6 +62,8 @@ if [ $USER = "root" ] ; then
 				create_reverse
 				## Validating Htpasswd
 				valid_htpasswd
+				## Ask user to instal FTP
+				install_ftp_server
 				## Resuming seedbox-compose installation
 				resume_seedbox
 				## Backup dockers app Configuration
