@@ -556,6 +556,7 @@ function install_ftp_server() {
 	PROFTPDFOLDER="/etc/proftpd/"
 	PROFTPDCONFFILE="proftpd.conf"
 	BASEPROFTPDFILE="includes/config/proftpd.conf"
+	PROFTPDBAKCONF="/etc/proftpd/proftpd.conf.bak"
 	if [[ ! -d "$PROFTPDFOLDER" ]]; then
 		if (whiptail --title "Use FTP Server" --yesno "Do you want to install FTP server ?" 7 50) then
 			FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
@@ -564,7 +565,7 @@ function install_ftp_server() {
 			apt-get install proftpd -y
 			checking_errors $?
 			echo -e " ${BWHITE}* Creating configuration file...${NC}"
-			mv "$PROFTPDFOLDER$PROFTPDCONFFILE" "$PROFTPDFOLDER$PROFTPDCONFFILE.bak"
+			mv "$PROFTPDFOLDER$PROFTPDCONFFILE" "$PROFTPDBAKCONF"
 	 	 	cat "$BASEPROFTPDFILE" >> "$PROFTPDFOLDER$PROFTPDCONFFILE"
 	 	 	sed -i -e "s/ServerName\ \"Debian\"/$FTPSERVERNAME/g" "$PROFTPDFOLDER$PROFTPDCONFFILE"
 	 		checking_errors $?
@@ -575,10 +576,16 @@ function install_ftp_server() {
 	 		echo -e " ${BWHITE}* Fine, nothing will be installed !${NC}"
 		fi
 	else
-		echo -e "	${BWHITE}* FTP Server already installed !${NC}"
-		if (whiptail --title "FTP Server" --yesno "Do you want to reconfigure your FTP Server ?" 7 50) then
+		echo -e " ${YELLOW}* FTP Server already installed !${NC}"
+		if (whiptail --title "FTP Server" --yesno "FTP Server already exist ! Do you want to reconfigure service ?" 7 75) then
 			FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
 			"Please enter a name for your FTP Server :" 7 50 "SeedBox" 3>&1 1>&2 2>&3)
+			echo -e " ${BWHITE}* Reconfigure... !${NC}"
+			echo -e " ${BWHITE}* Cleaning files... !${NC}"
+			if [[ -f "$PROFTPDBAKCONF" ]]; then
+				rm $PROFTPDBAKCONF -R
+				checking_errors $?
+			fi
 			echo -e " ${BWHITE}* Creating configuration file...${NC}"
 			mv "$PROFTPDFOLDER$PROFTPDCONFFILE" "$PROFTPDFOLDER$PROFTPDCONFFILE.bak"
 	 	 	cat "$BASEPROFTPDFILE" >> "$PROFTPDFOLDER$PROFTPDCONFFILE"
@@ -589,6 +596,7 @@ function install_ftp_server() {
 	 		checking_errors $?
 	 	fi
 	fi
+	echo ""
 }
 
 # function install_ftp_server() {
