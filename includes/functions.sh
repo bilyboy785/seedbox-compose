@@ -674,6 +674,14 @@ function resume_seedbox() {
 			echo -e "	--> $SERVICEINSTALLED from ${YELLOW}$IPADDRESS:$PORTINSTALLED${NC}"
 		done
 	fi
+	if [[ -d "$PROFTPDFOLDER" ]]; then
+		echo ""
+		echo -e " ${BWHITE}* Access FTP with your IDs from :${NC}"
+		echo -e "	--> IP Address : ${YELLOW}$IPADDRESS${NC}"
+		if [[ "$DOMAIN" != "localhost" ]]; then
+			echo -e "	--> Domain : ${YELLOW}$DOMAIN${NC}"
+		fi
+	fi
 	echo ""
 	echo -e " ${BWHITE}* Here is your IDs :${NC}"
 	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
