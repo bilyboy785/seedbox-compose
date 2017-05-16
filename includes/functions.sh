@@ -588,7 +588,6 @@ function install_ftp_server() {
 	 	 	service proftpd restart
 	 		checking_errors $?
 	fi
-	echo ""
 }
 
 # function install_ftp_server() {
