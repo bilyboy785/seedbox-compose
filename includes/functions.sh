@@ -556,7 +556,7 @@ function install_ftp_server() {
 	if [[ ! -d "$PROFTPDFOLDER" ]]; then
 		if (whiptail --title "Use FTP Server" --yesno "Do you want to install FTP server ?" 7 50) then
 			FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
-			"Please enter a name for your FTP Server :" 7 50 '"SeedBox"' 3>&1 1>&2 2>&3)
+			"Please enter a name for your FTP Server :" 7 50 "SeedBox" 3>&1 1>&2 2>&3)
 			echo -e " ${BWHITE}* Installing proftpd...${NC}"
 			apt-get install proftpd -y
 			checking_errors $?
@@ -610,7 +610,7 @@ function install_ftp_server() {
 			echo -e " ${BWHITE}* Creating base configuration file...${NC}"
 			mv "$PROFTPDFOLDER$PROFTPDCONFFILE" "$PROFTPDBAKCONF"
 	 	 	cat "$BASEPROFTPDFILE" >> "$PROFTPDFOLDER$PROFTPDCONFFILE"
-	 	 	sed -i -e "s/ServerName\ \"Debian\"/$FTPSERVERNAME/g" "$PROFTPDFOLDER$PROFTPDCONFFILE"
+	 	 	sed -i -e "s/ServerName\ \"Debian\"/ServerName\ \"$FTPSERVERNAME\"/g" "$PROFTPDFOLDER$PROFTPDCONFFILE"
 	 		checking_errors $?
 	 		if [[ "$USEFTPSLE" == "yes" ]]; then
 		 		echo -e " ${BWHITE}* Creating SSL configuration file...${NC}"
