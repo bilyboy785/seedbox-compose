@@ -631,12 +631,12 @@ function resume_seedbox() {
 	# echo -e " ${BWHITE}* Found logs here :${NC}"
 	# echo -e "	--> Info Logs : ${YELLOW}$INFOLOGS${NC}"
 	# echo -e "	--> Error Logs : ${YELLOW}$ERRORLOGS${NC}"
-	if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
-		mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
-		mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
-	fi
-	#chown $SEEDUSER: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
-	#chmod 775: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
+	# if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
+	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
+	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
+	# fi
+	# chown $SEEDUSER: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
+	# chmod 775: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
 }
 
 function backup_docker_conf() {
@@ -718,59 +718,59 @@ function schedule_backup_seedbox() {
 	fi
 }
 
-function access_token_ts() {
-	grep -R "teamspeak" "$SERVICESPERUSER" > /dev/null
-	if [[ "$?" == "0" ]]; then
-		read -p " * Do you want create a file with your Teamspeak password and Token ? (default no) [y/n] : " SHOWTSTOKEN
-		if [[ "$SHOWTSTOKEN" == "y" ]]; then
-			TSIDFILE="/home/$SEEDUSER/dockers/teamspeak/idteamspeak"
-			touch $TSIDFILE
-			SERVERADMINPASSWORD=$(docker logs teamspeak 2>&1 | grep password | cut -d\= -f 3 | tr --delete '"')
-			TOKEN=$(docker logs teamspeak 2>&1 | grep token | cut -d\= -f2)
-			echo "Admin Username : serveradmin" >> $TSIDFILE
-			echo "Admin password : $SERVERADMINPASSWORD" >> $TSIDFILE
-			echo "Token : $TOKEN" >> $TSIDFILE
-			echo -e "	--> ${YELLOW}Admin username : serveradmin${NC}"
-			echo -e "	--> ${YELLOW}Admin password : $SERVERADMINPASSWORD${NC}"
-			echo -e "	--> ${YELLOW}Token : $TOKEN${NC}"
-		else
-			echo -e "	--> Check teamspeak's Logs with ${BWHITE}docker logs teamspeak${NC}"
-		fi
-	fi
-}
+# function access_token_ts() {
+# 	grep -R "teamspeak" "$SERVICESPERUSER" > /dev/null
+# 	if [[ "$?" == "0" ]]; then
+# 		read -p " * Do you want create a file with your Teamspeak password and Token ? (default no) [y/n] : " SHOWTSTOKEN
+# 		if [[ "$SHOWTSTOKEN" == "y" ]]; then
+# 			TSIDFILE="/home/$SEEDUSER/dockers/teamspeak/idteamspeak"
+# 			touch $TSIDFILE
+# 			SERVERADMINPASSWORD=$(docker logs teamspeak 2>&1 | grep password | cut -d\= -f 3 | tr --delete '"')
+# 			TOKEN=$(docker logs teamspeak 2>&1 | grep token | cut -d\= -f2)
+# 			echo "Admin Username : serveradmin" >> $TSIDFILE
+# 			echo "Admin password : $SERVERADMINPASSWORD" >> $TSIDFILE
+# 			echo "Token : $TOKEN" >> $TSIDFILE
+# 			echo -e "	--> ${YELLOW}Admin username : serveradmin${NC}"
+# 			echo -e "	--> ${YELLOW}Admin password : $SERVERADMINPASSWORD${NC}"
+# 			echo -e "	--> ${YELLOW}Token : $TOKEN${NC}"
+# 		else
+# 			echo -e "	--> Check teamspeak's Logs with ${BWHITE}docker logs teamspeak${NC}"
+# 		fi
+# 	fi
+# }
 
-function uninstall_seedbox() {
-	clear
-	echo -e "${BLUE}##########################################${NC}"
-	echo -e "${BLUE}###          UNINSTALL SEEDBOX         ###${NC}"
-	echo -e "${BLUE}##########################################${NC}"
-	ACTION=$(whiptail --title "Seedbox-Compose" --menu "Choose what you want uninstall" 10 75 2 \
-			"1" "Full uninstall (all files and dockers)" \
-			"2" "User uninstall (delete a suer)" 3>&1 1>&2 2>&3)
-		echo ""
-		case $ACTION in
-		"1")
-		  	if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
-				if (whiptail --title "Dockers configuration" --yesno "Do you want to backup your Dockers configuration ?" 7 75) then
-					echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
-					echo -e "	${RED}--> Under developpment${NC}"
-				else
-					echo -e " ${BWHITE}* Everything will be deleted !${NC}"
-					echo -e "	${RED}--> Under developpment${NC}"
-				fi
-			fi
-		;;
-		"2")
-			if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
-				if (whiptail --title "Dockers configuration" --yesno "Do you want to backup your Dockers configuration ?" 7 75) then
-					echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
-					echo -e "	${RED}--> Under developpment${NC}"
-				else
-					echo -e " ${BWHITE}* Everything will be deleted !${NC}"
-					echo -e "	${RED}--> Under developpment${NC}"
-				fi
-			fi
-		;;
-		esac
-	echo ""
-}
+# function uninstall_seedbox() {
+# 	clear
+# 	echo -e "${BLUE}##########################################${NC}"
+# 	echo -e "${BLUE}###          UNINSTALL SEEDBOX         ###${NC}"
+# 	echo -e "${BLUE}##########################################${NC}"
+# 	UNINSTALL=$(whiptail --title "Seedbox-Compose" --menu "Choose what you want uninstall" 10 75 2 \
+# 			"1" "Full uninstall (all files and dockers)" \
+# 			"2" "User uninstall (delete a suer)" 3>&1 1>&2 2>&3)
+# 		echo ""
+# 		case $UNINSTALL in
+# 		"1")
+# 		  	if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
+# 				if (whiptail --title "Dockers configuration" --yesno "Do you want to backup your Dockers configuration ?" 7 75) then
+# 					echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
+# 					echo -e "	${RED}--> Under developpment${NC}"
+# 				else
+# 					echo -e " ${BWHITE}* Everything will be deleted !${NC}"
+# 					echo -e "	${RED}--> Under developpment${NC}"
+# 				fi
+# 			fi
+# 		;;
+# 		"2")
+# 			if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
+# 				if (whiptail --title "Dockers configuration" --yesno "Do you want to backup your Dockers configuration ?" 7 75) then
+# 					echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
+# 					echo -e "	${RED}--> Under developpment${NC}"
+# 				else
+# 					echo -e " ${BWHITE}* Everything will be deleted !${NC}"
+# 					echo -e "	${RED}--> Under developpment${NC}"
+# 				fi
+# 			fi
+# 		;;
+# 		esac
+# 	echo ""
+# }
