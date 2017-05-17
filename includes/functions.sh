@@ -954,6 +954,7 @@ function uninstall_seedbox() {
 					if (whiptail --title "Cloning repo" --yesno "Do you want to redownload Seedbox-compose ?" 7 75) then
 						git clone https://github.com/bilyboy785/seedbox-compose.git > /dev/null 2>&1
 					fi
+					clear
 				fi
 			fi
 		;;
