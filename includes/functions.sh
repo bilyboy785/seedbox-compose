@@ -404,7 +404,7 @@ function add_user_htpasswd() {
 
 function install_services() {
 	INSTALLEDFILE="/home/$SEEDUSER/resume"
-	touch "$INSTALLEDFILE" > /dev/null 2>&1
+	touch $INSTALLEDFILE > /dev/null 2>&1
 	if [[ -f "$FILEPORTPATH" ]]; then
 		declare -i PORT=$(cat $FILEPORTPATH | tail -1)
 	else
@@ -412,8 +412,6 @@ function install_services() {
 	fi
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		if (whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" 10 60) then
-			RSASSLKEY=$(whiptail --title "RSA Key Size" --inputbox \
-			"Secify RSA key size for your certificate" 7 50 "4096" 3>&1 1>&2 2>&3)
 			LESSL="y"
 		else
 			LESSL="n"
@@ -423,7 +421,6 @@ function install_services() {
 	touch $DOCKERCOMPOSEFILE
 	for line in $(cat $SERVICESPERUSER);
 	do
-		#REVERSEPROXYNGINX="/etc/nginx/conf.d/$line-$SEEDUSER.conf"
 		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
@@ -434,7 +431,7 @@ function install_services() {
 		sed -i "s|%IPADDRESS%|$IPADDRESS|g" $DOCKERCOMPOSEFILE
 		if [[ "$DOMAIN" != "localhost" ]]; then
 			SUBURI=$(whiptail --title "Access Type" --menu \
-	                "Please choose how do you want access your Apps :" 12 45 6 \
+	                "Please choose how do you want access your Apps :" 10 45 2 \
 	                "1" "Subdomains" \
 	                "2" "URI" 3>&1 1>&2 2>&3)
 	        case SUBURI in
@@ -449,11 +446,11 @@ function install_services() {
 	        		;;
 	        	"2" )
 					PROXYACCESS="URI"
-					FQDN="$DOMAIN"
+					FQDN=$DOMAIN
 					FQDNTMP="/$line"
 					ACCESSURL=$(whiptail --title "SSL Subdomain" --inputbox \
 					"Do you want to use a different URI for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
-					URI="$ACCESSURL"
+					URI=$ACCESSURL
 	        		NGINXSITE="/etc/nginx/conf.d/$line.$DOMAIN.conf"
 					;;
 	        esac
@@ -549,7 +546,7 @@ function generate_ssl_cert() {
 	EMAILADDRESS=$1
 	DOMAINSSL=$2
 	echo -e "	${BWHITE}--> Generating LE certificate files for $DOMAINSSL, please wait... and wait again !${NC}"
-	bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size $RSASSLKEY --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
+	bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
 }
 
 function manage_users() {
