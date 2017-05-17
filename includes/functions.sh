@@ -131,7 +131,7 @@ function delete_htaccess() {
 
 function checking_system() {
 	echo -e "${BLUE}### CHECKING SYSTEM ###${NC}"
-	echo " * Checking system OS"
+	echo -e " ${BWHITE}* Checking system OS${NC}"
 	TMPSOURCESDIR="includes/sources.list"
 	TMPSYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	TMPCODENAME=$(lsb_release -sc)
@@ -216,7 +216,7 @@ function install_nginx() {
 		apt-get install -y nginx > /dev/null 2>&1
 		checking_errors $?
 	else
-		echo -e " * Nginx is already installed !"
+		echo -e " ${YELLOW}* Nginx is already installed !${NC}"
 	fi
 	echo ""
 }
@@ -265,7 +265,7 @@ function install_docker() {
 		fi
 		echo ""
 	else
-		echo " * Docker is already installed !"
+		echo -e " ${YELLOW}* Docker is already installed !${NC}"
 		echo ""
 	fi
 }
@@ -279,7 +279,7 @@ function install_letsencrypt() {
 		checking_errors $?
 		echo ""
 	else
-		echo " * Let's Encrypt is already installed !"
+		echo -e " ${YELLOW}* Let's Encrypt is already installed !${NC}"
 		echo ""
 	fi
 }
@@ -345,9 +345,9 @@ function create_user() {
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 		useradd -m -G $SEEDGROUP -p $PASS $SEEDUSER > /dev/null 2>&1
 		if [[ $? -eq 0 ]]; then
-			echo -e " ${GREEN}--> User has been added to system !${NC}"
+			echo -e "	${GREEN}--> User has been added to system !${NC}"
 		else
-			echo -e " ${RED}--> Failed to add a user !${NC}"
+			echo -e "	${RED}--> Failed to add a user !${NC}"
 		fi
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
@@ -358,7 +358,7 @@ function create_user() {
 
 function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
-	echo " --> Services will be installed : "
+	echo -e " ${BWHITE}--> Services will be installed : ${NC}"
 	for app in $(cat includes/config/services-available);
 	do
 		service=$(echo $app | cut -d\- -f1)
@@ -458,10 +458,10 @@ function docker_compose() {
 	echo -e "${BLUE}### DOCKERCOMPOSE ###${NC}"
 	ACTDIR="$PWD"
 	cd /home/$SEEDUSER/
-	echo " * Starting docker..."
+	echo -e " ${BWHITE}* Starting docker...${NC}"
 	service docker restart
 	checking_errors $?
-	echo " * Docker-composing, it may takes a long..."
+	echo -e " ${BWHITE}* Docker-composing, it may takes a long...${NC}"
 	docker-compose up -d > /dev/null 2>&1
 	checking_errors $?
 	echo ""
@@ -469,12 +469,14 @@ function docker_compose() {
 }
 
 function valid_htpasswd() {
-	HTFOLDER="/etc/nginx/passwd/"
-	mkdir -p $HTFOLDER
-	HTTEMPFOLDER="/tmp/"
-	HTFILE=".htpasswd-$SEEDUSER"
-	cat "$HTTEMPFOLDER$HTFILE" >> "$HTFOLDER$HTFILE"
-	rm "$HTTEMPFOLDER$HTFILE"
+	if [[ -d "/etc/nginx/" ]]; then
+		HTFOLDER="/etc/nginx/passwd/"
+		mkdir -p $HTFOLDER
+		HTTEMPFOLDER="/tmp/"
+		HTFILE=".htpasswd-$SEEDUSER"
+		cat "$HTTEMPFOLDER$HTFILE" >> "$HTFOLDER$HTFILE"
+		rm "$HTTEMPFOLDER$HTFILE"
+	fi
 }
 
 function create_reverse() {
