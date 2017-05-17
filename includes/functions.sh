@@ -19,8 +19,9 @@ function script_option() {
 			"2" "Manage Users" \
 			"3" "Manage Apps" \
 			"4" "Manage Backups" \
+			"5" "Manage Docker" \
 			"5" "Install FTP Server" \
-			"6" "Generate SSL certificate" \
+			"6" "Manage SSL Certificates" \
 			"7" "Disable htaccess protection" \
 			"8" "Uninstall Seedbox-Compose"  3>&1 1>&2 2>&3)
 		echo ""
@@ -59,15 +60,30 @@ function script_option() {
 			 esac
 			;;
 		"5")
+			under_developpment
+		"6")
 			SCRIPT="INSTALLFTPSERVER"
 			;;
-		"6")
-			SCRIPT="GENERATECERT"
-			;;
 		"7")
-			SCRIPT="DELETEHTACCESS"
+			ACTIONSSL=$(whiptail --title "Manage SSL" --menu "Choose an action for SSL Certificates" 10 75 2 \
+				"1" "Generate Let's Encrypt Certificates" \
+				"2" "Renew Let's Encrypt Certificates" 3>&1 1>&2 2>&3)
+			echo ""
+			case $ACTIONSSL in
+			"1")
+				
+				generate_ssl_cert
+				;;
+			"2")
+				
+				renew_ssl_cert
+				;;
+			 esac
 			;;
 		"8")
+			SCRIPT="DELETEHTACCESS"
+			;;
+		"9")
 			SCRIPT="UNINSTALL"
 			;;
 		esac
