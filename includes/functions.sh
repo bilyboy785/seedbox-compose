@@ -45,7 +45,6 @@ function script_option() {
 		"3")
 			SCRIPT="MANAGEAPPS"
 			;;
-		;;
 		"4")
 			SCRIPT="BACKUPCONF"
 			;;
