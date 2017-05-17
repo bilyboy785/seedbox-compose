@@ -505,7 +505,7 @@ function manage_users() {
 	echo -e "${BLUE}###             MANAGE USERS           ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	MANAGEUSER=$(whiptail --title "Management" --menu \
-	                "Choose an action to manage users" 19 45 11 \
+	                "Choose an action to manage users" 15 45 10 \
 	                "1" "New Seedbox User" \
 	                "2" "Delete Seedbox User" 3>&1 1>&2 2>&3)
 	case $MANAGEUSER in

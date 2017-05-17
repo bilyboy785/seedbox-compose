@@ -24,7 +24,7 @@ SERVICESUSER="/etc/seedboxcompose/services-"
 FILEPORTPATH="/etc/seedboxcompose/ports.pt"
 PACKAGESFILE="includes/config/packages"
 USERSFILE="/etc/seedboxcompose/users"
-USERSFILE="/etc/seedboxcompose/group"
+GROUPFILE="/etc/seedboxcompose/group"
 INFOLOGS="/var/log/seedboxcompose.info.log"
 ERRORLOGS="/var/log/seedboxcompose.error.log"
 
