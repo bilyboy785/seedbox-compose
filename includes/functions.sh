@@ -433,11 +433,31 @@ function install_services() {
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%IPADDRESS%|$IPADDRESS|g" $DOCKERCOMPOSEFILE
 		if [[ "$DOMAIN" != "localhost" ]]; then
-			FQDNTMP="$line.$DOMAIN"
-			FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
-			"Do you want to use a different subdomain for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
-			NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
-			if [[ "$LESSL" == "y" ]]; then
+			SUBURI=$(whiptail --title "Access Type" --menu \
+	                "Please choose how do you want access your Apps :" 12 45 6 \
+	                "1" "Subdomains" \
+	                "2" "URI" 3>&1 1>&2 2>&3)
+	        case SUBURI in
+	        	"1" )
+					PROXYACCESS="SUBDOMAIN"
+					FQDNTMP="$line.$DOMAIN"
+					FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
+					"Do you want to use a different subdomain for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
+					ACCESSURL=$FQDN
+					URI="/"
+					NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
+	        		;;
+	        	"2" )
+					PROXYACCESS="URI"
+					FQDN="$DOMAIN"
+					FQDNTMP="/$line"
+					ACCESSURL=$(whiptail --title "SSL Subdomain" --inputbox \
+					"Do you want to use a different URI for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
+					URI="$ACCESSURL"
+	        		NGINXSITE="/etc/nginx/conf.d/$line.$domain.conf"
+					;;
+	        esac
+	        if [[ "$LESSL" == "y" ]]; then
 				NGINXPROXYFILE="/opt/seedbox-compose/includes/nginxproxyssl/$line.conf"
 			else
 				NGINXPROXYFILE="/opt/seedbox-compose/includes/nginxproxy/$line.conf"
@@ -448,6 +468,7 @@ function install_services() {
 			sed -i "s|%DOMAIN%|$FQDN|g" $NGINXSITE
 			sed -i "s|%PORT%|$PORT|g" $NGINXSITE
 			sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
+			sed -i "s|%URI%|$URI|g" $NGINXSITE
 		elif [[ "$DOMAIN" == "localhost" ]]; then
 			echo "$line-$PORT-$SEEDUSER" >> $INSTALLEDFILE
 		fi
@@ -455,6 +476,10 @@ function install_services() {
 		FQDN=""
 		FQDNTMP=""
 	done
+	if (whiptail --title "Docker Watcher" --yesno "Do you want to install a Watcher to auto-update your Apps ?" 7 75) then
+		cat "includes/dockerapps/watchtower.yml" >> $DOCKERCOMPOSEFILE
+		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
+	fi
 	echo $PORT >> $FILEPORTPATH
 	echo ""
 }
