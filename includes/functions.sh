@@ -43,30 +43,30 @@ function script_option() {
 			# "2" "New htaccess user" \  3>&1 1>&2 2>&3)
 		  ;;
 		"3")
-		  SCRIPT="MANAGEAPPS"
-		  ;;
+			SCRIPT="MANAGEAPPS"
+			;;
 		;;
 		"4")
-		  SCRIPT="BACKUPCONF"
-		;;
+			SCRIPT="BACKUPCONF"
+			;;
 		"5")
-		   SCRIPT="SCHEDULEBACKUP"
-		   echo -e "${BLUE}##########################################${NC}"
-		   echo -e "${BLUE}###           SCHEDULE BACKUP          ###${NC}"
-		   echo -e "${BLUE}##########################################${NC}"
-		;;
+			SCRIPT="SCHEDULEBACKUP"
+			echo -e "${BLUE}##########################################${NC}"
+			echo -e "${BLUE}###           SCHEDULE BACKUP          ###${NC}"
+			echo -e "${BLUE}##########################################${NC}"
+			;;
 		"6")
-		   SCRIPT="INSTALLFTPSERVER"
-		;;
+			SCRIPT="INSTALLFTPSERVER"
+			;;
 		"7")
-		   SCRIPT="GENERATECERT"
-		;;
+			SCRIPT="GENERATECERT"
+			;;
 		"8")
-		   SCRIPT="DELETEHTACCESS"
-		;;
+			SCRIPT="DELETEHTACCESS"
+			;;
 		"9")
-		  SCRIPT="UNINSTALL"
-		;;
+			SCRIPT="UNINSTALL"
+			;;
 		esac
 	else
 		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose installation !" 10 75 2 \
