@@ -553,7 +553,7 @@ function manage_apps() {
 	ACTIONONAPP=$(whiptail --title "App Manager" --menu \
 	                "Select an action :" 12 45 6 \
 	                "1" "Add Docker App"  \
-	                "2" "Edit my Apps" 3>&1 1>&2 2>&3)        
+	                "2" "Delete an App" 3>&1 1>&2 2>&3)        
 	[[ "$?" = 1 ]] && break;
 	case $ACTIONONAPP in
 		"1" ) ## ADDING APP
@@ -566,7 +566,7 @@ function manage_apps() {
 				resume_seedbox
 				backup_docker_conf
 			;;
-		"2" ) ## EDITING APP
+		"2" ) ## DELETING APP
 			echo -e " ${BWHITE}* Edit my app${NC}"
 			TABSERVICES=()
 			for SERVICEACTIVATED in $(cat $USERRESUMEFILE)
@@ -581,32 +581,6 @@ function manage_apps() {
 			[[ "$?" = 1 ]] && break;
 	esac
 }
-
-# function delete_dockers() {
-# 	echo -e "${BLUE}##########################################${NC}"
-# 	echo -e "${BLUE}###        CLEANING DOCKER APPS        ###${NC}"
-# 	echo -e "${BLUE}##########################################${NC}"
-# 	echo " * Stopping dockers..."
-# 	docker stop $(docker ps) > /dev/null 2>&1
-# 	echo " * Removing dockers..."
-# 	docker rm $(docker ps -a) > /dev/null 2>&1
-# 	if (whiptail --title "Data deleting" --yesno "Do you want to delete all docker's configuration files, data and user ?" 10 60) then
-# 		if [[ "$SEEDUSER" == "" ]]; then
-# 			SEEDUSER=$(whiptail --title "Username" --inputbox "Specify user to delete all his conf files" 10 60 Morgan 3>&1 1>&2 2>&3)
-# 		fi
-# 		DOCKERFOLDER="/home/$SEEDUSER/dockers/"
-# 		echo "		* Deleting user..."
-# 		userdel $SEEDUSER
-# 		if [[ -d "$DOCKERFOLDER" ]]; then
-# 			echo "		* Deleting files..."
-# 			rm $DOCKERFOLDER -R
-# 			rm $CONFDIR -R
-# 		fi
-# 	else
-# 		echo -e "	${BWHITE}* Nothing will be deleted !${NC}"
-# 	fi
-# 	echo ""
-# }
 
 function install_ftp_server() {
 	echo -e "${BLUE}##########################################${NC}"
@@ -830,6 +804,7 @@ function backup_docker_conf() {
 }
 
 function schedule_backup_seedbox() {
+	CRONTABFILE="/etc/crontab"
 	if (whiptail --title "Schedule Backup" --yesno "Do you want to schedule a configuration backup ?" 10 60) then
 		if [[ "$SEEDUSER" == "" ]]; then
 			SEEDUSER=$(whiptail --title "Username" --inputbox \
@@ -837,7 +812,7 @@ function schedule_backup_seedbox() {
 			3>&1 1>&2 2>&3)
 		fi
 		if [[ -d "/home/$SEEDUSER" ]]; then
-			grep -R "$SEEDUSER" /etc/crontab > /dev/null 2>&1
+			grep -R "$SEEDUSER" $CRONTABFILE > /dev/null 2>&1
 			if [[ "$?" != "0" ]]; then
 				BACKUPTYPE=$(whiptail --title "Schedule Backup" --menu "Choose a scheduling backup type" 12 60 4 \
 					"1" "Daily backup" \
@@ -848,7 +823,6 @@ function schedule_backup_seedbox() {
 					3>&1 1>&2 2>&3)
 				BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
 				DOCKERDIR="/home/$SEEDUSER"
-				CRONTABFILE="/etc/crontab"
 				TMPCRONFILE="/tmp/crontab"
 				case $BACKUPTYPE in
 				"1")
@@ -874,6 +848,9 @@ function schedule_backup_seedbox() {
 				rm $TMPCRONFILE
 			else
 				if (whiptail --title "Schedule Backup" --yesno "A cronjob is already configured for $SEEDUSER. Do you want to delete this job ?" 10 80) then
+					USERLINE=$(grep -n "$SEEDUSER" $CRONTABFILE | cut -d: -f1)
+					sed '/$SEEDUSER/d' $CRONTABFILE
+					echo -e " ${GREEN}--> Cronjob for $SEEDUSER has been deleted !${NC}"
 					schedule_backup_seedbox
 				else
 					break
