@@ -454,7 +454,7 @@ function install_services() {
 					ACCESSURL=$(whiptail --title "SSL Subdomain" --inputbox \
 					"Do you want to use a different URI for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
 					URI="$ACCESSURL"
-	        		NGINXSITE="/etc/nginx/conf.d/$line.$domain.conf"
+	        		NGINXSITE="/etc/nginx/conf.d/$line.$DOMAIN.conf"
 					;;
 	        esac
 	        if [[ "$LESSL" == "y" ]]; then
