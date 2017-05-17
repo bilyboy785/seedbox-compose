@@ -103,7 +103,6 @@ if [ $USER = "root" ] ; then
 	  	;;
 		"UNINSTALL")
 			#under_developpment
-	    	#delete_dockers
 	    	uninstall_seedbox
 	  	;;
 		"BACKUPCONF")

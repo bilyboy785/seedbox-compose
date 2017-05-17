@@ -331,7 +331,7 @@ function create_user() {
 	    groupadd $SEEDGROUP
 	    checking_errors $?
 	else
-	    echo -e " ${YELLOW}* Group $SEEDGROUP already exist !${NC}"
+	    echo -e " ${YELLOW}* No need to create group $SEEDGROUP, already exist.${NC}"
 	fi
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
@@ -902,38 +902,41 @@ function schedule_backup_seedbox() {
 # 	fi
 # }
 
-# function uninstall_seedbox() {
-# 	clear
-# 	echo -e "${BLUE}##########################################${NC}"
-# 	echo -e "${BLUE}###          UNINSTALL SEEDBOX         ###${NC}"
-# 	echo -e "${BLUE}##########################################${NC}"
-# 	UNINSTALL=$(whiptail --title "Seedbox-Compose" --menu "Choose what you want uninstall" 10 75 2 \
-# 			"1" "Full uninstall (all files and dockers)" \
-# 			"2" "User uninstall (delete a suer)" 3>&1 1>&2 2>&3)
-# 		echo ""
-# 		case $UNINSTALL in
-# 		"1")
-# 		  	if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
-# 				if (whiptail --title "Dockers configuration" --yesno "Do you want to backup your Dockers configuration ?" 7 75) then
-# 					echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
-# 					echo -e "	${RED}--> Under developpment${NC}"
-# 				else
-# 					echo -e " ${BWHITE}* Everything will be deleted !${NC}"
-# 					echo -e "	${RED}--> Under developpment${NC}"
-# 				fi
-# 			fi
-# 		;;
-# 		"2")
-# 			if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
-# 				if (whiptail --title "Dockers configuration" --yesno "Do you want to backup your Dockers configuration ?" 7 75) then
-# 					echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
-# 					echo -e "	${RED}--> Under developpment${NC}"
-# 				else
-# 					echo -e " ${BWHITE}* Everything will be deleted !${NC}"
-# 					echo -e "	${RED}--> Under developpment${NC}"
-# 				fi
-# 			fi
-# 		;;
-# 		esac
-# 	echo ""
-# }
+function uninstall_seedbox() {
+	clear
+	echo -e "${BLUE}##########################################${NC}"
+	echo -e "${BLUE}###          UNINSTALL SEEDBOX         ###${NC}"
+	echo -e "${BLUE}##########################################${NC}"
+	UNINSTALL=$(whiptail --title "Seedbox-Compose" --menu "Choose what you want uninstall" 10 75 2 \
+			"1" "Full uninstall (all files and dockers)" \
+			"2" "User uninstall (delete a suer)" 3>&1 1>&2 2>&3)
+		echo ""
+		case $UNINSTALL in
+		"1")
+		  	if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
+				if (whiptail --title "Dockers configuration" --yesno "Do you want to backup your Dockers configuration ?" 7 75) then
+					echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
+					for seeduser in $(cat $USERSFILE)
+					do
+						echo $seeduser
+					done
+				else
+					echo -e " ${BWHITE}* Everything will be deleted !${NC}"
+					echo -e "	${RED}--> Under developpment${NC}"
+				fi
+			fi
+		;;
+		"2")
+			if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
+				if (whiptail --title "Dockers configuration" --yesno "Do you want to backup your Dockers configuration ?" 7 75) then
+					echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
+					echo -e "	${RED}--> Under developpment${NC}"
+				else
+					echo -e " ${BWHITE}* Everything will be deleted !${NC}"
+					echo -e "	${RED}--> Under developpment${NC}"
+				fi
+			fi
+		;;
+		esac
+	echo ""
+}
