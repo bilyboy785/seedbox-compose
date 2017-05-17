@@ -289,6 +289,8 @@ function define_parameters() {
 	USEDOMAIN="y"
 	CURRTIMEZONE=$(cat /etc/timezone)
 	create_user
+	CONTACTEMAIL=$(whiptail --title "Email address" --inputbox \
+	"Please enter your email address :" 7 50 3>&1 1>&2 2>&3)
 	TIMEZONEDEF=$(whiptail --title "Timezone" --inputbox \
 	"Please enter your timezone" 7 66 "$CURRTIMEZONE" \
 	3>&1 1>&2 2>&3)
@@ -297,8 +299,6 @@ function define_parameters() {
 	else
 		TIMEZONE=$TIMEZONEDEF
 	fi
-	CONTACTEMAIL=$(whiptail --title "Email address" --inputbox \
-	"Please enter your email address :" 7 50 3>&1 1>&2 2>&3)
 	if (whiptail --title "Use domain name" --yesno "Do you want to use a domain to join your apps ?" 7 50) then
 		DOMAIN=$(whiptail --title "Your domain name" --inputbox \
 		"Please enter your domain :" 7 50 \
@@ -318,6 +318,7 @@ function create_user() {
 		echo "$SEEDGROUP" > "$GROUPFILE"
 	else
 		TMPGROUP=$(cat $GROUPFILE)
+		echo "LE GROUPE : $TMPGROUP"
 		if [[ "$TMPGROUP" == "" ]]; then
 			SEEDGROUP=$(whiptail --title "Group" --inputbox \
         		"Create a group for your Seedbox" 7 50 3>&1 1>&2 2>&3)
@@ -349,13 +350,9 @@ function create_user() {
 		checking_errors $?
 	else
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
-		echo -e " ${BWHITE}* Adding $SEEDUSER in system"
+		echo -e " ${BWHITE}* Adding $SEEDUSER to the system"
 		useradd -m -G $SEEDGROUP -p $PASS $SEEDUSER > /dev/null 2>&1
-		if [[ $? -eq 0 ]]; then
-			echo -e "	${GREEN}--> User has been added to system !${NC}"
-		else
-			echo -e "	${RED}--> Failed to add a user !${NC}"
-		fi
+		checking_errors $?
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
 	fi
