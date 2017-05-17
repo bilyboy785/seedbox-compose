@@ -16,16 +16,14 @@ function script_option() {
 	if [[ -d "$CONFDIR" ]]; then
 		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 20 75 11 \
 			"1" "Seedbox-Compose already installed !" \
-			"2" "New seedbox user" \
-			"3" "New htaccess user" \
-			"4" "Add docker Apps for user X" \
-			"5" "Restart all dockers" \
-			"6" "Backup dockers configuration" \
-			"7" "Enable scheduled backup" \
-			"8" "Install FTP Server" \
-			"9" "Generate SSL certificate" \
-			"10" "Disable htaccess protection" \
-			"11" "Uninstall Seedbox-Compose"  3>&1 1>&2 2>&3)
+			"2" "Manage Users" \
+			"3" "Manage Apps" \
+			"4" "Backup dockers configuration" \
+			"5" "Enable scheduled backup" \
+			"6" "Install FTP Server" \
+			"7" "Generate SSL certificate" \
+			"8" "Disable htaccess protection" \
+			"9" "Uninstall Seedbox-Compose"  3>&1 1>&2 2>&3)
 		echo ""
 		case $ACTION in
 		"1")
@@ -39,36 +37,34 @@ function script_option() {
 			fi
 		  ;;
 		"2")
-		  SCRIPT="NEWSEEDBOXUSER"
+		  SCRIPT="MANAGEUSERS"
+		 #  ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 20 75 11 \
+			# "1" "New user" \
+			# "2" "New htaccess user" \  3>&1 1>&2 2>&3)
 		  ;;
 		"3")
-		  SCRIPT="ADDUSER"
+		  SCRIPT="MANAGEAPPS"
 		  ;;
-		"4")
-		  SCRIPT="ADDDOCKAPP"
-		  ;;
-		"5")
-		  SCRIPT="RESTARTDOCKERS"
 		;;
-		"6")
+		"4")
 		  SCRIPT="BACKUPCONF"
 		;;
-		"7")
+		"5")
 		   SCRIPT="SCHEDULEBACKUP"
 		   echo -e "${BLUE}##########################################${NC}"
 		   echo -e "${BLUE}###           SCHEDULE BACKUP          ###${NC}"
 		   echo -e "${BLUE}##########################################${NC}"
 		;;
-		"8")
+		"6")
 		   SCRIPT="INSTALLFTPSERVER"
 		;;
-		"9")
+		"7")
 		   SCRIPT="GENERATECERT"
 		;;
-		"10")
+		"8")
 		   SCRIPT="DELETEHTACCESS"
 		;;
-		"11")
+		"9")
 		  SCRIPT="UNINSTALL"
 		;;
 		esac
@@ -296,20 +292,40 @@ function define_parameters() {
 }
 
 function create_user() {
-	touch $USERSFILE
+	if [[ ! -f "$USERSFILE" ]]; then
+		touch $USERSFILE
+	fi
+	if [[ ! -f "$GROUPFILE" ]]; then
+		touch $GROUPFILE
+	else
+		TMPGROUP=$(cat $GROUPFILE)
+	fi
 	SEEDUSER=$(whiptail --title "Username" --inputbox \
-		"Please enter a username :" 7 50 \
-		3>&1 1>&2 2>&3)
+		"Please enter a username :" 7 50 3>&1 1>&2 2>&3)
 	PASSWORD=$(whiptail --title "Password" --passwordbox \
-		"Please enter a password :" 7 50 \
-		3>&1 1>&2 2>&3)
+		"Please enter a password :" 7 50 3>&1 1>&2 2>&3)
+	SEEDGROUP=$(whiptail --title "Group" --inputbox \
+        "Create a group for your Seedbox" 7 50 $TMPGROUP 3>&1 1>&2 2>&3)
+    egrep "^$SEEDGROUP" /etc/group >/dev/null
+    echo "$SEEDGROUP" > "$GROUPFILE"
+	if [[ "$?" != "0" ]]; then
+		echo -e " ${BWHITE}* Creating group $SEEDGROUP"
+	    groupadd $SEEDGROUP
+	    checking_errors $?
+	else
+	    echo -e " ${YELLOW}* Group $SEEDGROUP already exist !${NC}"
+	fi
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
+		echo -e " ${YELLOW}* User already exist !${NC}"
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
+		echo -e " ${BWHITE}* Adding $SEEDUSER in $SEEDGROUP"
+		usermod -a -G $SEEDGROUP $SEEDUSER
+		checking_errors $?
 	else
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
-		useradd -m -p $PASS $SEEDUSER > /dev/null 2>&1
+		useradd -m -G $SEEDGROUP -p $PASS $SEEDUSER > /dev/null 2>&1
 		if [[ $? -eq 0 ]]; then
 			echo -e " ${GREEN}--> User has been added to system !${NC}"
 		else
@@ -485,35 +501,63 @@ function generate_ssl_cert() {
 	bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size $RSASSLKEY --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
 }
 
-function new_seedbox_user() {
-	echo -e "${BLUE}### NEW SEEDBOX USER ###${NC}"
-	define_parameters
-	choose_services
-	install_services
-	docker_compose
-	create_reverse
-	valid_htpasswd
-	resume_seedbox
-	backup_docker_conf
+function manage_users() {
+	echo -e "${BLUE}##########################################${NC}"
+	echo -e "${BLUE}###             MANAGE USERS           ###${NC}"
+	echo -e "${BLUE}##########################################${NC}"
+	MANAGEUSER=$(whiptail --title "Management" --menu \
+	                "Choose an action to manage users" 19 45 11 \
+	                "1" "New Seedbox User" \
+	                "2" "Delete Seedbox User" 3>&1 1>&2 2>&3)
+	case $MANAGEUSER in
+		"1" )
+			echo -e "${BLUE}### NEW SEEDBOX USER ###${NC}"
+			define_parameters
+			choose_services
+			install_services
+			docker_compose
+			create_reverse
+			valid_htpasswd
+			resume_seedbox
+			backup_docker_conf
+			;;
+		"2" )
+			echo -e "${BLUE}### DELETE SEEDBOX USER ###${NC}"
+			echo -e "${RED}--> UNDER DEVELOPPMENT ${NC}"
+			;;
+	esac
 }
 
-# function add_docker_app() {
-# 	echo -e "${BLUE}##########################################${NC}"
-# 	echo -e "${BLUE}###           ADD DOCKER APPS          ###${NC}"
-# 	echo -e "${BLUE}##########################################${NC}"
-# 	declare -i NUMUSER=0
-# 	declare -a seedboxusers=()
-# 	for line in $(cat $USERSFILE);
-# 	do
-# 		seedboxusers[${#seedboxusers[*]}]=$line
-# 		NUMUSER=$NUMUSER+1
-# 	done
-# 	NBUSERS=$(${#nomtableau[*]})
-# 	SEEDUSER=$(whiptail --title "Choose username" --menu \
-# 		"Please select user to add dockers app" 15 50 4 \
-# 		${seedboxusers[0]} " " 3>&1 1>&2 2>&3)
-# 	echo -e " ${BWHITE}* Adding apps for $SEEDUSER"
-# }
+function manage_apps() {
+	echo -e "${BLUE}##########################################${NC}"
+	echo -e "${BLUE}###           ADD DOCKER APPS          ###${NC}"
+	echo -e "${BLUE}##########################################${NC}"
+	TMPGROUP=$(cat $GROUPFILE)
+	TABUSERS=()
+	for USERSEED in $(members $TMPGROUP)
+	do
+	        IDSEEDUSER=$(id -u $USERSEED)
+	        TABUSERS+=( ${USERSEED//\"} ${IDSEEDUSER//\"} )
+	done
+	SEEDUSER=$(whiptail --title "Username" --menu \
+	                "Please select user to manage Apps" 19 45 11 \
+	                "${TABUSERS[@]}"  3>&1 1>&2 2>&3)
+	USERDOCKERCOMPOSEFILE="/home/$SEEDUSER/docker-compose.yml"
+	USERRESUMEFILE="/home/$SEEDUSER/resume"
+	echo -e "${BLUE}### APP MANAGER FOR $SEEDUSER ###${NC}"
+	echo -e " ${BWHITE}* Docker-Compose file : $USERDOCKERCOMPOSEFILE${NC}"
+	echo -e " ${BWHITE}* Resume file : $USERRESUMEFILE${NC}"
+	TABSERVICES=()
+	for SERVICEACTIVATED in $(cat $USERRESUMEFILE)
+	do
+	        SERVICE=$(echo $SERVICEACTIVATED | cut -d\- -f1)
+	        PORT=$(echo $SERVICEACTIVATED | cut -d\- -f2)
+	        TABSERVICES+=( ${SERVICE//\"} ${PORT//\"} )
+	done
+	APPSELECTED=$(whiptail --title "Your Apps" --menu \
+	                "Choose an App to make an action" 19 45 11 \
+	                "${TABSERVICES[@]}"  3>&1 1>&2 2>&3)
+}
 
 # function delete_dockers() {
 # 	echo -e "${BLUE}##########################################${NC}"

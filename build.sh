@@ -24,6 +24,7 @@ SERVICESUSER="/etc/seedboxcompose/services-"
 FILEPORTPATH="/etc/seedboxcompose/ports.pt"
 PACKAGESFILE="includes/config/packages"
 USERSFILE="/etc/seedboxcompose/users"
+USERSFILE="/etc/seedboxcompose/group"
 INFOLOGS="/var/log/seedboxcompose.info.log"
 ERRORLOGS="/var/log/seedboxcompose.error.log"
 
@@ -88,12 +89,12 @@ if [ $USER = "root" ] ; then
 			under_developpment
 			#delete_htaccess
 		;;
-		"ADDDOCKAPP")
+		"MANAGEAPPS")
 	    	#under_developpment
-			add_docker_app
+			manage_apps
 	  	;;
-		"NEWSEEDBOXUSER")
-			new_seedbox_user
+		"MANAGEUSERS")
+			manage_users
 		;;
 		"RESTARTDOCKER")
 			under_developpment
