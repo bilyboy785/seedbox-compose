@@ -631,7 +631,7 @@ function install_ftp_server() {
 			FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
 			"Please enter a name for your FTP Server :" 7 50 "SeedBox" 3>&1 1>&2 2>&3)
 			echo -e " ${BWHITE}* Installing proftpd...${NC}"
-			apt-get install proftpd -y
+			apt-get -qq install proftpd -y
 			checking_errors $?
 			if (whiptail --title "FTP Over SSL" --yesno "Do you want to use FTP with SSL ? (FTPs)" 7 60) then
 				if (whiptail --title "FTPs Let's Encrypt" --yesno "Do you want to generate a Let's Encrypt certificate for FTPs ?" 7 70) then
@@ -773,7 +773,8 @@ function resume_seedbox() {
 		for line in $(cat $INSTALLEDFILE);
 		do
 			ACCESSDOMAIN=$(echo $line | cut -d\- -f3)
-			echo -e "	--> $line from ${YELLOW}$ACCESSDOMAIN${NC}"
+			DOCKERAPP=$(echo $line | cut -d\- -f1)
+			echo -e "	--> ${BWHITE}$line${NC} from ${YELLOW}$ACCESSDOMAIN${NC}"
 		done
 	else
 		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
@@ -806,8 +807,8 @@ function resume_seedbox() {
 }
 
 function backup_docker_conf() {
-	BACKUPDIR="/var/archives/"
-	BACKUPNAME="backup-seedboxcompose-$SEEDUSER-"
+	BACKUPDIR="/var/backups/"
+	BACKUPNAME="backup-sc-$SEEDUSER-"
 	echo ""
 	BACKUP="$BACKUPDIR$BACKUPNAME$BACKUPDATE.tar.gz"
 	echo -e "${BLUE}##########################################${NC}"
@@ -849,9 +850,9 @@ function schedule_backup_seedbox() {
 					"2" "Weekly backup" \
 					"3" "Monthly backup" 3>&1 1>&2 2>&3)
 				BACKUPDIR=$(whiptail --title "Schedule Backup" --inputbox \
-					"Please choose backup destination" 7 65 "/var/backup" \
+					"Please choose backup destination" 7 65 "/var/backups" \
 					3>&1 1>&2 2>&3)
-				BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER-$BACKUPDATE.tar.gz"
+				BACKUPNAME="$BACKUPDIR/backup-sc-$SEEDUSER-$BACKUPDATE.tar.gz"
 				DOCKERDIR="/home/$SEEDUSER"
 				TMPCRONFILE="/tmp/crontab"
 				case $BACKUPTYPE in
@@ -871,9 +872,9 @@ function schedule_backup_seedbox() {
 				echo $SCHEDULEBACKUP >> $TMPCRONFILE
 				cat "$TMPCRONFILE" >> "$CRONTABFILE"
 				echo -e " ${BWHITE}* Backup successfully scheduled :${NC}"
-				echo -e "	${YELLOW}--> $BACKUPDESC ${NC}"
-				echo -e "	${YELLOW}--> In $BACKUPDIR ${NC}"
-				echo -e "	${YELLOW}--> For $SEEDUSER ${NC}"
+				echo -e "	${BWHITE}-->${NC} ${YELLOW}$BACKUPDESC ${NC}"
+				echo -e "	${BWHITE}-->${NC} In ${YELLOW}$BACKUPDIR ${NC}"
+				echo -e "	${BWHITE}-->${NC} For ${YELLOW}$SEEDUSER ${NC}"
 				echo ""
 				rm $TMPCRONFILE
 			else
