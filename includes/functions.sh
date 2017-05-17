@@ -849,7 +849,7 @@ function schedule_backup_seedbox() {
 			else
 				if (whiptail --title "Schedule Backup" --yesno "A cronjob is already configured for $SEEDUSER. Do you want to delete this job ?" 10 80) then
 					USERLINE=$(grep -n "$SEEDUSER" $CRONTABFILE | cut -d: -f1)
-					sed '/$SEEDUSER/d' $CRONTABFILE
+					sed '/'$SEEDUSER'/d' $CRONTABFILE
 					echo -e " ${GREEN}--> Cronjob for $SEEDUSER has been deleted !${NC}"
 					schedule_backup_seedbox
 				else
