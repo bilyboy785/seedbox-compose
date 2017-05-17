@@ -837,8 +837,8 @@ function schedule_backup_seedbox() {
 			3>&1 1>&2 2>&3)
 		fi
 		if [[ -d "/home/$SEEDUSER" ]]; then
-			grep -R "$SEEDUSER" "/etc/crontab"
-			if [[ "$?" != 0 ]]; then
+			grep -R "$SEEDUSER" /etc/crontab > /dev/null 2>&1
+			if [[ "$?" != "0" ]]; then
 				BACKUPTYPE=$(whiptail --title "Schedule Backup" --menu "Choose a scheduling backup type" 12 60 4 \
 					"1" "Daily backup" \
 					"2" "Weekly backup" \
@@ -878,6 +878,7 @@ function schedule_backup_seedbox() {
 				else
 					break
 				fi
+			fi
 		else
 			echo -e " ${YELLOW}--> Please install Seedbox for $SEEDUSER before backup${NC}"
 			echo ""
