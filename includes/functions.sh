@@ -45,7 +45,7 @@ function script_option() {
 			SCRIPT="MANAGEAPPS"
 			;;
 		"4")
-			ACTIONBACKUP=$(whiptail --title "Manage Backup" --menu "What do you want to do ?" 10 75 2 \
+			ACTIONBACKUP=$(whiptail --title "Manage Backup" --menu "Choose an action for backups !" 10 75 2 \
 				"1" "Create a backup now of my Home !" \
 				"2" "Schedule a backup for my data !" 3>&1 1>&2 2>&3)
 			echo ""
