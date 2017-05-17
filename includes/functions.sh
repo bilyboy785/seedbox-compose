@@ -14,16 +14,16 @@ function script_option() {
 	#echo "Choose an option to launch the script (1, 2...) : "
 	#echo ""
 	if [[ -d "$CONFDIR" ]]; then
-		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 20 75 11 \
+		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 18 80 10 \
 			"1" "Seedbox-Compose already installed !" \
 			"2" "Manage Users" \
 			"3" "Manage Apps" \
 			"4" "Manage Backups" \
 			"5" "Manage Docker" \
-			"5" "Install FTP Server" \
-			"6" "Manage SSL Certificates" \
-			"7" "Disable htaccess protection" \
-			"8" "Uninstall Seedbox-Compose"  3>&1 1>&2 2>&3)
+			"6" "Install FTP Server" \
+			"7" "Manage SSL Certificates" \
+			"8" "Disable htaccess protection" \
+			"9" "Uninstall Seedbox-Compose"  3>&1 1>&2 2>&3)
 		echo ""
 		case $ACTION in
 		"1")
@@ -33,7 +33,7 @@ function script_option() {
 		  if (whiptail --title "Seedbox already installed" --yesno "You're in trouble with Seedbox-compose ? Uninstall and try again ?" 7 90) then
 				uninstall_seedbox
 			else
-				echo "NOTHING"
+				script_option
 			fi
 		  ;;
 		"2")
