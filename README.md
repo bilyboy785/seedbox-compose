@@ -1,9 +1,9 @@
 # Seedbox-Compose [![Build Status](https://travis-ci.org/bilyboy785/seedbox-compose.svg?branch=master)](https://travis-ci.org/bilyboy785/seedbox-compose)
 A docker-compose file to deploy complete Seedbox based only Docker. Install a fresh Debian / Ubuntu Server, install git and docker and use this **Docker-compose.yml** to deploy your Seedbox.
 
-![Imgur](http://i.imgur.com/fweV56n.png)
+->![Imgur](http://i.imgur.com/fweV56n.png)<-
 
-![Imgur](http://i.imgur.com/jiEP7IJ.png)
+->![Imgur](http://i.imgur.com/jiEP7IJ.png)<-
 
 ### Tested on ###
  * [x] Debian 8.X
