@@ -18,12 +18,11 @@ function script_option() {
 			"1" "Seedbox-Compose already installed !" \
 			"2" "Manage Users" \
 			"3" "Manage Apps" \
-			"4" "Backup dockers configuration" \
-			"5" "Enable scheduled backup" \
-			"6" "Install FTP Server" \
-			"7" "Generate SSL certificate" \
-			"8" "Disable htaccess protection" \
-			"9" "Uninstall Seedbox-Compose"  3>&1 1>&2 2>&3)
+			"4" "Manage Backups" \
+			"5" "Install FTP Server" \
+			"6" "Generate SSL certificate" \
+			"7" "Disable htaccess protection" \
+			"8" "Uninstall Seedbox-Compose"  3>&1 1>&2 2>&3)
 		echo ""
 		case $ACTION in
 		"1")
@@ -46,24 +45,29 @@ function script_option() {
 			SCRIPT="MANAGEAPPS"
 			;;
 		"4")
-			SCRIPT="BACKUPCONF"
+			ACTIONBACKUP=$(whiptail --title "Manage Backup" --menu "What do you want to do ?" 10 75 2 \
+				"1" "Create a backup now of my Home !" \
+				"2" "Schedule a backup for my data !" 3>&1 1>&2 2>&3)
+			echo ""
+			case $ACTIONBACKUP in
+			"1")
+			  backup_docker_conf
+			  ;;
+			"2")
+			  schedule_backup_seedbox
+			  ;;
+			 esac
 			;;
 		"5")
-			SCRIPT="SCHEDULEBACKUP"
-			echo -e "${BLUE}##########################################${NC}"
-			echo -e "${BLUE}###           SCHEDULE BACKUP          ###${NC}"
-			echo -e "${BLUE}##########################################${NC}"
-			;;
-		"6")
 			SCRIPT="INSTALLFTPSERVER"
 			;;
-		"7")
+		"6")
 			SCRIPT="GENERATECERT"
 			;;
-		"8")
+		"7")
 			SCRIPT="DELETEHTACCESS"
 			;;
-		"9")
+		"8")
 			SCRIPT="UNINSTALL"
 			;;
 		esac
@@ -821,7 +825,7 @@ function schedule_backup_seedbox() {
 				BACKUPDIR=$(whiptail --title "Schedule Backup" --inputbox \
 					"Please choose backup destination" 7 65 "/var/backup" \
 					3>&1 1>&2 2>&3)
-				BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
+				BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER-$BACKUPDATE.tar.gz"
 				DOCKERDIR="/home/$SEEDUSER"
 				TMPCRONFILE="/tmp/crontab"
 				case $BACKUPTYPE in
