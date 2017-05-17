@@ -62,8 +62,6 @@ if [ $USER = "root" ] ; then
 				docker_compose
 				## Create reverse proxy for each apps
 				create_reverse
-				## Validating Htpasswd
-				valid_htpasswd
 				## Ask user to instal FTP
 				install_ftp_server
 				## Resuming seedbox-compose installation

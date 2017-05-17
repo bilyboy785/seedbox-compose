@@ -503,6 +503,7 @@ function create_reverse() {
 		else
 			echo -e "	${RED}* Failed to restart Nginx !${NC}"
 		fi
+		valid_htpasswd
 	fi
 	USERDIR="/home/$SEEDUSER/downloads/{medias,movies,tv}"
 	if [[ -d "$USERDIR" ]]; then
@@ -818,7 +819,6 @@ function backup_docker_conf() {
 		echo -e "	${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
 	fi
 	echo ""
-	echo ""
 }
 
 function schedule_backup_seedbox() {
@@ -858,17 +858,17 @@ function schedule_backup_seedbox() {
 				esac
 				echo $SCHEDULEBACKUP >> $TMPCRONFILE
 				cat "$TMPCRONFILE" >> "$CRONTABFILE"
-				echo -e " ${GREEN}--> Backup successfully scheduled :${NC}"
-				echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
-				echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
-				echo -e "	${BWHITE}* For $SEEDUSER ${NC}"
+				echo -e " ${BWHITE}* Backup successfully scheduled :${NC}"
+				echo -e "	${YELLOW}--> $BACKUPDESC ${NC}"
+				echo -e "	${YELLOW}--> In $BACKUPDIR ${NC}"
+				echo -e "	${YELLOW}--> For $SEEDUSER ${NC}"
 				echo ""
 				rm $TMPCRONFILE
 			else
 				if (whiptail --title "Schedule Backup" --yesno "A cronjob is already configured for $SEEDUSER. Do you want to delete this job ?" 10 80) then
 					USERLINE=$(grep -n "$SEEDUSER" $CRONTABFILE | cut -d: -f1)
 					sed -i ''$USERLINE'd' $CRONTABFILE
-					echo -e " ${GREEN}--> Cronjob for $SEEDUSER has been deleted !${NC}"
+					echo -e " ${BWHITE}* Cronjob for $SEEDUSER has been deleted !${NC}"
 					schedule_backup_seedbox
 				else
 					break
@@ -944,14 +944,14 @@ function uninstall_seedbox() {
 						echo -e " ${BWHITE}* Removing Dockers...${NC}"
 						docker rm $(docker ps -a) > /dev/null 2>&1
 						checking_errors $?
-						cd /opt && rm -Rf seedbox-compose
-						if (whiptail --title "Cloning repo" --yesno "Do you want to redownload Seedbox-compose ?" 7 75) then
-							git clone https://github.com/bilyboy785/seedbox-compose.git
-						fi
 					done
 					echo -e " ${BWHITE}* Removing Seedbox-compose directory...${NC}"
 					rm -Rf /etc/seedboxcompose
 					checking_errors $?
+					cd /opt && rm -Rf seedbox-compose
+					if (whiptail --title "Cloning repo" --yesno "Do you want to redownload Seedbox-compose ?" 7 75) then
+						git clone https://github.com/bilyboy785/seedbox-compose.git
+					fi
 				fi
 			fi
 		;;
