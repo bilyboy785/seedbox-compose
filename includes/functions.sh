@@ -505,7 +505,7 @@ function manage_users() {
 	echo -e "${BLUE}###             MANAGE USERS           ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	MANAGEUSER=$(whiptail --title "Management" --menu \
-	                "Choose an action to manage users" 15 45 10 \
+	                "Choose an action to manage users" 10 45 2 \
 	                "1" "New Seedbox User" \
 	                "2" "Delete Seedbox User" 3>&1 1>&2 2>&3)
 	case $MANAGEUSER in
@@ -539,7 +539,7 @@ function manage_apps() {
 	        TABUSERS+=( ${USERSEED//\"} ${IDSEEDUSER//\"} )
 	done
 	SEEDUSER=$(whiptail --title "Username" --menu \
-	                "Please select user to manage Apps" 19 45 11 \
+	                "Please select user to manage Apps" 12 45 6 \
 	                "${TABUSERS[@]}"  3>&1 1>&2 2>&3)
 	USERDOCKERCOMPOSEFILE="/home/$SEEDUSER/docker-compose.yml"
 	USERRESUMEFILE="/home/$SEEDUSER/resume"
