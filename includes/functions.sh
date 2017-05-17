@@ -944,6 +944,7 @@ function uninstall_seedbox() {
 	echo -e "${BLUE}##########################################${NC}"
 	BACKUPDIR="/var/backups"
 	CRONTABFILE="/etc/crontab"
+	SEEDGROUP=$(cat $GROUPFILE)
 	UNINSTALL=$(whiptail --title "Seedbox-Compose" --menu "Choose what you want uninstall" 10 75 2 \
 			"1" "Full uninstall (all files and dockers)" \
 			"2" "User uninstall (delete a suer)" 3>&1 1>&2 2>&3)
@@ -964,6 +965,9 @@ function uninstall_seedbox() {
 							checking_errors $?
 						fi
 						USERHOMEDIR="/home/$seeduser"
+						echo -e " ${BWHITE}* Deleting user...${NC}"
+						userdel -r -f $seeduser
+						checking_errors $?
 						echo -e " ${BWHITE}* Deleting data in your Home directory...${NC}"
 						rm -Rf $USERHOMEDIR
 						checking_errors $?
@@ -971,8 +975,8 @@ function uninstall_seedbox() {
 						service nginx stop > /dev/null 2>&1
 						rm -Rf /etc/nginx/conf.d/*
 						checking_errors $?
-						echo -e " ${BWHITE}* Deleting user...${NC}"
-						userdel $seeduser
+						echo -e " ${BWHITE}* Deleting group...${NC}"
+						userdel $SEEDGROUP
 						checking_errors $?
 						echo -e " ${BWHITE}* Stopping Dockers...${NC}"
 						docker stop $(docker ps) > /dev/null 2>&1
