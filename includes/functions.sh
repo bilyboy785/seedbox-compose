@@ -423,6 +423,7 @@ function install_services() {
 		fi
 	fi
 	DOCKERCOMPOSEFILE="/home/$SEEDUSER/docker-compose.yml"
+	touch $DOCKERCOMPOSEFILE
 	for line in $(cat $SERVICESPERUSER);
 	do
 		#REVERSEPROXYNGINX="/etc/nginx/conf.d/$line-$SEEDUSER.conf"
@@ -710,6 +711,7 @@ function install_ftp_server() {
 		fi
 	else
 		echo -e " ${YELLOW}* FTP Server already installed !${NC}"
+		echo -e "	${RED}--> Please check manually Proftpd configuration${NC}"
 		if (whiptail --title "FTP Server" --yesno "FTP Server already exist ! Do you want to reconfigure service ?" 7 75) then
 			FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
 			"Please enter a name for your FTP Server :" 7 50 "SeedBox" 3>&1 1>&2 2>&3)
@@ -918,6 +920,7 @@ function uninstall_seedbox() {
 	echo -e "${BLUE}###          UNINSTALL SEEDBOX         ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	BACKUPDIR="/var/backups"
+	CRONTABFILE="/etc/crontab"
 	UNINSTALL=$(whiptail --title "Seedbox-Compose" --menu "Choose what you want uninstall" 10 75 2 \
 			"1" "Full uninstall (all files and dockers)" \
 			"2" "User uninstall (delete a suer)" 3>&1 1>&2 2>&3)
@@ -953,6 +956,10 @@ function uninstall_seedbox() {
 						checking_errors $?
 						echo -e " ${BWHITE}* Removing Dockers...${NC}"
 						docker rm $(docker ps -a) > /dev/null 2>&1
+						checking_errors $?
+						echo -e " ${BWHITE}* Removing Cronjob...${NC}"
+						USERLINE=$(grep -n "$seeduser" $CRONTABFILE | cut -d: -f1)
+						sed -i ''$USERLINE'd' $CRONTABFILE
 						checking_errors $?
 					done
 					echo -e " ${BWHITE}* Removing Seedbox-compose directory...${NC}"
