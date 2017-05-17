@@ -554,7 +554,7 @@ function manage_users() {
 		"2" )
 			echo -e "${BLUE}### DELETE SEEDBOX USER ###${NC}"
 			echo -e "${BLUE}---------------------------${NC}"
-			echo -e "${RED}--> UNDER DEVELOPPMENT ${NC}"
+			echo -e "${RED}--> UNDER DEVELOPPMENT ! ${NC}"
 			;;
 	esac
 }
