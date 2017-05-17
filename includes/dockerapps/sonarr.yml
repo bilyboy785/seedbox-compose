@@ -1,5 +1,5 @@
 
-#Sonarr
+#STARTsonarr#
 sonarr-%USER%:
   restart: always
   image: linuxserver/sonarr
@@ -15,3 +15,4 @@ sonarr-%USER%:
     - /home/%USER%/dockers/sonarr/config:/config
     - /home/%USER%/downloads/tv:/downloads
     - /home/%USER%/downloads/medias/tv:/tv
+#ENDsonarr#

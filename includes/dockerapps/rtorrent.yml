@@ -1,5 +1,5 @@
 
-#RuTorrent-rTorrent
+#STARTrtorrent#
 rutorrent-%USER%:
   restart: always
   image: diameter/rtorrent-rutorrent
@@ -14,3 +14,4 @@ rutorrent-%USER%:
     - "49161:49161"
   volumes:
     - /home/%USER%/downloads:/downloads
+#ENDrtorrent#

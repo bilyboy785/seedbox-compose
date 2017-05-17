@@ -1,5 +1,5 @@
 
-#H5AI
+#STARTh5ai#
 h5ai-%USER%:
   restart: always
   image: clue/h5ai
@@ -8,4 +8,4 @@ h5ai-%USER%:
     - %PORT%:80
   volumes:
     - /home/%USER%/downloads/medias:/var/www
-    
+#ENDh5ai#

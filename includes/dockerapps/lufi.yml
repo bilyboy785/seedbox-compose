@@ -1,5 +1,5 @@
 
-#Lufi
+#STARTlufi#
 lufi-%USER%:
   restart: always
   image: xataz/lufi
@@ -16,3 +16,4 @@ lufi-%USER%:
   volumes:
     - /home/%USER%/dockers/lufi/data:/data
     - /home/%USER%/dockers/lufi/files:/files
+#ENDlufi#

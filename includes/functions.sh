@@ -529,7 +529,7 @@ function manage_users() {
 
 function manage_apps() {
 	echo -e "${BLUE}##########################################${NC}"
-	echo -e "${BLUE}###           ADD DOCKER APPS          ###${NC}"
+	echo -e "${BLUE}###             APP MANAGER            ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
 	TMPGROUP=$(cat $GROUPFILE)
 	TABUSERS=()
@@ -538,24 +538,48 @@ function manage_apps() {
 	        IDSEEDUSER=$(id -u $USERSEED)
 	        TABUSERS+=( ${USERSEED//\"} ${IDSEEDUSER//\"} )
 	done
-	SEEDUSER=$(whiptail --title "Username" --menu \
+	## CHOOSE USER
+	SEEDUSER=$(whiptail --title "App Manager" --menu \
 	                "Please select user to manage Apps" 12 45 6 \
 	                "${TABUSERS[@]}"  3>&1 1>&2 2>&3)
+	[[ "$?" = 1 ]] && break;
+	## RESUME USER INFORMATIONS
 	USERDOCKERCOMPOSEFILE="/home/$SEEDUSER/docker-compose.yml"
 	USERRESUMEFILE="/home/$SEEDUSER/resume"
-	echo -e "${BLUE}### APP MANAGER FOR $SEEDUSER ###${NC}"
+	echo -e "${BLUE}### Application manager for $SEEDUSER ###${NC}"
 	echo -e " ${BWHITE}* Docker-Compose file : $USERDOCKERCOMPOSEFILE${NC}"
 	echo -e " ${BWHITE}* Resume file : $USERRESUMEFILE${NC}"
-	TABSERVICES=()
-	for SERVICEACTIVATED in $(cat $USERRESUMEFILE)
-	do
-	        SERVICE=$(echo $SERVICEACTIVATED | cut -d\- -f1)
-	        PORT=$(echo $SERVICEACTIVATED | cut -d\- -f2)
-	        TABSERVICES+=( ${SERVICE//\"} ${PORT//\"} )
-	done
-	APPSELECTED=$(whiptail --title "Your Apps" --menu \
-	                "Choose an App to make an action" 19 45 11 \
-	                "${TABSERVICES[@]}"  3>&1 1>&2 2>&3)
+	## CHOOSE AN ACTION FOR APPS
+	ACTIONONAPP=$(whiptail --title "App Manager" --menu \
+	                "Select an action :" 12 45 6 \
+	                "1" "Add Docker App"  \
+	                "2" "Edit my Apps" 3>&1 1>&2 2>&3)        
+	[[ "$?" = 1 ]] && break;
+	case $ACTIONONAPP in
+		"1" ) ## ADDING APP
+			echo -e " ${BWHITE}* Add new apps${NC}"
+				choose_services
+				install_services
+				docker_compose
+				create_reverse
+				valid_htpasswd
+				resume_seedbox
+				backup_docker_conf
+			;;
+		"2" ) ## EDITING APP
+			echo -e " ${BWHITE}* Edit my app${NC}"
+			TABSERVICES=()
+			for SERVICEACTIVATED in $(cat $USERRESUMEFILE)
+			do
+			        SERVICE=$(echo $SERVICEACTIVATED | cut -d\- -f1)
+			        PORT=$(echo $SERVICEACTIVATED | cut -d\- -f2)
+			        TABSERVICES+=( ${SERVICE//\"} ${PORT//\"} )
+			done
+			APPSELECTED=$(whiptail --title "App Manager" --menu \
+			              "Choose an App to make an action" 19 45 11 \
+			              "${TABSERVICES[@]}"  3>&1 1>&2 2>&3)
+			[[ "$?" = 1 ]] && break;
+	esac
 }
 
 # function delete_dockers() {
@@ -806,46 +830,54 @@ function backup_docker_conf() {
 }
 
 function schedule_backup_seedbox() {
-	if (whiptail --title "Backup Dockers conf" --yesno "Do you want to schedule a configuration backup ?" 10 60) then
+	if (whiptail --title "Schedule Backup" --yesno "Do you want to schedule a configuration backup ?" 10 60) then
 		if [[ "$SEEDUSER" == "" ]]; then
 			SEEDUSER=$(whiptail --title "Username" --inputbox \
 			"Please enter your username :" 7 50 \
 			3>&1 1>&2 2>&3)
 		fi
 		if [[ -d "/home/$SEEDUSER" ]]; then
-			BACKUPTYPE=$(whiptail --title "Backup type" --menu "Choose a scheduling backup type" 12 60 4 \
-				"1" "Daily backup" \
-				"2" "Weekly backup" \
-				"3" "Monthly backup" 3>&1 1>&2 2>&3)
-			BACKUPDIR=$(whiptail --title "Backup dir" --inputbox \
-				"Please choose backup destination" 7 65 "/var/backup" \
-				3>&1 1>&2 2>&3)
-			BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
-			DOCKERDIR="/home/$SEEDUSER"
-			CRONTABFILE="/etc/crontab"
-			TMPCRONFILE="/tmp/crontab"
-			case $BACKUPTYPE in
-			"1")
-				SCHEDULEBACKUP="@daily tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-				BACKUPDESC="Backup every day"
-			;;
-			"2")
-				SCHEDULEBACKUP="@weekly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-				BACKUPDESC="Backup every weeks"
-			;;
-			"3")
-				SCHEDULEBACKUP="@monthly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-				BACKUPDESC="Backup every months"
-			;;
-			esac
-			echo $SCHEDULEBACKUP >> $TMPCRONFILE
-			cat "$TMPCRONFILE" >> "$CRONTABFILE"
-			echo -e " ${GREEN}--> Backup successfully scheduled :${NC}"
-			echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
-			echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
-			echo -e "	${BWHITE}* For $SEEDUSER ${NC}"
-			echo ""
-			rm $TMPCRONFILE
+			grep -R "$SEEDUSER" "/etc/crontab"
+			if [[ "$?" != 0 ]]; then
+				BACKUPTYPE=$(whiptail --title "Schedule Backup" --menu "Choose a scheduling backup type" 12 60 4 \
+					"1" "Daily backup" \
+					"2" "Weekly backup" \
+					"3" "Monthly backup" 3>&1 1>&2 2>&3)
+				BACKUPDIR=$(whiptail --title "Schedule Backup" --inputbox \
+					"Please choose backup destination" 7 65 "/var/backup" \
+					3>&1 1>&2 2>&3)
+				BACKUPNAME="$BACKUPDIR/backup-seedboxcompose-$SEEDUSER.tar.gz"
+				DOCKERDIR="/home/$SEEDUSER"
+				CRONTABFILE="/etc/crontab"
+				TMPCRONFILE="/tmp/crontab"
+				case $BACKUPTYPE in
+				"1")
+					SCHEDULEBACKUP="@daily tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+					BACKUPDESC="Backup every day"
+				;;
+				"2")
+					SCHEDULEBACKUP="@weekly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+					BACKUPDESC="Backup every weeks"
+				;;
+				"3")
+					SCHEDULEBACKUP="@monthly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
+					BACKUPDESC="Backup every months"
+				;;
+				esac
+				echo $SCHEDULEBACKUP >> $TMPCRONFILE
+				cat "$TMPCRONFILE" >> "$CRONTABFILE"
+				echo -e " ${GREEN}--> Backup successfully scheduled :${NC}"
+				echo -e "	${BWHITE}* $BACKUPDESC ${NC}"
+				echo -e "	${BWHITE}* In $BACKUPDIR ${NC}"
+				echo -e "	${BWHITE}* For $SEEDUSER ${NC}"
+				echo ""
+				rm $TMPCRONFILE
+			else
+				if (whiptail --title "Schedule Backup" --yesno "A cronjob is already configured for $SEEDUSER. Do you want to delete this job ?" 10 80) then
+					schedule_backup_seedbox
+				else
+					break
+				fi
 		else
 			echo -e " ${YELLOW}--> Please install Seedbox for $SEEDUSER before backup${NC}"
 			echo ""

@@ -1,5 +1,5 @@
 
-#Lutim
+#STARTlutil#
 lutim-%USER%:
   restart: always
   image: xataz/lutim
@@ -16,3 +16,4 @@ lutim-%USER%:
   volumes:
     - /home/%USER%/dockers/lutim/data:/data
     - /home/%USER%/dockers/lutim/files:/lutim/files
+#ENDlutim#

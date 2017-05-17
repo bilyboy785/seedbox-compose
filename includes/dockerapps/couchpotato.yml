@@ -1,5 +1,5 @@
 
-#Couchpotato
+#STARTcouchpotato#
 couchpotato-%USER%:
   restart: always
   image: linuxserver/couchpotato
@@ -14,3 +14,4 @@ couchpotato-%USER%:
     - /home/%USER%/dockers/couchpotato/config:/config
     - /home/%USER%/downloads/movies:/downloads
     - /home/%USER%/downloads/medias/movies:/movies
+#ENDcouchpotato#

@@ -1,5 +1,5 @@
 
-#Transmission
+#STARTtransmission#
 transmission-%USER%:
   restart: always
   image: linuxserver/transmission
@@ -16,3 +16,4 @@ transmission-%USER%:
     - /home/%USER%/dockers/transmission/config:/config
     - /home/%USER%/downloads:/downloads
     - /home/%USER%/dockers/transmission/watch:/watch
+#ENDtransmission#

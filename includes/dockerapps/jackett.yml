@@ -1,5 +1,5 @@
 
-#Jackett
+#STARTjackett#
 jackett-%USER%:
   restart: always
   image : linuxserver/jackett
@@ -14,3 +14,4 @@ jackett-%USER%:
     - /etc/localtime:/etc/locatime:ro
     - /home/%USER%/dockers/jackett/config:/config:rw
     - /home/%USER%/dockers/jackett/downloads:/downloads:rw
+#ENDjackett#

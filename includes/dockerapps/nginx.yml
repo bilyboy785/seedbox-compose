@@ -1,4 +1,5 @@
-#Nginx
+
+#STARTnginx#
 nginx-%USER%:
   restart: always
   image: wonderfall/boring-nginx
@@ -11,3 +12,4 @@ nginx-%USER%:
     - /dockers/nginx/conf:/conf.d
     - /dockers/nginx/log:/var/log/nginx
     - /dockers/nginx/certs:/certs
+#ENDnginx#

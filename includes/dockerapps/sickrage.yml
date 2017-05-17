@@ -1,5 +1,5 @@
 
-#SIckrage
+#STARTsickrage#
 sickrage-%USER%:
   restart: always
   image: linuxserver/sickrage
@@ -14,3 +14,4 @@ sickrage-%USER%:
     - /home/%USER%/dockers/sickrage/config:/config
     - /home/%USER%/downloads/tv:/downloads
     - /home/%USER%/downloads/medias/tv:/tv
+#ENDsickrage#

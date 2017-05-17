@@ -1,5 +1,5 @@
 
-#PlexRequests
+#STARTplexrequest#
 plexrequests-%USER%:
   restart: always
   image: linuxserver/plexrequests
@@ -12,3 +12,4 @@ plexrequests-%USER%:
   volumes:
     - /etc/localtime:/etc/localtime:ro
     - /home/%USER%/dockers/plexrequests/config:/config
+#ENDplexrequest#

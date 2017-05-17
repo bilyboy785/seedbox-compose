@@ -1,5 +1,5 @@
 
-#Zerobin
+#STARTprivatebin#
 privatebin-%USER%:
   restart: always
   image: wonderfall/privatebin
@@ -13,3 +13,4 @@ privatebin-%USER%:
     - %PORT%:8888
   volumes:
     - /home/%USER%/dockers/privatebin/data:/privatebin/data
+#ENDprivatebin#

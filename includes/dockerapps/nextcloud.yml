@@ -1,5 +1,5 @@
 
-#Nextcloud
+#STARTnextcloud#
 nextcloud-%USER%:
   restart: always
   image: linuxserver/nextcloud
@@ -12,3 +12,4 @@ nextcloud-%USER%:
   volumes:
     - /home/%USER%/dockers/nextcloud/config:/config
     - /home/%USER%/dockers/nextcloud/data:/data
+#ENDnextcloud#
