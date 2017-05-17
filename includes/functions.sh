@@ -907,22 +907,51 @@ function uninstall_seedbox() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###          UNINSTALL SEEDBOX         ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
+	BACKUPDIR="/var/backups"
 	UNINSTALL=$(whiptail --title "Seedbox-Compose" --menu "Choose what you want uninstall" 10 75 2 \
 			"1" "Full uninstall (all files and dockers)" \
 			"2" "User uninstall (delete a suer)" 3>&1 1>&2 2>&3)
-		echo ""
 		case $UNINSTALL in
 		"1")
 		  	if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
+		  		echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
 				if (whiptail --title "Dockers configuration" --yesno "Do you want to backup your Dockers configuration ?" 7 75) then
-					echo -e " ${BWHITE}* All files, dockers and configuration will be uninstall${NC}"
+					DOBACKUP="yes"
+				else
 					for seeduser in $(cat $USERSFILE)
 					do
-						echo $seeduser
+						if [[ "$DOBACKUP" == "yes" ]]; then
+							BACKUPNAME="$BACKUPDIR/backup-seedbox-$seeduser-$backupdate.tar.gz"
+							DOCKERCONFDIR="/home/$seeduser/dockers/"
+							echo -e " ${BWHITE}* Backing up dockers configuration for $seeduser...${NC}"
+							tar cvpzf $BACKUPNAME $DOCKERCONFDIR > /dev/null 2>&1
+							checking_errors $?
+						fi
+						USERHOMEDIR="/home/$seeduser"
+						echo -e " ${BWHITE}* Deleting data in your Home directory...${NC}"
+						rm -Rf $USERHOMEDIR
+						checking_errors $?
+						echo -e " ${BWHITE}* Deleting nginx configuration${NC}"
+						service nginx stop > /dev/null 2>&1
+						rm -Rf /etc/nginx/conf.d/*
+						checking_errors $?
+						echo -e " ${BWHITE}* Deleting user...${NC}"
+						userdel $seeduser
+						checking_errors $?
+						echo -e " ${BWHITE}* Stopping Dockers...${NC}"
+						docker stop $(docker ps) > /dev/null 2>&1
+						checking_errors $?
+						echo -e " ${BWHITE}* Removing Dockers...${NC}"
+						docker rm $(docker ps -a) > /dev/null 2>&1
+						checking_errors $?
+						cd /opt && rm -Rf seedbox-compose
+						if (whiptail --title "Cloning repo" --yesno "Do you want to redownload Seedbox-compose ?" 7 75) then
+							git clone https://github.com/bilyboy785/seedbox-compose.git
+						fi
 					done
-				else
-					echo -e " ${BWHITE}* Everything will be deleted !${NC}"
-					echo -e "	${RED}--> Under developpment${NC}"
+					echo -e " ${BWHITE}* Removing Seedbox-compose directory...${NC}"
+					rm -Rf /etc/seedboxcompose
+					checking_errors $?
 				fi
 			fi
 		;;
