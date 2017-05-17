@@ -110,7 +110,7 @@ function install_base_packages() {
 	echo -e "${BLUE}### INSTALL BASE PACKAGES ###${NC}"
 	sed -ri 's/deb\ cdrom/#deb\ cdrom/g' /etc/apt/sources.list
 	whiptail --title "Base Package" --msgbox "Seedbox-Compose installer will now install base packages and update system" 10 60
-	echo " * Installing apache2-utils, unzip, git, curl ..."
+	echo -e " ${BWHITE}* Installing apache2-utils, unzip, git, curl ...${NC}"
 	{
 	NUMPACKAGES=$(cat $PACKAGESFILE | wc -l)
 	for package in $(cat $PACKAGESFILE);
@@ -234,7 +234,7 @@ function install_zsh() {
 		sed -i -e 's/^\ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"bira\"/g' ~/.zshrc > /dev/null 2>&1
 		sed -i -e 's/^\# DISABLE_AUTO_UPDATE=\"true\"/DISABLE_AUTO_UPDATE=\"true\"/g' ~root/.zshrc > /dev/null 2>&1
 	else
-		echo -e " * ZSH is already installed !"
+		echo -e " ${YELLOW}* ZSH is already installed !${NC}"
 	fi
 	echo ""
 }
@@ -310,22 +310,20 @@ function define_parameters() {
 }
 
 function create_user() {
-	if [[ ! -f "$USERSFILE" ]]; then
-		touch $USERSFILE
-	fi
+	echo -e " ${BWHITE}* Checking group for Seedbox${NC}"
 	if [[ ! -f "$GROUPFILE" ]]; then
 		touch $GROUPFILE
+		SEEDGROUP=$(whiptail --title "Group" --inputbox \
+        	"Create a group for your Seedbox" 7 50 3>&1 1>&2 2>&3)	
+		echo "$SEEDGROUP" > "$GROUPFILE"
 	else
 		TMPGROUP=$(cat $GROUPFILE)
+		if [[ "$TMPGROUP" == "" ]]; then
+			SEEDGROUP=$(whiptail --title "Group" --inputbox \
+        		"Create a group for your Seedbox" 7 50 3>&1 1>&2 2>&3)
+        fi
 	fi
-	SEEDUSER=$(whiptail --title "Username" --inputbox \
-		"Please enter a username :" 7 50 3>&1 1>&2 2>&3)
-	PASSWORD=$(whiptail --title "Password" --passwordbox \
-		"Please enter a password :" 7 50 3>&1 1>&2 2>&3)
-	SEEDGROUP=$(whiptail --title "Group" --inputbox \
-        "Create a group for your Seedbox" 7 50 $TMPGROUP 3>&1 1>&2 2>&3)
     egrep "^$SEEDGROUP" /etc/group >/dev/null
-    echo "$SEEDGROUP" > "$GROUPFILE"
 	if [[ "$?" != "0" ]]; then
 		echo -e " ${BWHITE}* Creating group $SEEDGROUP"
 	    groupadd $SEEDGROUP
@@ -333,6 +331,14 @@ function create_user() {
 	else
 	    echo -e " ${YELLOW}* No need to create group $SEEDGROUP, already exist.${NC}"
 	fi
+	echo -e " ${BWHITE}* Checking user for Seedbox${NC}"
+	if [[ ! -f "$USERSFILE" ]]; then
+		touch $USERSFILE
+	fi
+	SEEDUSER=$(whiptail --title "Username" --inputbox \
+		"Please enter a username :" 7 50 3>&1 1>&2 2>&3)
+	PASSWORD=$(whiptail --title "Password" --passwordbox \
+		"Please enter a password :" 7 50 3>&1 1>&2 2>&3)
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
 		echo -e " ${YELLOW}* User already exist !${NC}"
@@ -343,6 +349,7 @@ function create_user() {
 		checking_errors $?
 	else
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
+		echo -e " ${BWHITE}* Adding $SEEDUSER in system"
 		useradd -m -G $SEEDGROUP -p $PASS $SEEDUSER > /dev/null 2>&1
 		if [[ $? -eq 0 ]]; then
 			echo -e "	${GREEN}--> User has been added to system !${NC}"
@@ -532,18 +539,20 @@ function manage_users() {
 	                "2" "Delete Seedbox User" 3>&1 1>&2 2>&3)
 	case $MANAGEUSER in
 		"1" )
-			echo -e "${BLUE}### NEW SEEDBOX USER ###${NC}"
+			echo -e "${BLUE}#### NEW SEEDBOX USER ####${NC}"
+			echo -e "${BLUE}--------------------------${NC}"
 			define_parameters
 			choose_services
 			install_services
 			docker_compose
 			create_reverse
-			valid_htpasswd
 			resume_seedbox
 			backup_docker_conf
+			schedule_backup_seedbox
 			;;
 		"2" )
 			echo -e "${BLUE}### DELETE SEEDBOX USER ###${NC}"
+			echo -e "${BLUE}---------------------------${NC}"
 			echo -e "${RED}--> UNDER DEVELOPPMENT ${NC}"
 			;;
 	esac
@@ -814,13 +823,12 @@ function backup_docker_conf() {
 	DOCKERCONFDIR="/home/$USERBACKUP/dockers/"
 	if [[ -d "$DOCKERCONFDIR" ]]; then
 		mkdir -p $BACKUPDIR
-		echo -e " * Backing up Dockers conf..."
+		echo -e " ${BWHITE}* Backing up Dockers conf..."
 		tar cvpzf $BACKUP $DOCKERCONFDIR > /dev/null 2>&1
-		echo -e "	${BWHITE}--> Backup successfully created in $BACKUP${NC}"
+		echo -e "	${GREEN}--> Backup successfully created in $BACKUP${NC}"
 	else
 		echo -e "	${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
 	fi
-	echo ""
 }
 
 function schedule_backup_seedbox() {
