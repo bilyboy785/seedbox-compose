@@ -318,7 +318,6 @@ function create_user() {
 		echo "$SEEDGROUP" > "$GROUPFILE"
 	else
 		TMPGROUP=$(cat $GROUPFILE)
-		echo "LE GROUPE : $TMPGROUP"
 		if [[ "$TMPGROUP" == "" ]]; then
 			SEEDGROUP=$(whiptail --title "Group" --inputbox \
         		"Create a group for your Seedbox" 7 50 3>&1 1>&2 2>&3)
@@ -330,6 +329,7 @@ function create_user() {
 	    groupadd $SEEDGROUP
 	    checking_errors $?
 	else
+		SEEDGROUP=$TMPGROUP
 	    echo -e " ${YELLOW}* No need to create group $SEEDGROUP, already exist.${NC}"
 	fi
 	echo -e " ${BWHITE}* Checking user for Seedbox${NC}"
@@ -808,11 +808,11 @@ function backup_docker_conf() {
 	BACKUPNAME="backup-sc-$SEEDUSER-"
 	echo ""
 	BACKUP="$BACKUPDIR$BACKUPNAME$BACKUPDATE.tar.gz"
-	echo -e "${BLUE}##########################################${NC}"
-	echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"
-	echo -e "${BLUE}##########################################${NC}"
 	if [[ "$SEEDUSER" != "" ]]; then
 		if (whiptail --title "Backup Dockers conf" --yesno "Do you want backup configuration for $SEEDUSER ?" 10 60) then
+			echo -e "${BLUE}##########################################${NC}"
+			echo -e "${BLUE}###         BACKUP DOCKER CONF         ###${NC}"
+			echo -e "${BLUE}##########################################${NC}"
 			USERBACKUP=$SEEDUSER
 		else
 			exit 1
