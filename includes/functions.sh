@@ -803,7 +803,6 @@ function backup_docker_conf() {
 		echo -e "	${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
 	fi
 	echo ""
-	schedule_backup_seedbox
 	echo ""
 }
 

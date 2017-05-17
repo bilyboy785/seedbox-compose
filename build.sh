@@ -73,6 +73,7 @@ if [ $USER = "root" ] ; then
 				#schedule_backup_seedbox
 				## Display Teamspeak IDs
 				##access_token_ts
+				schedule_backup_seedbox
 	    	else
 				clear
 				echo -e " ${RED}--> Seedbox-Compose already installed !${NC}"
