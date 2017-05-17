@@ -37,11 +37,8 @@ function script_option() {
 			fi
 		  ;;
 		"2")
-		  SCRIPT="MANAGEUSERS"
-		 #  ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 20 75 11 \
-			# "1" "New user" \
-			# "2" "New htaccess user" \  3>&1 1>&2 2>&3)
-		  ;;
+			SCRIPT="MANAGEUSERS"
+			;;
 		"3")
 			SCRIPT="MANAGEAPPS"
 			;;
@@ -60,7 +57,9 @@ function script_option() {
 			 esac
 			;;
 		"5")
+			# manage_docker
 			under_developpment
+			;;
 		"6")
 			SCRIPT="INSTALLFTPSERVER"
 			;;
@@ -71,12 +70,12 @@ function script_option() {
 			echo ""
 			case $ACTIONSSL in
 			"1")
-				
-				generate_ssl_cert
+				under_developpment
+				#generate_ssl_cert
 				;;
 			"2")
-				
-				renew_ssl_cert
+				under_developpment
+				#renew_ssl_cert
 				;;
 			 esac
 			;;
@@ -93,9 +92,9 @@ function script_option() {
 		echo ""
 		case $ACTION in
 		"1")
-		  SCRIPT="INSTALL"
-		  ;;
-		 esac
+			SCRIPT="INSTALL"
+			;;
+		esac
 	fi
 	
 }
