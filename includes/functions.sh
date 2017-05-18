@@ -8,11 +8,13 @@ function under_developpment() {
 	echo ""
 }
 
+function check_dir() {
+	if [[ $1 != $BASEDIR ]]; then
+		cd $BASEDIR
+	fi
+}
+
 function script_option() {
-	#echo -e "${BLUE}### WELCOME TO SEEDBOX-COMPOSE ###${NC}"
-	#echo "This script will help you to make a complete seedbox based on Docker !"
-	#echo "Choose an option to launch the script (1, 2...) : "
-	#echo ""
 	if [[ -d "$CONFDIR" ]]; then
 		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 18 80 10 \
 			"1" "Seedbox-Compose already installed !" \
@@ -132,7 +134,7 @@ function delete_htaccess() {
 function checking_system() {
 	echo -e "${BLUE}### CHECKING SYSTEM ###${NC}"
 	echo -e " ${BWHITE}* Checking system OS${NC}"
-	TMPSOURCESDIR="includes/sources.list"
+	TMPSOURCESDIR="/opt/seedbox-compose/includes/sources.list"
 	TMPSYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	TMPCODENAME=$(lsb_release -sc)
 	TMPRELEASE=$(cat /etc/debian_version)
@@ -278,6 +280,8 @@ function install_letsencrypt() {
 		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt > /dev/null 2>&1
 		checking_errors $?
 		echo ""
+		cd /opt/letsencrypt && ./letsencrypt-auto --help > /dev/null 2>&1
+		cd $BASEDIR
 	else
 		echo -e " ${YELLOW}* Let's Encrypt is already installed !${NC}"
 		echo ""
@@ -363,14 +367,14 @@ function create_user() {
 function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
 	echo -e " ${BWHITE}--> Services will be installed : ${NC}"
-	for app in $(cat includes/config/services-available);
+	for app in $(cat $SERVICESAVAILABLE);
 	do
 		service=$(echo $app | cut -d\- -f1)
 		desc=$(echo $app | cut -d\- -f2)
 		echo "$service $desc off" >> /tmp/menuservices.txt
 	done
 	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
-	"Please select services you want to add for $SEEDUSER (Use space to select)" 28 65 17 \
+	"Please select services you want to add for $SEEDUSER (Use space to select)" 28 60 17 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
 	SERVICESPERUSER="$SERVICESUSER$SEEDUSER"
 	touch $SERVICESPERUSER
@@ -421,7 +425,7 @@ function install_services() {
 	touch $DOCKERCOMPOSEFILE
 	for line in $(cat $SERVICESPERUSER);
 	do
-		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
+		cat "/opt/seedbox-compose/includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%GID%|$GRPID|g" $DOCKERCOMPOSEFILE
@@ -429,53 +433,76 @@ function install_services() {
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%IPADDRESS%|$IPADDRESS|g" $DOCKERCOMPOSEFILE
+		SUBURI=$(whiptail --title "Access Type" --menu \
+	            "Please choose how do you want access your Apps :" 10 45 2 \
+	            "1" "Subdomains" \
+	            "2" "URI" 3>&1 1>&2 2>&3)
+	    case $SUBURI in
+	        "1" )
+				PROXYACCESS="SUBDOMAIN"
+				FQDNTMP="$line.$DOMAIN"
+				FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
+				"Do you want to use a different subdomain for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
+				ACCESSURL=$FQDN
+				URI="/"
+				NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$FQDN.conf"
+	        	;;
+	        "2" )
+				PROXYACCESS="URI"
+				FQDN=$DOMAIN
+				FQDNTMP="/$line"
+				ACCESSURL=$(whiptail --title "SSL Subdomain" --inputbox \
+				"Do you want to use a different URI for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
+				URI=$ACCESSURL
+	        	NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$line.$DOMAIN.conf"
+				;;
+	    esac
 		if [[ "$DOMAIN" != "localhost" ]]; then
-			SUBURI=$(whiptail --title "Access Type" --menu \
-	                "Please choose how do you want access your Apps :" 10 45 2 \
-	                "1" "Subdomains" \
-	                "2" "URI" 3>&1 1>&2 2>&3)
-	        case SUBURI in
-	        	"1" )
-					PROXYACCESS="SUBDOMAIN"
-					FQDNTMP="$line.$DOMAIN"
-					FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
-					"Do you want to use a different subdomain for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
-					ACCESSURL=$FQDN
-					URI="/"
-					NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
-	        		;;
-	        	"2" )
-					PROXYACCESS="URI"
-					FQDN=$DOMAIN
-					FQDNTMP="/$line"
-					ACCESSURL=$(whiptail --title "SSL Subdomain" --inputbox \
-					"Do you want to use a different URI for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
-					URI=$ACCESSURL
-	        		NGINXSITE="/etc/nginx/conf.d/$line.$DOMAIN.conf"
-					;;
-	        esac
 	        if [[ "$LESSL" == "y" ]]; then
 				NGINXPROXYFILE="/opt/seedbox-compose/includes/nginxproxyssl/$line.conf"
 			else
 				NGINXPROXYFILE="/opt/seedbox-compose/includes/nginxproxy/$line.conf"
 			fi
-			touch $NGINXSITE
+			if [[ ! -f "$NGINXSITE" ]]; then
+				touch $NGINXSITE
+			else
+				echo "	${RED}--> $NGINXSITE already exist, please choose another name."
+				NGINXSITE=$(whiptail --title "Nginx filename" --inputbox \
+				"Please choose another name for nginx file ($NGINXSITE)" 7 75 "$SEEDUSER.$FQDN" 3>&1 1>&2 2>&3)
+			fi
 			cat $NGINXPROXYFILE >> $NGINXSITE
 			echo "$line-$PORT-$FQDN" >> $INSTALLEDFILE
 			sed -i "s|%DOMAIN%|$FQDN|g" $NGINXSITE
 			sed -i "s|%PORT%|$PORT|g" $NGINXSITE
 			sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
 			sed -i "s|%URI%|$URI|g" $NGINXSITE
+			sed -i "s|%URIS%|$URI\/|g" $NGINXSITE
 		elif [[ "$DOMAIN" == "localhost" ]]; then
+			NGINXPROXYFILE="/opt/seedbox-compose/includes/nginxproxy/$line.conf"
+			touch $NGINXSITE
+			cat $NGINXPROXYFILE >> $NGINXSITE
+			sed -i "s|%DOMAIN%|localhost|g" $NGINXSITE
+			sed -i "s|%PORT%|$PORT|g" $NGINXSITE
+			sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
+			sed -i "s|%URI%|$URI|g" $NGINXSITE
+			sed -i "s|%URIS%|$URI/|g" $NGINXSITE
 			echo "$line-$PORT-$SEEDUSER" >> $INSTALLEDFILE
 		fi
 		PORT=$PORT+1
 		FQDN=""
 		FQDNTMP=""
 	done
-	if (whiptail --title "Docker Watcher" --yesno "Do you want to install a Watcher to auto-update your Apps ?" 7 75) then
-		cat "includes/dockerapps/watchtower.yml" >> $DOCKERCOMPOSEFILE
-		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
+	docker ps | grep watchtower > /dev/null 2>&1
+	if [[ "$?" != 0 ]]; then
+		if (whiptail --title "Docker Watcher" --yesno "Do you want to install a Watcher to auto-update your containers ?" 8 80) then
+			echo -e " ${BWHITE}--> Watchtower will be installed !${NC}"
+			cat "/opt/seedbox-compose/includes/dockerapps/watchtower.yml" >> $DOCKERCOMPOSEFILE
+			checking_errors $?
+		else
+			echo -e " ${BWHITE}--> Watchtower will be skipped !${NC}"
+		fi
+	else
+		echo -e " ${BWHITE}--> Watchtower already running !${NC}"
 	fi
 	echo $PORT >> $FILEPORTPATH
 	echo ""
@@ -513,17 +540,22 @@ function create_reverse() {
 		echo -e " ${BWHITE}* Stopping nginx${NC}"
 		service nginx stop > /dev/null 2>&1
 		checking_errors $?
-		for line in $(cat $INSTALLEDFILE);
-		do
-			SERVICE=$(echo $line | cut -d\- -f1)
-			PORT=$(echo $line | cut -d\- -f2)
-			FQDN=$(echo $line | cut -d\- -f3)
-			echo -e " ${BWHITE}--> [$SERVICE] - Creating reverse${NC}"
-			if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]] && [[ "$LESSL" == "y" ]]; then
-				generate_ssl_cert $CONTACTEMAIL $FQDN
-				checking_errors $?
-			fi
-		done
+		if [[ "$PROXYACCESS" == "URI" ]]; then
+			echo -e " ${BWHITE}--> [$DOMAIN] - Creating reverse${NC}"
+			generate_ssl_cert $CONTACTEMAIL $DOMAIN
+		else	
+			for line in $(cat $INSTALLEDFILE);
+			do
+				SERVICE=$(echo $line | cut -d\- -f1)
+				PORT=$(echo $line | cut -d\- -f2)
+				FQDN=$(echo $line | cut -d\- -f3)
+				echo -e " ${BWHITE}--> [$SERVICE] - Creating reverse${NC}"
+				if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]] && [[ "$LESSL" == "y" ]]; then
+					generate_ssl_cert $CONTACTEMAIL $FQDN
+					checking_errors $?
+				fi
+			done
+		fi
 		echo ""
 		echo -e " --> ${BWHITE}Restarting Nginx...${NC}"
 		service nginx restart > /dev/null 2>&1
@@ -545,8 +577,14 @@ function create_reverse() {
 function generate_ssl_cert() {
 	EMAILADDRESS=$1
 	DOMAINSSL=$2
-	echo -e "	${BWHITE}--> Generating LE certificate files for $DOMAINSSL, please wait... and wait again !${NC}"
-	bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
+	ping -c 1 $DOMAINSSL | grep "$IPADDRESS" > /dev/null
+	if [[ "$?" == "0" ]]; then
+		echo -e "	${BWHITE}--> Generating LE certificate for $DOMAINSSL, please wait...${NC}"
+		bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
+	else
+		whiptail --title "Communication Error" --msgbox "Please configure an A entry in your DNS zone for $DOMAINSSL to $IPADDRESS, then click Ok !" 12 70
+		generate_ssl_cert $EMAILADDRESS $DOMAINSSL
+	fi
 }
 
 function manage_users() {
@@ -591,7 +629,7 @@ function manage_apps() {
 	done
 	## CHOOSE USER
 	SEEDUSER=$(whiptail --title "App Manager" --menu \
-	                "Please select user to manage Apps" 12 45 6 \
+	                "Please select user to manage Apps" 12 45 8 \
 	                "${TABUSERS[@]}"  3>&1 1>&2 2>&3)
 	[[ "$?" = 1 ]] && break;
 	## RESUME USER INFORMATIONS
@@ -640,9 +678,9 @@ function install_ftp_server() {
 	PROFTPDFOLDER="/etc/proftpd/"
 	PROFTPDCONFFILE="proftpd.conf"
 	PROFTPDTLSCONFFILE="tls.conf"
-	BASEPROFTPDFILE="includes/config/proftpd.conf"
-	BASEPROFTPDTLSFILELETSENCRYPT="includes/config/proftpd.tls.letsencrypt.conf"
-	BASEPROFTPDTLSFILEOPENSSL="includes/config/proftpd.tls.openssl.conf"
+	BASEPROFTPDFILE="/opt/seedbox-compose/includes/config/proftpd.conf"
+	BASEPROFTPDTLSFILELETSENCRYPT="/opt/seedbox-compose/includes/config/proftpd.tls.letsencrypt.conf"
+	BASEPROFTPDTLSFILEOPENSSL="/opt/seedbox-compose/includes/config/proftpd.tls.openssl.conf"
 	PROFTPDBAKCONF="/etc/proftpd/proftpd.conf.bak"
 	PROFTPDTLSBAKCONF="/etc/proftpd/tls.conf.bak"
 	if [[ ! -d "$PROFTPDFOLDER" ]]; then
@@ -799,9 +837,9 @@ function resume_seedbox() {
 		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 		for line in $(cat $INSTALLEDFILE);
 		do
-			SERVICEINSTALLED=$(echo $line | cut -d\- -f1)
+			APPINSTALLED=$(echo $line | cut -d\- -f1)
 			PORTINSTALLED=$(echo $line | cut -d\- -f2 | sed 's! !!g')
-			echo -e "	--> $SERVICEINSTALLED from ${YELLOW}$IPADDRESS:$PORTINSTALLED${NC}"
+			echo -e "	--> $APPINSTALLED from ${YELLOW}$IPADDRESS:$PORTINSTALLED${NC}"
 		done
 	fi
 	if [[ -d "$PROFTPDFOLDER" ]]; then
@@ -817,6 +855,7 @@ function resume_seedbox() {
 	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
 	echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
 	echo ""
+	rm -Rf $SERVICESPERUSER > /dev/null 2>&1
 	# if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
 	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
 	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
@@ -861,39 +900,40 @@ function schedule_backup_seedbox() {
 			"Please enter your username :" 7 50 \
 			3>&1 1>&2 2>&3)
 		fi
+		MODELSCRIPT="/opt/seedbox-compose/includes/config/model-backup.sh"
+		BACKUPSCRIPT="/home/$SEEDUSER/backup-dockers.sh"
+		TMPCRONFILE="/tmp/crontab"
 		if [[ -d "/home/$SEEDUSER" ]]; then
 			grep -R "$SEEDUSER" "$CRONTABFILE" > /dev/null 2>&1
 			if [[ "$?" != "0" ]]; then
-				BACKUPTYPE=$(whiptail --title "Schedule Backup" --menu "Choose a scheduling backup type" 12 60 4 \
-					"1" "Daily backup" \
-					"2" "Weekly backup" \
-					"3" "Monthly backup" 3>&1 1>&2 2>&3)
 				BACKUPDIR=$(whiptail --title "Schedule Backup" --inputbox \
-					"Please choose backup destination" 7 65 "/var/backups" \
+					"Please choose backup destination" 7 65 "/var/backups/" \
 					3>&1 1>&2 2>&3)
-				BACKUPNAME="$BACKUPDIR/backup-sc-$SEEDUSER-$BACKUPDATE.tar.gz"
-				DOCKERDIR="/home/$SEEDUSER"
-				TMPCRONFILE="/tmp/crontab"
-				case $BACKUPTYPE in
-				"1")
-					SCHEDULEBACKUP="@daily tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-					BACKUPDESC="Backup every day"
-				;;
-				"2")
-					SCHEDULEBACKUP="@weekly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-					BACKUPDESC="Backup every weeks"
-				;;
-				"3")
-					SCHEDULEBACKUP="@monthly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-					BACKUPDESC="Backup every months"
-				;;
-				esac
+				DAILYRET=$(whiptail --title "Schedule Backup" --inputbox \
+					"How many days you want to keep your daily backups ? (Default : 14 backups)" 9 85 "14" \
+					3>&1 1>&2 2>&3)
+				WEEKLYRET=$(whiptail --title "Schedule Backup" --inputbox \
+					"How many days you want to keep your weekly backups ? (Default : 8 backups)" 9 85 "60" \
+					3>&1 1>&2 2>&3)
+				MONTHLYRET=$(whiptail --title "Schedule Backup" --inputbox \
+					"How many days you want to keep your monthly backups ? (Default : 10 backups)" 9 85 "300" \
+					3>&1 1>&2 2>&3)
+				touch $BACKUPSCRIPT
+				cat $MODELSCRIPT >> $BACKUPSCRIPT
+				sed -i "s|%USER%|$SEEDUSER|g" "$BACKUPSCRIPT"
+				sed -i "s|%BACKUPDIR%|$BACKUPDIR|g" "$BACKUPSCRIPT"
+				sed -i "s|%DAILYRET%|$DAILYRET|g" "$BACKUPSCRIPT"
+				sed -i "s|%WEEKLYRET%|$WEEKLYRET|g" "$BACKUPSCRIPT"
+				sed -i "s|%MONTHLYRET%|$MONTHLYRET|g" "$BACKUPSCRIPT"
+				SCHEDULEBACKUP="@daily bash $BACKUPSCRIPT >/dev/null 2>&1"
 				echo $SCHEDULEBACKUP >> $TMPCRONFILE
 				cat "$TMPCRONFILE" >> "$CRONTABFILE"
 				echo -e " ${BWHITE}* Backup successfully scheduled :${NC}"
-				echo -e "	${BWHITE}-->${NC} ${YELLOW}$BACKUPDESC ${NC}"
 				echo -e "	${BWHITE}-->${NC} In ${YELLOW}$BACKUPDIR ${NC}"
 				echo -e "	${BWHITE}-->${NC} For ${YELLOW}$SEEDUSER ${NC}"
+				echo -e "	${BWHITE}-->${NC} Keep ${YELLOW}$DAILYRET days daily backups ${NC}"
+				echo -e "	${BWHITE}-->${NC} Keep ${YELLOW}$WEEKLYRET days weekly backups ${NC}"
+				echo -e "	${BWHITE}-->${NC} Keep ${YELLOW}$MONTHLYRET days monthly backups ${NC}"
 				echo ""
 				rm $TMPCRONFILE
 			else
@@ -901,6 +941,7 @@ function schedule_backup_seedbox() {
 					USERLINE=$(grep -n "$SEEDUSER" $CRONTABFILE | cut -d: -f1)
 					sed -i ''$USERLINE'd' $CRONTABFILE
 					echo -e " ${BWHITE}* Cronjob for $SEEDUSER has been deleted !${NC}"
+					rm -Rf $BACKUPSCRIPT
 					schedule_backup_seedbox
 				else
 					break
