@@ -518,17 +518,22 @@ function create_reverse() {
 		echo -e " ${BWHITE}* Stopping nginx${NC}"
 		service nginx stop > /dev/null 2>&1
 		checking_errors $?
-		for line in $(cat $INSTALLEDFILE);
-		do
-			SERVICE=$(echo $line | cut -d\- -f1)
-			PORT=$(echo $line | cut -d\- -f2)
-			FQDN=$(echo $line | cut -d\- -f3)
-			echo -e " ${BWHITE}--> [$SERVICE] - Creating reverse${NC}"
-			if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]] && [[ "$LESSL" == "y" ]]; then
-				generate_ssl_cert $CONTACTEMAIL $FQDN
-				checking_errors $?
-			fi
-		done
+		if [[ "$PROXYACCESS" == "URI" ]]; then
+			echo -e " ${BWHITE}--> [$FQDN] - Creating reverse${NC}"
+			generate_ssl_cert $CONTACTEMAIL $FQDN
+		else	
+			for line in $(cat $INSTALLEDFILE);
+			do
+				SERVICE=$(echo $line | cut -d\- -f1)
+				PORT=$(echo $line | cut -d\- -f2)
+				FQDN=$(echo $line | cut -d\- -f3)
+				echo -e " ${BWHITE}--> [$SERVICE] - Creating reverse${NC}"
+				if [[ "$DOMAIN" != "localhost" ]] && [[ "$line" != "teamspeak" ]] && [[ "$LESSL" == "y" ]]; then
+					generate_ssl_cert $CONTACTEMAIL $FQDN
+					checking_errors $?
+				fi
+			done
+		fi
 		echo ""
 		echo -e " --> ${BWHITE}Restarting Nginx...${NC}"
 		service nginx restart > /dev/null 2>&1
