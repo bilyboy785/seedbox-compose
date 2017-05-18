@@ -280,7 +280,8 @@ function install_letsencrypt() {
 		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt > /dev/null 2>&1
 		checking_errors $?
 		echo ""
-		cd /opt/letsencrypt && ./letsencrypt-auto --help
+		cd /opt/letsencrypt && ./letsencrypt-auto --help > /dev/null 2>&1
+		cd $BASEDIR
 	else
 		echo -e " ${YELLOW}* Let's Encrypt is already installed !${NC}"
 		echo ""
