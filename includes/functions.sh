@@ -904,13 +904,13 @@ function schedule_backup_seedbox() {
 					"Please choose backup destination" 7 65 "/var/backups/" \
 					3>&1 1>&2 2>&3)
 				DAILYRET=$(whiptail --title "Schedule Backup" --inputbox \
-					"How many days you want to keep your daily backups ? (Default : 14 backups)" 7 65 "14" \
+					"How many days you want to keep your daily backups ? (Default : 14 backups)" 10 70 "14" \
 					3>&1 1>&2 2>&3)
 				WEEKLYRET=$(whiptail --title "Schedule Backup" --inputbox \
-					"How many days you want to keep your weekly backups ? (Default : 8 backups)" 7 65 "60" \
+					"How many days you want to keep your weekly backups ? (Default : 8 backups)" 10 70 "60" \
 					3>&1 1>&2 2>&3)
 				MONTHLYRET=$(whiptail --title "Schedule Backup" --inputbox \
-					"How many days you want to keep your monthly backups ? (Default : 10 backups)" 7 65 "300" \
+					"How many days you want to keep your monthly backups ? (Default : 10 backups)" 10 70 "300" \
 					3>&1 1>&2 2>&3)
 				touch $BACKUPSCRIPT
 				cat $MODELSCRIPT >> $BACKUPSCRIPT
