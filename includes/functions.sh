@@ -873,42 +873,40 @@ function schedule_backup_seedbox() {
 			"Please enter your username :" 7 50 \
 			3>&1 1>&2 2>&3)
 		fi
+		MODELSCRIPT="/opt/seedbox-compose/includes/config/model-backup.sh"
+		BACKUPSCRIPT="/home/$SEEDUSER/backup-dockers.sh"
+		TMPCRONFILE="/tmp/crontab"
 		if [[ -d "/home/$SEEDUSER" ]]; then
 			grep -R "$SEEDUSER" "$CRONTABFILE" > /dev/null 2>&1
 			if [[ "$?" != "0" ]]; then
-				BACKUPTYPE=$(whiptail --title "Schedule Backup" --menu "Choose a scheduling backup type" 12 60 4 \
-					"1" "Daily backup" \
-					"2" "Weekly backup" \
-					"3" "Monthly backup" 3>&1 1>&2 2>&3)
 				BACKUPDIR=$(whiptail --title "Schedule Backup" --inputbox \
-					"Please choose backup destination" 7 65 "/var/backups" \
+					"Please choose backup destination" 7 65 "/var/backups/" \
 					3>&1 1>&2 2>&3)
-				BACKUPNAME="$BACKUPDIR/backup-sc-$SEEDUSER-$BACKUPDATE.tar.gz"
-				DOCKERDIR="/home/$SEEDUSER"
-				TMPCRONFILE="/tmp/crontab"
-				case $BACKUPTYPE in
-				"1")
-					SCHEDULEBACKUP="@daily tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-					BACKUPDESC="Backup every day"
-				;;
-				"2")
-					SCHEDULEBACKUP="@weekly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-					BACKUPDESC="Backup every weeks"
-				;;
-				"3")
-					SCHEDULEBACKUP="@monthly tar cvpzf $BACKUPNAME $DOCKERDIR >/dev/null 2>&1"
-					BACKUPDESC="Backup every months"
-				;;
-				esac
-				BACKUPROTATION=$(whiptail --title "Schedule Backup" --inputbox \
-					"How many days you want to keep backup (for rotation)" 7 65 "7" \
+				DAILYRET=$(whiptail --title "Schedule Backup" --inputbox \
+					"How many days you want to keep your daily backups ? (Default : 14 backups)" 7 65 "14" \
 					3>&1 1>&2 2>&3)
+				WEEKLYRET=$(whiptail --title "Schedule Backup" --inputbox \
+					"How many days you want to keep your weekly backups ? (Default : 8 backups)" 7 65 "60" \
+					3>&1 1>&2 2>&3)
+				MONTHLYRET=$(whiptail --title "Schedule Backup" --inputbox \
+					"How many days you want to keep your monthly backups ? (Default : 10 backups)" 7 65 "300" \
+					3>&1 1>&2 2>&3)
+				touch $BACKUPSCRIPT
+				cat $MODELSCRIPT >> $BACKUPSCRIPT
+				sed -i "s|%USER%|$SEEDUSER|g" "$BACKUPSCRIPT"
+				sed -i "s|%BACKUPDIR%|$BACKUPDIR|g" "$BACKUPSCRIPT"
+				sed -i "s|%DAILYRET%|$DAILYRET|g" "$BACKUPSCRIPT"
+				sed -i "s|%WEEKLYRET%|$WEEKLYRET|g" "$BACKUPSCRIPT"
+				sed -i "s|%MONTHLYRET%|$MONTHLYRET|g" "$BACKUPSCRIPT"
+				SCHEDULEBACKUP="@daily bash $BACKUPSCRIPT >/dev/null 2>&1"
 				echo $SCHEDULEBACKUP >> $TMPCRONFILE
 				cat "$TMPCRONFILE" >> "$CRONTABFILE"
 				echo -e " ${BWHITE}* Backup successfully scheduled :${NC}"
-				echo -e "	${BWHITE}-->${NC} ${YELLOW}$BACKUPDESC ${NC}"
 				echo -e "	${BWHITE}-->${NC} In ${YELLOW}$BACKUPDIR ${NC}"
 				echo -e "	${BWHITE}-->${NC} For ${YELLOW}$SEEDUSER ${NC}"
+				echo -e "	${BWHITE}-->${NC} Keep ${YELLOW}$DAILYRET days daily backups ${NC}"
+				echo -e "	${BWHITE}-->${NC} Keep ${YELLOW}$WEEKLYRET days weekly backups ${NC}"
+				echo -e "	${BWHITE}-->${NC} Keep ${YELLOW}$MONTHLYRET days monthly backups ${NC}"
 				echo ""
 				rm $TMPCRONFILE
 			else
@@ -916,6 +914,7 @@ function schedule_backup_seedbox() {
 					USERLINE=$(grep -n "$SEEDUSER" $CRONTABFILE | cut -d: -f1)
 					sed -i ''$USERLINE'd' $CRONTABFILE
 					echo -e " ${BWHITE}* Cronjob for $SEEDUSER has been deleted !${NC}"
+					rm -Rf $BACKUPSCRIPT
 					schedule_backup_seedbox
 				else
 					break
