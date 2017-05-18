@@ -900,6 +900,9 @@ function schedule_backup_seedbox() {
 					BACKUPDESC="Backup every months"
 				;;
 				esac
+				BACKUPROTATION=$(whiptail --title "Schedule Backup" --inputbox \
+					"How many days you want to keep backup (for rotation)" 7 65 "7" \
+					3>&1 1>&2 2>&3)
 				echo $SCHEDULEBACKUP >> $TMPCRONFILE
 				cat "$TMPCRONFILE" >> "$CRONTABFILE"
 				echo -e " ${BWHITE}* Backup successfully scheduled :${NC}"
