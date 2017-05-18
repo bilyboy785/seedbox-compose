@@ -445,7 +445,7 @@ function install_services() {
 				"Do you want to use a different subdomain for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
 				ACCESSURL=$FQDN
 				URI="/"
-				NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
+				NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$FQDN.conf"
 	        	;;
 	        "2" )
 				PROXYACCESS="URI"
@@ -454,7 +454,7 @@ function install_services() {
 				ACCESSURL=$(whiptail --title "SSL Subdomain" --inputbox \
 				"Do you want to use a different URI for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
 				URI=$ACCESSURL
-	        	NGINXSITE="/etc/nginx/conf.d/$line.$DOMAIN.conf"
+	        	NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$line.$DOMAIN.conf"
 				;;
 	    esac
 		if [[ "$DOMAIN" != "localhost" ]]; then
@@ -463,7 +463,13 @@ function install_services() {
 			else
 				NGINXPROXYFILE="/opt/seedbox-compose/includes/nginxproxy/$line.conf"
 			fi
-			touch $NGINXSITE
+			if [[ ! -f "$NGINXSITE" ]]; then
+				touch $NGINXSITE
+			else
+				echo "	${RED}--> $NGINXSITE already exist, please choose another name."
+				NGINXSITE=$(whiptail --title "Nginx filename" --inputbox \
+				"Please choose another name for nginx file ($NGINXSITE)" 7 75 "$SEEDUSER.$FQDN" 3>&1 1>&2 2>&3)
+			fi
 			cat $NGINXPROXYFILE >> $NGINXSITE
 			echo "$line-$PORT-$FQDN" >> $INSTALLEDFILE
 			sed -i "s|%DOMAIN%|$FQDN|g" $NGINXSITE
@@ -487,8 +493,10 @@ function install_services() {
 		FQDNTMP=""
 	done
 	if (whiptail --title "Docker Watcher" --yesno "Do you want to install a Watcher to auto-update your Apps ?" 7 75) then
-		cat "/opt/seedbox-compose/includes/dockerapps/watchtower.yml" >> $DOCKERCOMPOSEFILE
-		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
+		docker ps | grep watchtooower > /dev/null 2>&1
+		if [[ "$?" != 0 ]]; then
+			cat "/opt/seedbox-compose/includes/dockerapps/watchtower.yml" >> $DOCKERCOMPOSEFILE
+		fi
 	fi
 	echo $PORT >> $FILEPORTPATH
 	echo ""

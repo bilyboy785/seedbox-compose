@@ -22,18 +22,18 @@ FILENAME="sc-%USER%-$DATE.tar.gz"
 if [[ "$MONTHDAY" == "1" ]]; then
     DESTINATION="monthly-backup"
     # monthly - Default keep for 300 days
-	find $BACKUPDIR$DESTINATION$SEEDUSER -maxdepth 1 -mtime +%MONTHLYRET% -type d -exec rm -rv {} \;
+	  find $BACKUPDIR$DESTINATION$SEEDUSER -maxdepth 1 -mtime +%MONTHLYRET% -type d -exec rm -rv {} \; > /dev/null 2>&1
 else
   # On sunday do
   if [[ "$WEEKDAY" == "7" ]]; then
     DESTINATION="weekly-backup"
     # WEEKLY - Default keep for 60 days
-	find $BACKUPDIR$DESTINATION$SEEDUSER -maxdepth 1 -mtime +%WEEKLYRET% -type d -exec rm -rv {} \;
+	  find $BACKUPDIR$DESTINATION$SEEDUSER -maxdepth 1 -mtime +%WEEKLYRET% -type d -exec rm -rv {} \; > /dev/null 2>&1
   # others days
   else
     DESTINATION="daily-backup"
     # DAILY - Default keep for 14 days
-	  find $BACKUPDIR$DESTINATION$SEEDUSER -maxdepth 1 -mtime +%DAILYRET% -type d -exec rm -rv {} \;
+	  find $BACKUPDIR$DESTINATION$SEEDUSER -maxdepth 1 -mtime +%DAILYRET% -type d -exec rm -rv {} \; > /dev/null 2>&1
   fi
 fi
 
