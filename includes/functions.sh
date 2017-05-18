@@ -9,10 +9,6 @@ function under_developpment() {
 }
 
 function script_option() {
-	#echo -e "${BLUE}### WELCOME TO SEEDBOX-COMPOSE ###${NC}"
-	#echo "This script will help you to make a complete seedbox based on Docker !"
-	#echo "Choose an option to launch the script (1, 2...) : "
-	#echo ""
 	if [[ -d "$CONFDIR" ]]; then
 		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 18 80 10 \
 			"1" "Seedbox-Compose already installed !" \
@@ -429,31 +425,31 @@ function install_services() {
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%IPADDRESS%|$IPADDRESS|g" $DOCKERCOMPOSEFILE
+		SUBURI=$(whiptail --title "Access Type" --menu \
+	            "Please choose how do you want access your Apps :" 10 45 2 \
+	            "1" "Subdomains" \
+	            "2" "URI" 3>&1 1>&2 2>&3)
+	    case $SUBURI in
+	        "1" )
+				PROXYACCESS="SUBDOMAIN"
+				FQDNTMP="$line.$DOMAIN"
+				FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
+				"Do you want to use a different subdomain for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
+				ACCESSURL=$FQDN
+				URI="/"
+				NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
+	        	;;
+	        "2" )
+				PROXYACCESS="URI"
+				FQDN=$DOMAIN
+				FQDNTMP="/$line"
+				ACCESSURL=$(whiptail --title "SSL Subdomain" --inputbox \
+				"Do you want to use a different URI for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
+				URI=$ACCESSURL
+	        	NGINXSITE="/etc/nginx/conf.d/$line.$DOMAIN.conf"
+				;;
+	    esac
 		if [[ "$DOMAIN" != "localhost" ]]; then
-			SUBURI=$(whiptail --title "Access Type" --menu \
-	                "Please choose how do you want access your Apps :" 10 45 2 \
-	                "1" "Subdomains" \
-	                "2" "URI" 3>&1 1>&2 2>&3)
-	        case SUBURI in
-	        	"1" )
-					PROXYACCESS="SUBDOMAIN"
-					FQDNTMP="$line.$DOMAIN"
-					FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
-					"Do you want to use a different subdomain for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
-					ACCESSURL=$FQDN
-					URI="/"
-					NGINXSITE="/etc/nginx/conf.d/$FQDN.conf"
-	        		;;
-	        	"2" )
-					PROXYACCESS="URI"
-					FQDN=$DOMAIN
-					FQDNTMP="/$line"
-					ACCESSURL=$(whiptail --title "SSL Subdomain" --inputbox \
-					"Do you want to use a different URI for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
-					URI=$ACCESSURL
-	        		NGINXSITE="/etc/nginx/conf.d/$line.$DOMAIN.conf"
-					;;
-	        esac
 	        if [[ "$LESSL" == "y" ]]; then
 				NGINXPROXYFILE="/opt/seedbox-compose/includes/nginxproxyssl/$line.conf"
 			else
@@ -466,7 +462,16 @@ function install_services() {
 			sed -i "s|%PORT%|$PORT|g" $NGINXSITE
 			sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
 			sed -i "s|%URI%|$URI|g" $NGINXSITE
+			sed -i "s|%URIS%|$URI\/|g" $NGINXSITE
 		elif [[ "$DOMAIN" == "localhost" ]]; then
+			NGINXPROXYFILE="/opt/seedbox-compose/includes/nginxproxy/$line.conf"
+			touch $NGINXSITE
+			cat $NGINXPROXYFILE >> $NGINXSITE
+			sed -i "s|%DOMAIN%|localhost|g" $NGINXSITE
+			sed -i "s|%PORT%|$PORT|g" $NGINXSITE
+			sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
+			sed -i "s|%URI%|$URI|g" $NGINXSITE
+			sed -i "s|%URIS%|$URI/|g" $NGINXSITE
 			echo "$line-$PORT-$SEEDUSER" >> $INSTALLEDFILE
 		fi
 		PORT=$PORT+1
