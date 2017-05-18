@@ -8,6 +8,12 @@ function under_developpment() {
 	echo ""
 }
 
+function check_dir() {
+	if [[ $1 != $BASEDIR ]]; then
+		cd $BASEDIR
+	fi
+}
+
 function script_option() {
 	if [[ -d "$CONFDIR" ]]; then
 		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 18 80 10 \
@@ -128,7 +134,7 @@ function delete_htaccess() {
 function checking_system() {
 	echo -e "${BLUE}### CHECKING SYSTEM ###${NC}"
 	echo -e " ${BWHITE}* Checking system OS${NC}"
-	TMPSOURCESDIR="includes/sources.list"
+	TMPSOURCESDIR="/opt/seedbox-compose/includes/sources.list"
 	TMPSYSTEM=$(gawk -F= '/^NAME/{print $2}' /etc/os-release)
 	TMPCODENAME=$(lsb_release -sc)
 	TMPRELEASE=$(cat /etc/debian_version)
@@ -360,7 +366,7 @@ function create_user() {
 function choose_services() {
 	echo -e "${BLUE}### SERVICES ###${NC}"
 	echo -e " ${BWHITE}--> Services will be installed : ${NC}"
-	for app in $(cat includes/config/services-available);
+	for app in $(cat $SERVICESAVAILABLE);
 	do
 		service=$(echo $app | cut -d\- -f1)
 		desc=$(echo $app | cut -d\- -f2)
@@ -418,7 +424,7 @@ function install_services() {
 	touch $DOCKERCOMPOSEFILE
 	for line in $(cat $SERVICESPERUSER);
 	do
-		cat "includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
+		cat "/opt/seedbox-compose/includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%GID%|$GRPID|g" $DOCKERCOMPOSEFILE
@@ -480,7 +486,7 @@ function install_services() {
 		FQDNTMP=""
 	done
 	if (whiptail --title "Docker Watcher" --yesno "Do you want to install a Watcher to auto-update your Apps ?" 7 75) then
-		cat "includes/dockerapps/watchtower.yml" >> $DOCKERCOMPOSEFILE
+		cat "/opt/seedbox-compose/includes/dockerapps/watchtower.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 	fi
 	echo $PORT >> $FILEPORTPATH
@@ -651,9 +657,9 @@ function install_ftp_server() {
 	PROFTPDFOLDER="/etc/proftpd/"
 	PROFTPDCONFFILE="proftpd.conf"
 	PROFTPDTLSCONFFILE="tls.conf"
-	BASEPROFTPDFILE="includes/config/proftpd.conf"
-	BASEPROFTPDTLSFILELETSENCRYPT="includes/config/proftpd.tls.letsencrypt.conf"
-	BASEPROFTPDTLSFILEOPENSSL="includes/config/proftpd.tls.openssl.conf"
+	BASEPROFTPDFILE="/opt/seedbox-compose/includes/config/proftpd.conf"
+	BASEPROFTPDTLSFILELETSENCRYPT="/opt/seedbox-compose/includes/config/proftpd.tls.letsencrypt.conf"
+	BASEPROFTPDTLSFILEOPENSSL="/opt/seedbox-compose/includes/config/proftpd.tls.openssl.conf"
 	PROFTPDBAKCONF="/etc/proftpd/proftpd.conf.bak"
 	PROFTPDTLSBAKCONF="/etc/proftpd/tls.conf.bak"
 	if [[ ! -d "$PROFTPDFOLDER" ]]; then
