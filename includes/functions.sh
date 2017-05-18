@@ -465,7 +465,7 @@ function install_services() {
 			fi
 			touch $NGINXSITE
 			cat $NGINXPROXYFILE >> $NGINXSITE
-			echo "$line-$PORT-$FQDN$URI" >> $INSTALLEDFILE
+			echo "$line-$PORT-$FQDN" >> $INSTALLEDFILE
 			sed -i "s|%DOMAIN%|$FQDN|g" $NGINXSITE
 			sed -i "s|%PORT%|$PORT|g" $NGINXSITE
 			sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE

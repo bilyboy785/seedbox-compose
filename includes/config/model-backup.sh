@@ -42,6 +42,6 @@ mkdir -p $BACKUPDIR$DESTINATION$SEEDUSER
 
 # BACKING UP IF DOESN'T EXIST
 BACKUP="$BACKUPDIR$DESTINATION$SEEDUSER$FILENAME"
-if [[ ! -f "$BACKUP"]]; then
+if [[ ! -f "$BACKUP" ]]; then
 	tar cvpzf $BACKUP $USERDIR > /dev/null 2>&1
 fi
