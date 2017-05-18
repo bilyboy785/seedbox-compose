@@ -274,6 +274,7 @@ function install_letsencrypt() {
 		git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt > /dev/null 2>&1
 		checking_errors $?
 		echo ""
+		cd /opt/letsencrypt && ./letsencrypt-auto --help
 	else
 		echo -e " ${YELLOW}* Let's Encrypt is already installed !${NC}"
 		echo ""
@@ -366,7 +367,7 @@ function choose_services() {
 		echo "$service $desc off" >> /tmp/menuservices.txt
 	done
 	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
-	"Please select services you want to add for $SEEDUSER (Use space to select)" 28 65 17 \
+	"Please select services you want to add for $SEEDUSER (Use space to select)" 28 60 17 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
 	SERVICESPERUSER="$SERVICESUSER$SEEDUSER"
 	touch $SERVICESPERUSER
@@ -519,8 +520,8 @@ function create_reverse() {
 		service nginx stop > /dev/null 2>&1
 		checking_errors $?
 		if [[ "$PROXYACCESS" == "URI" ]]; then
-			echo -e " ${BWHITE}--> [$FQDN] - Creating reverse${NC}"
-			generate_ssl_cert $CONTACTEMAIL $FQDN
+			echo -e " ${BWHITE}--> [$DOMAIN] - Creating reverse${NC}"
+			generate_ssl_cert $CONTACTEMAIL $DOMAIN
 		else	
 			for line in $(cat $INSTALLEDFILE);
 			do
