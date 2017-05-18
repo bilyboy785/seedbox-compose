@@ -1,5 +1,5 @@
 
-#PlexRequests
+#STARTplexrequest#
 plexrequests-%USER%:
   restart: always
   image: linuxserver/plexrequests
@@ -8,7 +8,8 @@ plexrequests-%USER%:
     - PGID=%GID%
     - PUID=%UID%
   ports:
-    - %IPADDRESS%:%PORT%:3000
+    - %PORT%:3000
   volumes:
     - /etc/localtime:/etc/localtime:ro
     - /home/%USER%/dockers/plexrequests/config:/config
+#ENDplexrequest#

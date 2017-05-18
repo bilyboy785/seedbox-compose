@@ -1,5 +1,9 @@
 # Seedbox-Compose [![Build Status](https://travis-ci.org/bilyboy785/seedbox-compose.svg?branch=master)](https://travis-ci.org/bilyboy785/seedbox-compose)
-A docker-compose file to deploy complete Seedbox based only Docker. Install a fresh Debian / Ubuntu Server, install git git-core and docker and use this **Docker-compose.yml** to deploy your Seedbox.
+A docker-compose file to deploy complete Seedbox based only Docker. Install a fresh Debian / Ubuntu Server, install git and docker and use this **Docker-compose.yml** to deploy your Seedbox.
+
+![Imgur](http://i.imgur.com/fweV56n.png)
+
+![Imgur](http://i.imgur.com/jiEP7IJ.png)
 
 ### Tested on ###
  * [x] Debian 8.X
@@ -7,55 +11,40 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
  * [ ] CentOS
  
 ## Services availables in this docker-compose
+ * **Movies automation**
+   * Couchpotato
+   * Radarr
 
-Service                | Status      |   Default subdomain
----------------------- | ----------- | ----------------------
-Nginx                  | Installed   |  /                                              
-Rtorrent/RuTorrent     | Installed   |  rtorrent.domain.tld                  
-Jackett                | Installed   |  jackett.domain.tld                
-UI for Docker          | Installed   |  docker.domain.tld                  
-Radarr                 | Optional    |  radarr.domain.tld                  
-Sonarr                 | Optional    |  sonarr.domain.tld    
-Sickrage               | Optional    |  sickrage.domain.tld 
-Couchpotato            | Optional    |  couchpotato.domain.tld               
-PlexMediaServer        | Optional    |  plex.domain.tld
-Headphones.            | Optional    |  headphones.domain.tld                  
-PlexPy                 | Optional    |  plexpy.domain.tld                 
-Zerobin                | Optional    |  zerobin.domain.tld                 
-Teamspeak              | Optional    |  ---                                   
+ * **TVShows automation**
+   * Sickrage
+   * Sonarr
 
-## Installation
- * First, you need to create DNS entry type A for each service you want to install : **service.domain.tld** (look at the services table)
- * Second, install git and clone this repo into a fresh Debian/Ubuntu server :
-```shell
-apt install git
-git clone https://github.com/bilyboy785/seedbox-compose.git /root/seedbox-compose
-```
- * Launch the script :
-```shell
-cd /root/seedbox-compose
-./build.sh
-```
+ * **Music automation**
+   * Headphones 
 
-## Services configuration
-### Sonarr / Sickrage
+ * **Seedbox manager**
+   * HTPCManager
+   * **SOON** : Muximux
 
-### Radarr / Couchpotato
+ * **Media Server**
+   * Plex Media Server
 
-### Jackett
+ * **WebUID Manager**
+   * Portainer - Manager for Dockers
+   * PlexPy - Manager for Plex Media Server
+   * H5ai - WebUI to access files
 
-### Teamspeak
-To access and configure Teamspeak, you need to have the Token Access and ServerAdmin password. There are stored in logs of TS docker. You can access it with :
-```shell
-docker logs teamspeak
-```
+ * **Torrent Client**
+   * Rtorrent/Rutorrent
+   * Transmission
+ 
+ * **Utilities**
+   * Zerobin - Code paste
+   * Jackett - Torrent Providers finder
 
-During docker-compose action, i stored your IDs in your **/home/user/dockers/teamspeak/idteamspeak**. Check this file before launching Teamspeak.
 
-## Add new user
-### Add htaccess user
-
-### Add user with separate dockers
+## Installation & Configuration
+For all instructions and configuration tips, follow the [Wiki](https://github.com/bilyboy785/seedbox-compose/wiki)
 
 ## Sources
  * [portainer/portainer](https://hub.docker.com/r/portainer/portainer/)

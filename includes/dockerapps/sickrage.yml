@@ -1,5 +1,5 @@
 
-#SIckrage
+#STARTsickrage#
 sickrage-%USER%:
   restart: always
   image: linuxserver/sickrage
@@ -9,8 +9,9 @@ sickrage-%USER%:
     - PGID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - %IPADDRESS%:%PORT%:8081
+    - %PORT%:8081
   volumes:
     - /home/%USER%/dockers/sickrage/config:/config
     - /home/%USER%/downloads/tv:/downloads
     - /home/%USER%/downloads/medias/tv:/tv
+#ENDsickrage#

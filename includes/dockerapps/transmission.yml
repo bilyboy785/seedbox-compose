@@ -1,5 +1,5 @@
 
-#Transmission
+#STARTtransmission#
 transmission-%USER%:
   restart: always
   image: linuxserver/transmission
@@ -9,10 +9,11 @@ transmission-%USER%:
     - PUID=%UID%
     - TZ=%TIMEZONE%
   ports:
-    - %IPADDRESS%:%PORT%:9091
+    - %PORT%:9091
     - 51413:51413
     - 51413:51413/udp
   volumes:
     - /home/%USER%/dockers/transmission/config:/config
     - /home/%USER%/downloads:/downloads
     - /home/%USER%/dockers/transmission/watch:/watch
+#ENDtransmission#

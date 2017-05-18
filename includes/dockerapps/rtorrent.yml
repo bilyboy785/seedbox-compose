@@ -1,5 +1,5 @@
 
-#RuTorrent-rTorrent
+#STARTrtorrent#
 rutorrent-%USER%:
   restart: always
   image: diameter/rtorrent-rutorrent
@@ -9,8 +9,9 @@ rutorrent-%USER%:
     - GRP_ID=%GID%
     - PHP_MEM=1024M
   ports:
-    - "%IPADDRESS%:%PORT%:80"
+    - "%PORT%:80"
     - "49160:49160/udp"
     - "49161:49161"
   volumes:
     - /home/%USER%/downloads:/downloads
+#ENDrtorrent#

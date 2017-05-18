@@ -1,5 +1,5 @@
 
-#PlexPy
+#STARTplexpy#
 plexpy-%USER%:
   restart: always
   image: linuxserver/plexpy
@@ -9,7 +9,8 @@ plexpy-%USER%:
     - PUID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - %IPADDRESS%:%PORT%:8181
+    - %PORT%:8181
   volumes:
     - /home/%USER%/dockers/plexpy/config:/config
     - /home/%USER%/dockers/plexply/logs:/logs:ro
+#ENDplexpy#

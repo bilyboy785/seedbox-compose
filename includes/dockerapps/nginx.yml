@@ -1,13 +1,15 @@
-#Nginx
+
+#STARTnginx#
 nginx-%USER%:
   restart: always
   image: wonderfall/boring-nginx
   container_name: nginx-%USER%
   ports:
-    - "%IPADDRESS%:80:8000"
-    - "%IPADDRESS%:443:4430"
+    - "80:8000"
+    - "443:4430"
   volumes:
     - /dockers/nginx/sites-enabled:/sites-enabled
     - /dockers/nginx/conf:/conf.d
     - /dockers/nginx/log:/var/log/nginx
     - /dockers/nginx/certs:/certs
+#ENDnginx#

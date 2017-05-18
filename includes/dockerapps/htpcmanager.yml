@@ -1,14 +1,15 @@
 
-#Manager
-manager-%USER%:
+#STARThtpcmanager#
+htpcmanager-%USER%:
   restart: always
   image: linuxserver/htpcmanager
-  container_name: manager-%USER%
+  container_name: htpcmanager-%USER%
   environment:
     - PGID=%GID%
     - PUID=%UID%
     - TZ=%TIMEZONE%
   ports:
-    - %IPADDRESS%:%PORT%:8085
+    - %PORT%:8085
   volumes:
-    - /home/%USER%/dockers/manager/config:/config:rw
+    - /home/%USER%/dockers/htpcmanager/config:/config:rw
+#ENDhtpcmanager#

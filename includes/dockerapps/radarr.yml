@@ -1,5 +1,5 @@
 
-#Radarr
+#STARTradarr#
 radarr-%USER%:
   restart: always
   image: hotio/radarr
@@ -9,8 +9,9 @@ radarr-%USER%:
     - PGID=%GID%
     - TZ=%TIMEZONE%
   ports:
-    - %IPADDRESS%:%PORT%:7878
+    - %PORT%:7878
   volumes:
     - /home/%USER%/dockers/radarr/config:/config
     - /home/%USER%/downloads/movies:/downloads
     - /home/%USER%/downloads/medias/movies:/movies
+#ENDradarr#

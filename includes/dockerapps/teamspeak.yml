@@ -1,5 +1,5 @@
 
-#TeamSpeak
+#STARTteamspeak#
 teamspeak-%USER%:
   restart: always
   image: linuxserver/gsm-ts3
@@ -11,3 +11,4 @@ teamspeak-%USER%:
   volumes:
     - /etc/localtime:/etc/localtime:ro
     - /home/%USER%/dockers/teamspeak/config:/config
+#ENDteamspeak#

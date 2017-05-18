@@ -16,7 +16,6 @@ FIRSTPORT="5050"
 LASTPORT="8080"
 CURRENTDIR="$PWD"
 CONFDIR="/etc/seedboxcompose"
-PROFTPDCONF="/etc/proftpd/proftpd.conf"
 SOURCESLIST="/etc/apt/sources.list"
 DOCKERLIST="/etc/apt/sources.list.d/docker.list"
 SERVICESAVAILABLE="includes/config/services-available"
@@ -25,7 +24,7 @@ SERVICESUSER="/etc/seedboxcompose/services-"
 FILEPORTPATH="/etc/seedboxcompose/ports.pt"
 PACKAGESFILE="includes/config/packages"
 USERSFILE="/etc/seedboxcompose/users"
-DOCKERCOMPOSEFILE="/etc/seedboxcompose/docker-compose.yml"
+GROUPFILE="/etc/seedboxcompose/group"
 INFOLOGS="/var/log/seedboxcompose.info.log"
 ERRORLOGS="/var/log/seedboxcompose.error.log"
 
@@ -36,6 +35,7 @@ if [ $USER = "root" ] ; then
 	case $SCRIPT in
 		"INSTALL")
 	    	if [[ ! -d "/etc/seedboxcompose/" ]]; then
+	    		clear
 		  		echo -e "${BLUE}##########################################${NC}"
 		  		echo -e "${BLUE}###    INSTALLING SEEDBOX-COMPOSE      ###${NC}"
 		  		echo -e "${BLUE}##########################################${NC}"
@@ -62,8 +62,8 @@ if [ $USER = "root" ] ; then
 				docker_compose
 				## Create reverse proxy for each apps
 				create_reverse
-				## Validating Htpasswd
-				valid_htpasswd
+				## Ask user to instal FTP
+				install_ftp_server
 				## Resuming seedbox-compose installation
 				resume_seedbox
 				## Backup dockers app Configuration
@@ -71,6 +71,7 @@ if [ $USER = "root" ] ; then
 				#schedule_backup_seedbox
 				## Display Teamspeak IDs
 				##access_token_ts
+				schedule_backup_seedbox
 	    	else
 				clear
 				echo -e " ${RED}--> Seedbox-Compose already installed !${NC}"
@@ -87,20 +88,20 @@ if [ $USER = "root" ] ; then
 			under_developpment
 			#delete_htaccess
 		;;
-		"ADDDOCKAPP")
+		"MANAGEAPPS")
 	    	#under_developpment
-			add_docker_app
+			manage_apps
 	  	;;
-		"NEWSEEDBOXUSER")
-			new_seedbox_user
+		"MANAGEUSERS")
+			manage_users
 		;;
 		"RESTARTDOCKER")
 			under_developpment
 	    	#restart_docker_apps
 	  	;;
-		"DELETEDOCKERS")
-			under_developpment
-	    	#delete_dockers
+		"UNINSTALL")
+			#under_developpment
+	    	uninstall_seedbox
 	  	;;
 		"BACKUPCONF")
 	    	backup_docker_conf

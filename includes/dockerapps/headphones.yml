@@ -1,5 +1,5 @@
 
-#Headphones
+#STARTheadphones#
 headphones-%USER%:
   restart: always
   image: linuxserver/headphones
@@ -9,8 +9,9 @@ headphones-%USER%:
     - PUID=%UID%
     - TZ=%TIMEZONE%
   ports:
-    - %IPADDRESS%:%PORT%:8181
+    - %PORT%:8181
   volumes:
     - /home/%USER%/dockers/headphones/config:/config:rw
     - /home/%USER%/downloads/music:/downloads
     - /home/%USER%/downloads/medias/music:/music
+#ENDheadphones#

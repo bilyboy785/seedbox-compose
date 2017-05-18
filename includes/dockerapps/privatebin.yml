@@ -1,0 +1,16 @@
+
+#STARTprivatebin#
+privatebin-%USER%:
+  restart: always
+  image: wonderfall/privatebin
+  container_name: privatebin-%USER%
+  environment:
+    - UID=%UID%
+    - GID=%GID%
+    - MEMORY_LIMIT=128M
+    - UPLOAD_MAX_SIZE=10M
+  ports:
+    - %PORT%:8888
+  volumes:
+    - /home/%USER%/dockers/privatebin/data:/privatebin/data
+#ENDprivatebin#
