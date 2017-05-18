@@ -837,9 +837,9 @@ function resume_seedbox() {
 		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 		for line in $(cat $INSTALLEDFILE);
 		do
-			SERVICEINSTALLED=$(echo $line | cut -d\- -f1)
+			APPINSTALLED=$(echo $line | cut -d\- -f1)
 			PORTINSTALLED=$(echo $line | cut -d\- -f2 | sed 's! !!g')
-			echo -e "	--> $SERVICEINSTALLED from ${YELLOW}$IPADDRESS:$PORTINSTALLED${NC}"
+			echo -e "	--> $APPINSTALLED from ${YELLOW}$IPADDRESS:$PORTINSTALLED${NC}"
 		done
 	fi
 	if [[ -d "$PROFTPDFOLDER" ]]; then
@@ -847,7 +847,7 @@ function resume_seedbox() {
 		echo -e " ${BWHITE}* Access FTP with your IDs from :${NC}"
 		echo -e "	--> IP Address : ${YELLOW}$IPADDRESS${NC}"
 		if [[ "$DOMAIN" != "localhost" ]]; then
-			echo -e "	--> Domain : ${YELLOW}$FTPSDOMAIN${NC}"
+			echo -e "	--> Domain : ${YELLOW}$DOMAIN${NC}"
 		fi
 	fi
 	echo ""
