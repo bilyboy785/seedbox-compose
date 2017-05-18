@@ -854,6 +854,9 @@ function resume_seedbox() {
 	echo -e " ${BWHITE}* Here is your IDs :${NC}"
 	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
 	echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
+	echo -e " ${BWHITE}* Restarting nginx...${NC}"
+	service nginx restart
+	checking_errors $?
 	echo ""
 	rm -Rf $SERVICESPERUSER > /dev/null 2>&1
 	# if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
