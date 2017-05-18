@@ -596,7 +596,7 @@ function manage_apps() {
 	done
 	## CHOOSE USER
 	SEEDUSER=$(whiptail --title "App Manager" --menu \
-	                "Please select user to manage Apps" 12 45 6 \
+	                "Please select user to manage Apps" 12 45 8 \
 	                "${TABUSERS[@]}"  3>&1 1>&2 2>&3)
 	[[ "$?" = 1 ]] && break;
 	## RESUME USER INFORMATIONS
@@ -822,6 +822,7 @@ function resume_seedbox() {
 	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
 	echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
 	echo ""
+	rm -Rf $SERVICESPERUSER > /dev/null 2>&1
 	# if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
 	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
 	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.pid /home/$SEEDUSER/downloads/medias/.supervisord.pid > /dev/null 2>&1
