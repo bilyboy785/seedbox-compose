@@ -492,11 +492,17 @@ function install_services() {
 		FQDN=""
 		FQDNTMP=""
 	done
-	if (whiptail --title "Docker Watcher" --yesno "Do you want to install a Watcher to auto-update your Apps ?" 7 75) then
-		docker ps | grep watchtooower > /dev/null 2>&1
-		if [[ "$?" != 0 ]]; then
+	docker ps | grep watchtooower > /dev/null 2>&1
+	if [[ "$?" != 0 ]]; then
+		if (whiptail --title "Docker Watcher" --yesno "Do you want to install a Watcher to auto-update your containers ?" 8 80) then
+			echo -e " ${BWHITE}--> Watchtower will be installed !${NC}"
 			cat "/opt/seedbox-compose/includes/dockerapps/watchtower.yml" >> $DOCKERCOMPOSEFILE
+			checking_errors $?
+		else
+			echo -e " ${BWHITE}--> Watchtower will be skipped !${NC}"
 		fi
+	else
+		echo -e " ${BWHITE}--> Watchtower already running !${NC}"
 	fi
 	echo $PORT >> $FILEPORTPATH
 	echo ""
