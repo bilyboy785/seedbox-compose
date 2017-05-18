@@ -492,7 +492,7 @@ function install_services() {
 		FQDN=""
 		FQDNTMP=""
 	done
-	docker ps | grep watchtooower > /dev/null 2>&1
+	docker ps | grep watchtower > /dev/null 2>&1
 	if [[ "$?" != 0 ]]; then
 		if (whiptail --title "Docker Watcher" --yesno "Do you want to install a Watcher to auto-update your containers ?" 8 80) then
 			echo -e " ${BWHITE}--> Watchtower will be installed !${NC}"
@@ -577,8 +577,14 @@ function create_reverse() {
 function generate_ssl_cert() {
 	EMAILADDRESS=$1
 	DOMAINSSL=$2
-	echo -e "	${BWHITE}--> Generating LE certificate for $DOMAINSSL, please wait...${NC}"
-	bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
+	ping -c 1 $DOMAINSSL | grep "$IPADDRESS" > /dev/null
+	if [[ "$?" == "0" ]]; then
+		echo -e "	${BWHITE}--> Generating LE certificate for $DOMAINSSL, please wait...${NC}"
+		bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
+	else
+		whiptail --title "Communication Error" --msgbox "Please configure an A entry in your DNS zone for $DOMAINSSL to $IPADDRESS, then click Ok !" 12 70
+		generate_ssl_cert $EMAILADDRESS $DOMAINSSL
+	fi
 }
 
 function manage_users() {
@@ -904,13 +910,13 @@ function schedule_backup_seedbox() {
 					"Please choose backup destination" 7 65 "/var/backups/" \
 					3>&1 1>&2 2>&3)
 				DAILYRET=$(whiptail --title "Schedule Backup" --inputbox \
-					"How many days you want to keep your daily backups ? (Default : 14 backups)" 10 70 "14" \
+					"How many days you want to keep your daily backups ? (Default : 14 backups)" 8 85 "14" \
 					3>&1 1>&2 2>&3)
 				WEEKLYRET=$(whiptail --title "Schedule Backup" --inputbox \
-					"How many days you want to keep your weekly backups ? (Default : 8 backups)" 10 70 "60" \
+					"How many days you want to keep your weekly backups ? (Default : 8 backups)" 8 85 "60" \
 					3>&1 1>&2 2>&3)
 				MONTHLYRET=$(whiptail --title "Schedule Backup" --inputbox \
-					"How many days you want to keep your monthly backups ? (Default : 10 backups)" 10 70 "300" \
+					"How many days you want to keep your monthly backups ? (Default : 10 backups)" 8 85 "300" \
 					3>&1 1>&2 2>&3)
 				touch $BACKUPSCRIPT
 				cat $MODELSCRIPT >> $BACKUPSCRIPT
