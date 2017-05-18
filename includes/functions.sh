@@ -457,7 +457,7 @@ function install_services() {
 			fi
 			touch $NGINXSITE
 			cat $NGINXPROXYFILE >> $NGINXSITE
-			echo "$line-$PORT-$FQDN" >> $INSTALLEDFILE
+			echo "$line-$PORT-$FQDN$URI" >> $INSTALLEDFILE
 			sed -i "s|%DOMAIN%|$FQDN|g" $NGINXSITE
 			sed -i "s|%PORT%|$PORT|g" $NGINXSITE
 			sed -i "s|%USER%|$SEEDUSER|g" $NGINXSITE
@@ -550,7 +550,7 @@ function create_reverse() {
 function generate_ssl_cert() {
 	EMAILADDRESS=$1
 	DOMAINSSL=$2
-	echo -e "	${BWHITE}--> Generating LE certificate files for $DOMAINSSL, please wait... and wait again !${NC}"
+	echo -e "	${BWHITE}--> Generating LE certificate for $DOMAINSSL, please wait...${NC}"
 	bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
 }
 
@@ -814,7 +814,7 @@ function resume_seedbox() {
 		echo -e " ${BWHITE}* Access FTP with your IDs from :${NC}"
 		echo -e "	--> IP Address : ${YELLOW}$IPADDRESS${NC}"
 		if [[ "$DOMAIN" != "localhost" ]]; then
-			echo -e "	--> Domain : ${YELLOW}$DOMAIN${NC}"
+			echo -e "	--> Domain : ${YELLOW}$FTPSDOMAIN${NC}"
 		fi
 	fi
 	echo ""
