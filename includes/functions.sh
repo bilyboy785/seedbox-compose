@@ -24,6 +24,7 @@ function check_domain() {
 			checking_errors $?
 		done
 	fi
+	pause
 }
 
 function check_dir() {
@@ -1040,7 +1041,7 @@ function uninstall_seedbox() {
 						fi
 						USERHOMEDIR="/home/$seeduser"
 						echo -e " ${BWHITE}* Deleting user...${NC}"
-						userdel -r -f $seeduser
+						userdel -rf $seeduser > /dev/null 2>&1
 						checking_errors $?
 						echo -e " ${BWHITE}* Deleting data in your Home directory...${NC}"
 						rm -Rf $USERHOMEDIR
@@ -1050,7 +1051,7 @@ function uninstall_seedbox() {
 						rm -Rf /etc/nginx/conf.d/*
 						checking_errors $?
 						echo -e " ${BWHITE}* Deleting group...${NC}"
-						userdel $SEEDGROUP
+						groupdel $SEEDGROUP > /dev/null 2>&1
 						checking_errors $?
 						echo -e " ${BWHITE}* Stopping Dockers...${NC}"
 						docker stop $(docker ps) > /dev/null 2>&1
@@ -1087,4 +1088,9 @@ function uninstall_seedbox() {
 		;;
 		esac
 	echo ""
+}
+
+function pause() {
+	echo "${YELLOW}-->PRESS ENTER TO CONTINUE<--${NC}"
+	read
 }
