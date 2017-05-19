@@ -20,7 +20,7 @@ function check_domain() {
 		do
 			DOCKERAPPLICATION=$(echo $line | cut -d\- -f1)
 			echo -e " ${BWHITE}* Ping $DOCKERAPPLICATION.$TESTDOMAIN...${NC}"
-			ping -c 1 ${DOCKERAPPLICATION,,}.$TESTDOMAIN | grep "$IPADDRESS" > /dev/null
+			ping -c 1 ${DOCKERAPPLICATION,,}.$TESTDOMAIN | grep "$IPADDRESS" > /dev/null 2>&1
 			checking_errors $?
 		done
 	fi
