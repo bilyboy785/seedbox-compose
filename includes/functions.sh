@@ -1091,6 +1091,8 @@ function uninstall_seedbox() {
 }
 
 function pause() {
-	echo -e "${YELLOW}-->PRESS ENTER TO CONTINUE<--${NC}"
+	echo ""
+	echo -e "${YELLOW}###  -->PRESS ENTER TO CONTINUE<--  ###${NC}"
 	read
+	echo ""
 }
