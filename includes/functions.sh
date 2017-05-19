@@ -11,6 +11,7 @@ function under_developpment() {
 function check_domain() {
 	if (whiptail --title "Domain access" --yesno "Are you sure your DNS entries are correctly configured ? We can test them now ;)" 10 90) then
 		TESTDOMAIN=$1
+		echo ""
 		echo -e "${BLUE}### CHECKING DNS ENTRIES ###${NC}"
 		echo -e " ${BWHITE}* Ping $TESTDOMAIN...${NC}"
 		ping -c 1 $TESTDOMAIN | grep "$IPADDRESS" > /dev/null
