@@ -20,7 +20,7 @@ function check_domain() {
 		do
 			DOCKERAPPLICATION=$(echo $line | cut -d\- -f1)
 			echo -e " ${BWHITE}* Ping $DOCKERAPPLICATION.$TESTDOMAIN...${NC}"
-			ping -c 1 $DOCKERAPPLICATION.$TESTDOMAIN | grep "$IPADDRESS" > /dev/null
+			ping -c 1 ${DOCKERAPPLICATION,,}.$TESTDOMAIN | grep "$IPADDRESS" > /dev/null
 			checking_errors $?
 		done
 	fi
@@ -1091,6 +1091,6 @@ function uninstall_seedbox() {
 }
 
 function pause() {
-	echo "${YELLOW}-->PRESS ENTER TO CONTINUE<--${NC}"
+	echo -e "${YELLOW}-->PRESS ENTER TO CONTINUE<--${NC}"
 	read
 }
