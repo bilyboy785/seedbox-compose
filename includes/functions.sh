@@ -10,8 +10,7 @@ function under_developpment() {
 
 function check_domain() {
 	if (whiptail --title "Domain access" --yesno "Are you sure your DNS entries are correctly configured ? We can test them now ;)" 10 90) then
-		TESTDOMAIN=$(whiptail --title "Domain" --inputbox \
-			"Please enter your domain:" 7 50 3>&1 1>&2 2>&3)
+		TESTDOMAIN=$1
 		echo -e "${BLUE}### CHECKING DNS ENTRIES ###${NC}"
 		echo -e " ${BWHITE}* Ping $TESTDOMAIN...${NC}"
 		ping -c 1 $TESTDOMAIN | grep "$IPADDRESS" > /dev/null
@@ -326,6 +325,7 @@ function define_parameters() {
 		DOMAIN=$(whiptail --title "Your domain name" --inputbox \
 		"Please enter your domain :" 7 50 \
 		3>&1 1>&2 2>&3)
+		check_domain $DOMAIN
 	else
 		DOMAIN="localhost"
 	fi
