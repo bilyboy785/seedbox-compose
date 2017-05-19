@@ -325,7 +325,6 @@ function define_parameters() {
 		DOMAIN=$(whiptail --title "Your domain name" --inputbox \
 		"Please enter your domain :" 7 50 \
 		3>&1 1>&2 2>&3)
-		check_domain $DOMAIN
 	else
 		DOMAIN="localhost"
 	fi
@@ -436,6 +435,7 @@ function install_services() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		if (whiptail --title "Use SSL" --yesno "Do you want to use SSL with Let's Encrypt support ?" 10 60) then
 			LESSL="y"
+			check_domain $DOMAIN
 		else
 			LESSL="n"
 		fi
