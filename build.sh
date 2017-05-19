@@ -33,6 +33,7 @@ clear
 
 if [ $USER = "root" ] ; then
 	check_dir $PWD
+	check_domain
 	script_option
 	case $SCRIPT in
 		"INSTALL")

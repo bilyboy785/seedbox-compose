@@ -8,6 +8,24 @@ function under_developpment() {
 	echo ""
 }
 
+function check_domain() {
+	if (whiptail --title "Domain access" --yesno "Are you sure your DNS entries are correctly configured ? We can test them now ;)" 10 90) then
+		TESTDOMAIN=$(whiptail --title "Domain" --inputbox \
+			"Please enter your domain:" 7 50 3>&1 1>&2 2>&3)
+		echo -e "${BLUE}### CHECKING DNS ENTRIES ###${NC}"
+		echo -e " ${BWHITE}* Ping $TESTDOMAIN...${NC}"
+		ping -c 1 $TESTDOMAIN | grep "$IPADDRESS" > /dev/null
+		checking_errors $?
+		for line in $(cat $SERVICESAVAILABLE)
+		do
+			DOCKERAPPLICATION=$(echo $line | cut -d\- -f1)
+			echo -e " ${BWHITE}* Ping $DOCKERAPPLICATION.$TESTDOMAIN...${NC}"
+			ping -c 1 $DOCKERAPPLICATION.$TESTDOMAIN | grep "$IPADDRESS" > /dev/null
+			checking_errors $?
+		done
+	fi
+}
+
 function check_dir() {
 	if [[ $1 != $BASEDIR ]]; then
 		cd $BASEDIR
@@ -520,6 +538,21 @@ function docker_compose() {
 	checking_errors $?
 	echo ""
 	cd $ACTDIR
+	config_post_compose
+}
+
+function config_post_compose() {
+	echo -e "${BLUE}### CONFIG POST COMPOSE ###${NC}"
+	if [[ "$PROXYACCESS" == "URI" ]]; then
+		grep -R "jackett" "$INSTALLEDFILE" > /dev/null 2>&1
+		if [[ "$?" == "0" ]]; then
+			echo -e " ${BWHITE}* Processing jackett config file...${NC}"
+			rm "/home/$SEEDUSER/dockers/jackett/config/ServerConfig.json" > /dev/null 2>&1
+			cp "$BASEDIR/includes/config/jackett.serverconfig.conf" "/home/$SEEDUSER/dockers/jackett/config/ServerConfig.json" > /dev/null 2>&1
+			docker restart jackett-$SEEDUSER
+			checking_errors $?
+		fi
+	fi
 }
 
 function valid_htpasswd() {
