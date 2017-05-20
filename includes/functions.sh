@@ -333,7 +333,7 @@ function create_user() {
 	    checking_errors $?
 	else
 		SEEDGROUP=$TMPGROUP
-	    echo -e " ${YELLOW}* No need to create group $SEEDGROUP, already exist.${NC}"
+	    echo -e "	${YELLOW}--> No need to create group $SEEDGROUP, already exist.${NC}"
 	fi
 	echo -e " ${BWHITE}* Checking user for Seedbox${NC}"
 	if [[ ! -f "$USERSFILE" ]]; then
@@ -382,8 +382,8 @@ function choose_services() {
 		echo -e "	${GREEN}* $(echo $APPDOCKER | tr -d '"')${NC}"
 		echo $(echo ${APPDOCKER,,} | tr -d '"') >> $SERVICESPERUSER
 		if [[ "$(echo ${APPDOCKER,,} | tr -d '"')" == "lychee" ]]; then
-			ROOTPASSWD=$(whiptail --title "MariaDB" --inputbox "Enter root password for MariaDB" 10 60 3>&1 1>&2 2>&3)
-			LYCHEEDBPASSWORD=$(whiptail --title "MariaDB" --inputbox "Enter DB password for Lychee" 10 60 3>&1 1>&2 2>&3)
+			ROOTPASSWD=$(whiptail --title "MariaDB" --inputbox "Enter root password for MariaDB" 7 60 3>&1 1>&2 2>&3)
+			LYCHEEDBPASSWORD=$(whiptail --title "MariaDB" --inputbox "Enter DB password for Lychee" 7 60 3>&1 1>&2 2>&3)
 		fi
 	done
 	rm /tmp/menuservices.txt
