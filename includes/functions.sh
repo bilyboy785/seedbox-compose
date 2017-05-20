@@ -422,7 +422,9 @@ function install_services() {
 		fi
 	fi
 	DOCKERCOMPOSEFILE="/home/$SEEDUSER/docker-compose.yml"
-	touch $DOCKERCOMPOSEFILE
+	if [[ ! -f $DOCKERCOMPOSEFILE ]]; then
+		touch $DOCKERCOMPOSEFILE
+	fi
 	for line in $(cat $SERVICESPERUSER);
 	do
 		cat "/opt/seedbox-compose/includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
@@ -467,8 +469,8 @@ function install_services() {
 				touch $NGINXSITE
 			else
 				echo "	${RED}--> $NGINXSITE already exist, please choose another name."
-				whiptail --title "Nginx file" --msgbox "The nginx file for your app already exist. Click to continue and choose an action." 12 80
-				if (whiptail --title "Nginx Filename" --yesno "File $NGINXSITE already exist. Delete it ?" 9 80) then
+				whiptail --title "Nginx file" --msgbox "The nginx file for your app already exist. Click to continue and choose an action." 7 80
+				if (whiptail --title "Nginx Filename" --yesno "File $NGINXSITE already exist, do you want to delete it (Yes) or create a new file (No) ?" 9 80) then
 					rm -R $NGINXSITE
 					touch $NGINXSITE
 				else
@@ -588,7 +590,7 @@ function generate_ssl_cert() {
 		echo -e "	${BWHITE}--> Generating LE certificate for $DOMAINSSL, please wait...${NC}"
 		bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
 	else
-		whiptail --title "Communication Error" --msgbox "Please configure an A entry in your DNS zone for $DOMAINSSL to $IPADDRESS, then click Ok !" 12 70
+		whiptail --title "Communication Error" --msgbox "Please configure an \"A\" entry in your DNS zone for $DOMAINSSL to $IPADDRESS, then click Ok !" 12 70
 		generate_ssl_cert $EMAILADDRESS $DOMAINSSL
 	fi
 }
