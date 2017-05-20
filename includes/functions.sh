@@ -656,7 +656,6 @@ function manage_apps() {
 	echo -e "${BLUE}### Application manager for $SEEDUSER ###${NC}"
 	echo -e " * Docker-Compose file : ${BWHITE}$USERDOCKERCOMPOSEFILE${NC}"
 	echo -e " * Resume file : ${BWHITE}$USERRESUMEFILE${NC}"
-	echo -e " * Domain used : ${BWHITE}$DOMAIN${NC}"
 	## CHOOSE AN ACTION FOR APPS
 	ACTIONONAPP=$(whiptail --title "App Manager" --menu \
 	                "Select an action :" 12 55 2 \
