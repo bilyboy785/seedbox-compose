@@ -544,11 +544,11 @@ function docker_compose() {
 function valid_htpasswd() {
 	if [[ -d "/etc/nginx/" ]]; then
 		HTFOLDER="/etc/nginx/passwd/"
-		mkdir -p $HTFOLDER
+		mkdir -p $HTFOLDER > /dev/null 2>&1
 		HTTEMPFOLDER="/tmp/"
 		HTFILE=".htpasswd-$SEEDUSER"
-		cat "$HTTEMPFOLDER$HTFILE" >> "$HTFOLDER$HTFILE"
-		rm "$HTTEMPFOLDER$HTFILE"
+		cat "$HTTEMPFOLDER$HTFILE" >> "$HTFOLDER$HTFILE" > /dev/null 2>&1
+		rm "$HTTEMPFOLDER$HTFILE" > /dev/null 2>&1
 	fi
 }
 
