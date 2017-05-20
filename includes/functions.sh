@@ -633,11 +633,19 @@ function manage_apps() {
 	                "${TABUSERS[@]}"  3>&1 1>&2 2>&3)
 	[[ "$?" = 1 ]] && break;
 	## RESUME USER INFORMATIONS
+	if (whiptail --title "Use domain name" --yesno "Do you want to use a domain to join your apps ?" 7 50) then
+		DOMAIN=$(whiptail --title "Your domain name" --inputbox \
+		"Please enter your domain :" 7 50 \
+		3>&1 1>&2 2>&3)
+	else
+		DOMAIN="localhost"
+	fi
 	USERDOCKERCOMPOSEFILE="/home/$SEEDUSER/docker-compose.yml"
 	USERRESUMEFILE="/home/$SEEDUSER/resume"
 	echo -e "${BLUE}### Application manager for $SEEDUSER ###${NC}"
-	echo -e " ${BWHITE}* Docker-Compose file : $USERDOCKERCOMPOSEFILE${NC}"
-	echo -e " ${BWHITE}* Resume file : $USERRESUMEFILE${NC}"
+	echo -e " * Docker-Compose file : ${BWHITE}$USERDOCKERCOMPOSEFILE${NC}"
+	echo -e " * Resume file : ${BWHITE}$USERRESUMEFILE${NC}"
+	echo -e " * Domain used : ${BWHITE}$DOMAIN${NC}"
 	## CHOOSE AN ACTION FOR APPS
 	ACTIONONAPP=$(whiptail --title "App Manager" --menu \
 	                "Select an action :" 12 55 2 \
@@ -646,7 +654,7 @@ function manage_apps() {
 	[[ "$?" = 1 ]] && manage_apps;
 	case $ACTIONONAPP in
 		"1" ) ## ADDING APP
-			echo -e " ${BWHITE}* Add new apps${NC}"
+			echo ""
 				choose_services
 				install_services
 				docker_compose
