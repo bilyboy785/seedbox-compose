@@ -662,7 +662,7 @@ function manage_apps() {
 	                "Select an action :" 12 55 2 \
 	                "1" "Add Docker App"  \
 	                "2" "Delete an App" 3>&1 1>&2 2>&3)        
-	[[ "$?" = 1 ]] && manage_apps;
+	[[ "$?" = 1 ]] && script_option;
 	case $ACTIONONAPP in
 		"1" ) ## ADDING APP
 			echo ""
@@ -1026,6 +1026,7 @@ function uninstall_seedbox() {
 	UNINSTALL=$(whiptail --title "Seedbox-Compose" --menu "Choose what you want uninstall" 10 75 2 \
 			"1" "Full uninstall (all files and dockers)" \
 			"2" "User uninstall (delete a suer)" 3>&1 1>&2 2>&3)
+		[[ "$?" = 1 ]] && script_option;
 		case $UNINSTALL in
 		"1")
 		  	if (whiptail --title "Uninstall Seedbox" --yesno "Do you really want to uninstall Seedbox ?" 7 75) then
