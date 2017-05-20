@@ -643,7 +643,7 @@ function manage_apps() {
 	                "Select an action :" 12 55 2 \
 	                "1" "Add Docker App"  \
 	                "2" "Delete an App" 3>&1 1>&2 2>&3)        
-	[[ "$?" = 1 ]] && break;
+	[[ "$?" = 1 ]] && manage_apps;
 	case $ACTIONONAPP in
 		"1" ) ## ADDING APP
 			echo -e " ${BWHITE}* Add new apps${NC}"
