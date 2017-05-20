@@ -640,7 +640,7 @@ function manage_apps() {
 	echo -e " ${BWHITE}* Resume file : $USERRESUMEFILE${NC}"
 	## CHOOSE AN ACTION FOR APPS
 	ACTIONONAPP=$(whiptail --title "App Manager" --menu \
-	                "Select an action :" 12 45 6 \
+	                "Select an action :" 12 55 2 \
 	                "1" "Add Docker App"  \
 	                "2" "Delete an App" 3>&1 1>&2 2>&3)        
 	[[ "$?" = 1 ]] && break;
