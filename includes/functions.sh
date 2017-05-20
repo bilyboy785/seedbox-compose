@@ -374,7 +374,7 @@ function choose_services() {
 		echo "$service $desc off" >> /tmp/menuservices.txt
 	done
 	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
-	"Please select services you want to add for $SEEDUSER (Use space to select)" 28 60 17 \
+	"Please select services you want to add for $SEEDUSER (Use space to select)" 28 60 19 \
 	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
 	SERVICESPERUSER="$SERVICESUSER$SEEDUSER"
 	touch $SERVICESPERUSER
@@ -382,6 +382,10 @@ function choose_services() {
 	do
 		echo -e "	${GREEN}* $(echo $APPDOCKER | tr -d '"')${NC}"
 		echo $(echo ${APPDOCKER,,} | tr -d '"') >> $SERVICESPERUSER
+		if [[ "${APPDOCKER,,}" == "lychee" ]]; then
+			ROOTPASSWD=$(whiptail --title "MariaDB" --inputbox "Enter root password for MariaDB" 10 60 3>&1 1>&2 2>&3)
+			LYCHEEDBPASSWORD=$(whiptail --title "MariaDB" --inputbox "Enter DB password for Lychee" 10 60 3>&1 1>&2 2>&3)
+		fi
 	done
 	rm /tmp/menuservices.txt
 }
@@ -428,6 +432,10 @@ function install_services() {
 	for line in $(cat $SERVICESPERUSER);
 	do
 		cat "/opt/seedbox-compose/includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
+		if [[ "$line" == "lychee" ]]; then
+			sed -i "s|%ROOTPASSWD%|$ROOTPASSWD|g" $DOCKERCOMPOSEFILE
+			sed -i "s|%LYCHEEDBPASSWD%|$LYCHEEDBPASSWORD|g" $DOCKERCOMPOSEFILE
+		fi
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%GID%|$GRPID|g" $DOCKERCOMPOSEFILE
@@ -863,8 +871,16 @@ function resume_seedbox() {
 		echo -e " ${BWHITE}* Access FTP with your IDs from :${NC}"
 		echo -e "	--> IP Address : ${YELLOW}$IPADDRESS${NC}"
 		if [[ "$DOMAIN" != "localhost" ]]; then
-			echo -e "	--> Domain : ${YELLOW}$LEDOMAIN${NC}"
+			echo -e "	--> Domain : ${YELLOW}$DOMAIN${NC}"
 		fi
+	fi
+	grep -R "lychee" "$INSTALLEDFILE" > /dev/null 2>&1
+	if [[ "$?" == "0" ]]; then
+		echo ""
+		echo -e " ${BWHITE}* DB credentials for Lychee :${NC}"
+		echo -e "	--> DB Host : ${YELLOW}dblychee-$SEEDUSER${NC}"
+		echo -e "	--> Username : ${YELLOW}lychee${NC}"
+		echo -e "	--> Password : ${YELLOW}$LYCHEEDBPASSWORD${NC}"
 	fi
 	echo ""
 	echo -e " ${BWHITE}* Here is your IDs :${NC}"

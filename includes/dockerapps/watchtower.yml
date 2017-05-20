@@ -4,6 +4,8 @@ watchtower:
   restart: always
   image: v2tec/watchtower
   container_name: watchtower
+  ports:
+    - 8765:5051
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
 #ENDheadphones#
