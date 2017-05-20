@@ -830,8 +830,8 @@ function resume_seedbox() {
 		for line in $(cat $INSTALLEDFILE);
 		do
 			ACCESSDOMAIN=$(echo $line | cut -d\- -f3)
-			DOCKERAPP=$(echo $line | cut -d\- -f1)
-			echo -e "	--> ${BWHITE}$line${NC} from ${YELLOW}$ACCESSDOMAIN${NC}"
+			APPINSTALLED=$(echo $line | cut -d\- -f1)
+			echo -e "	--> ${BWHITE}$APPINSTALLED${NC} from ${YELLOW}$ACCESSDOMAIN${NC}"
 		done
 	else
 		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
@@ -847,7 +847,7 @@ function resume_seedbox() {
 		echo -e " ${BWHITE}* Access FTP with your IDs from :${NC}"
 		echo -e "	--> IP Address : ${YELLOW}$IPADDRESS${NC}"
 		if [[ "$DOMAIN" != "localhost" ]]; then
-			echo -e "	--> Domain : ${YELLOW}$DOMAIN${NC}"
+			echo -e "	--> Domain : ${YELLOW}$LEDOMAIN${NC}"
 		fi
 	fi
 	echo ""
