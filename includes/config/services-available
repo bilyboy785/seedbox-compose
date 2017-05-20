@@ -5,10 +5,12 @@ Sickrage-TVShowsAutomation
 Headphones-MusicsAutomation
 Rtorrent-TorrentClient
 Transmission-TorrentClient
+Flood-TorrentClientBETA
 HTPCManager-SeedboxManager
 Plex-MediaServer
 PlexPy-MonitorForMediaServer
 PlexRequests-RequestsForMediaServer
+Lychee-PhotosGallery
 H5ai-WebAccess
 TeamSpeak-TalkingServer
 Privatebin-CodeSharing

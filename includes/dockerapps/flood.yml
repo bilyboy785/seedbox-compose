@@ -1,0 +1,18 @@
+
+#STARTflood#
+flood-%USER%:
+  restart: always
+  image: wonderfall/rtorrent-flood
+  container_name: flood-%USER%
+  environment:
+    - UID=%UID%
+    - GID=%GID%
+    - FLOOD_SECRET=%FLOODSECRET%
+    - CONTEXT_PATH=/
+  ports:
+    - %PORT%:3000
+  volumes:
+    - /home/%USER%/dockers/flood/db:/flood-db
+    - /home/%USER%/downloads:/data
+  tty: true
+#ENDflood#

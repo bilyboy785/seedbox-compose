@@ -1,0 +1,30 @@
+
+#STARTlychee#
+lycheedb-%USER%:
+  image: mariadb:10
+  container_name: lycheedb-%USER%
+  volumes:
+    - /home/%USER%/dockers/lychee/db:/var/lib/mysql
+  ports:
+    - %PORT%:3306
+  environment:
+    - MYSQL_ROOT_PASSWORD=%ROOTPASSWD%
+    - MYSQL_DATABASE=lychee
+    - MYSQL_USER=lychee
+    - MYSQL_PASSWORD=%LYCHEEDBPASSWD%
+
+lychee-%USER%:
+  restart: always
+  image: wonderfall/lychee
+  links:
+    - lycheedb-%USER%:lycheedb-%USER%
+  container_name: lychee-%USER%
+  environment:
+    - UID=%UID%
+    - GID=%GID%
+  ports:
+    - %PORT%:8888
+  volumes:
+    - /home/%USER%/dockers/lychee/uploads:/uplodas
+    - /home/%USER%/dockers/lychee/data:/data
+#ENDlychee#

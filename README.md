@@ -26,8 +26,9 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
    * HTPCManager
    * **SOON** : Muximux
 
- * **Media Server**
+ * **Media Player/Server**
    * Plex Media Server
+   * Lychee
 
  * **WebUID Manager**
    * Portainer - Manager for Dockers
@@ -37,6 +38,7 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
  * **Torrent Client**
    * Rtorrent/Rutorrent
    * Transmission
+   * Flood : **Beta Version**
  
  * **Utilities**
    * Zerobin - Code paste
