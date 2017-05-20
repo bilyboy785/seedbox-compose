@@ -30,7 +30,7 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
    * Plex Media Server
    * Lychee
 
- * **WebUID Manager**
+ * **WebUI Manager**
    * Portainer - Manager for Dockers
    * PlexPy - Manager for Plex Media Server
    * H5ai - WebUI to access files
