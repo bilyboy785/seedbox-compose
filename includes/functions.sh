@@ -467,8 +467,14 @@ function install_services() {
 				touch $NGINXSITE
 			else
 				echo "	${RED}--> $NGINXSITE already exist, please choose another name."
-				NGINXSITE=$(whiptail --title "Nginx filename" --inputbox \
-				"Please choose another name for nginx file ($NGINXSITE)" 7 75 "$SEEDUSER.$FQDN" 3>&1 1>&2 2>&3)
+				whiptail --title "Nginx file" --msgbox "The nginx file for your app already exist. Click to continue and choose an action." 12 80
+				if (whiptail --title "Nginx Filename" --yesno "File $NGINXSITE already exist. Delete it ?" 9 80) then
+					rm -R $NGINXSITE
+					touch $NGINXSITE
+				else
+					NGINXSITE=$(whiptail --title "Nginx filename" --inputbox \
+					"Please choose another name for nginx file ($NGINXSITE)" 9 75 "$SEEDUSER.$FQDN.conf" 3>&1 1>&2 2>&3)
+				fi
 			fi
 			cat $NGINXPROXYFILE >> $NGINXSITE
 			echo "$line-$PORT-$FQDN" >> $INSTALLEDFILE
