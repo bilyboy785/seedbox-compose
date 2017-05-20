@@ -381,7 +381,7 @@ function choose_services() {
 	do
 		echo -e "	${GREEN}* $(echo $APPDOCKER | tr -d '"')${NC}"
 		echo $(echo ${APPDOCKER,,} | tr -d '"') >> $SERVICESPERUSER
-		if [[ "${APPDOCKER,,}" == "lychee" ]]; then
+		if [[ "$(echo ${APPDOCKER,,} | tr -d '"')" == "lychee" ]]; then
 			ROOTPASSWD=$(whiptail --title "MariaDB" --inputbox "Enter root password for MariaDB" 10 60 3>&1 1>&2 2>&3)
 			LYCHEEDBPASSWORD=$(whiptail --title "MariaDB" --inputbox "Enter DB password for Lychee" 10 60 3>&1 1>&2 2>&3)
 		fi
@@ -467,6 +467,8 @@ function install_services() {
 		        	NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$line.$DOMAIN.conf"
 					;;
 		    esac
+		else
+			NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$line.conf"
 		fi
 		if [[ "$DOMAIN" != "localhost" ]]; then
 	        if [[ "$LESSL" == "y" ]]; then

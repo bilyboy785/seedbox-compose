@@ -6,7 +6,7 @@ lycheedb-%USER%:
   volumes:
     - /home/%USER%/dockers/lychee/db:/var/lib/mysql
   ports:
-    - %PORT%:3306
+    - 3306:3306
   environment:
     - MYSQL_ROOT_PASSWORD=%ROOTPASSWD%
     - MYSQL_DATABASE=lychee
