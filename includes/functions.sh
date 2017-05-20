@@ -629,7 +629,7 @@ function manage_apps() {
 	done
 	## CHOOSE USER
 	SEEDUSER=$(whiptail --title "App Manager" --menu \
-	                "Please select user to manage Apps" 11 55 4 \
+	                "Please select user to manage Apps" 12 55 3 \
 	                "${TABUSERS[@]}"  3>&1 1>&2 2>&3)
 	[[ "$?" = 1 ]] && break;
 	## RESUME USER INFORMATIONS
