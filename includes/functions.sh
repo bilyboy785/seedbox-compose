@@ -722,7 +722,7 @@ function install_ftp_server() {
 		if (whiptail --title "Use FTP Server" --yesno "Do you want to install FTP server ?" 7 50) then
 			FTPSERVERNAME=$(whiptail --title "FTPServer Name" --inputbox \
 			"Please enter a name for your FTP Server :" 7 50 "SeedBox" 3>&1 1>&2 2>&3)
-			echo -e " ${BWHITE}* Installing proftpd...${NC}"
+			echo -e " ${BWHITE}--> Installing proftpd...${NC}"
 			apt-get -qq install proftpd -y
 			checking_errors $?
 			if (whiptail --title "FTP Over SSL" --yesno "Do you want to use FTP with SSL ? (FTPs)" 7 60) then
@@ -731,10 +731,10 @@ function install_ftp_server() {
 					"Please enter your email address :" 7 50 "$CONTACTEMAIL" 3>&1 1>&2 2>&3)
 					LEDOMAIN=$(whiptail --title "LE Domain" --inputbox \
 					"Please enter your domain for FTP access :" 7 50 "ftp.$DOMAIN" 3>&1 1>&2 2>&3)
-					echo -e " ${BWHITE}* Stoping nginx...${NC}"
+					echo -e " ${BWHITE}--> Stoping nginx...${NC}"
 					service nginx stop
 					checking_errors $?
-					echo -e " ${BWHITE}* Generating certificate...${NC}"
+					echo -e " ${BWHITE}--> Generating certificate...${NC}"
 					generate_ssl_cert $LEEMAIL $LEDOMAIN
 					checking_errors $?
 					USEFTPSLE="yes"
@@ -754,13 +754,13 @@ function install_ftp_server() {
 					FTPSORGANIZATIONALUNIT=$(whiptail --title "OpenSSL Generation" --inputbox \
 					"Organizationnal Unit (Export, Production ...)" 7 50 "Tech" 3>&1 1>&2 2>&3)
 					FTPSPASSWORD=$(whiptail --title "OpenSSL Generation" --passwordbox "Password" 7 50 3>&1 1>&2 2>&3)
-					echo -e " ${BWHITE}* Generating key request...${NC}"
+					echo -e " ${BWHITE}--> Generating key request...${NC}"
 					openssl genrsa -des3 -passout pass:$FTPSPASSWORD -out /etc/ssl/private/$FTPSDOMAIN.key 2048 -noout > /dev/null 2>&1
 					checking_errors $?
-					echo -e " ${BWHITE}* Removing passphrase from key...${NC}"
+					echo -e " ${BWHITE}--> Removing passphrase from key...${NC}"
 					openssl rsa -in /etc/ssl/private/$FTPSDOMAIN.key -passin pass:$FTPSPASSWORD -out /etc/ssl/private/$FTPSDOMAIN.key > /dev/null 2>&1
 					checking_errors $?
-					echo -e " ${BWHITE}* Generating Certificate file...${NC}"
+					echo -e " ${BWHITE}--> Generating Certificate file...${NC}"
 					openssl req -new -x509 -key /etc/ssl/private/$FTPSDOMAIN.key -out /etc/ssl/certs/$FTPSDOMAIN.crt -passin pass:$FTPSPASSWORD \
     					-subj "/C=$FTPSCC/ST=$FTPSSTATE/L=$FTPSLOCALITY/O=$FTPSORGANIZATION/OU=$FTPSORGANIZATIONALUNIT/CN=$FTPSDOMAIN/emailAddress=$FTPSEMAIL" > /dev/null 2>&1
     				checking_errors $?
@@ -772,13 +772,13 @@ function install_ftp_server() {
 		 			TLSREQUIRED="off"
 		 		fi
 			fi
-			echo -e " ${BWHITE}* Creating base configuration file...${NC}"
+			echo -e " ${BWHITE}--> Creating base configuration file...${NC}"
 			mv "$PROFTPDFOLDER$PROFTPDCONFFILE" "$PROFTPDBAKCONF"
 	 	 	cat "$BASEPROFTPDFILE" >> "$PROFTPDFOLDER$PROFTPDCONFFILE"
 	 	 	sed -i -e "s/ServerName\ \"Debian\"/ServerName\ \"$FTPSERVERNAME\"/g" "$PROFTPDFOLDER$PROFTPDCONFFILE"
 	 		checking_errors $?
 	 		if [[ "$USEFTPSLE" == "yes" ]]; then
-		 		echo -e " ${BWHITE}* Creating SSL configuration file...${NC}"
+		 		echo -e " ${BWHITE}--> Creating SSL configuration file...${NC}"
 		 		sed -i -e "s/#Include\ \/etc\/\proftpd\/tls.conf/Include\ \/etc\/\proftpd\/tls.conf/g" "$PROFTPDFOLDER$PROFTPDCONFFILE"
 		 		mv "$PROFTPDFOLDER$PROFTPDTLSCONFFILE" "$PROFTPDTLSBAKCONF"
 		 	 	cat "$BASEPROFTPDTLSFILELETSENCRYPT" >> "$PROFTPDFOLDER$PROFTPDTLSCONFFILE"
@@ -787,7 +787,7 @@ function install_ftp_server() {
 		 	 	checking_errors $?
 	 		fi
 	 		if [[ "$USEFTPSOPENSSL" == "yes" ]]; then
-		 		echo -e " ${BWHITE}* Creating SSL configuration file...${NC}"
+		 		echo -e " ${BWHITE}--> Creating SSL configuration file...${NC}"
 		 		sed -i -e "s/#Include\ \/etc\/\proftpd\/tls.conf/Include\ \/etc\/\proftpd\/tls.conf/g" "$PROFTPDFOLDER$PROFTPDCONFFILE"
 		 		mv "$PROFTPDFOLDER$PROFTPDTLSCONFFILE" "$PROFTPDTLSBAKCONF"
 		 	 	cat "$BASEPROFTPDTLSFILEOPENSSL" >> "$PROFTPDFOLDER$PROFTPDTLSCONFFILE"
@@ -795,7 +795,7 @@ function install_ftp_server() {
 		 	 	sed -i "s|%DOMAIN%|$FTPSDOMAIN|g" "$PROFTPDFOLDER$PROFTPDTLSCONFFILE"
 		 	 	checking_errors $?
 	 		fi
-	 		echo -e " ${BWHITE}* Restarting service...${NC}"
+	 		echo -e " ${BWHITE}--> Restarting service...${NC}"
 	 		service proftpd restart
 	 		checking_errors $?
 	 	else
@@ -889,6 +889,7 @@ function resume_seedbox() {
 	echo -e " ${BWHITE}* Here is your IDs :${NC}"
 	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
 	echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
+	echo ""
 	echo -e " ${BWHITE}* Restarting nginx...${NC}"
 	service nginx restart
 	checking_errors $?

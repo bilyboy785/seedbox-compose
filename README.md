@@ -37,6 +37,7 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
  * **Torrent Client**
    * Rtorrent/Rutorrent
    * Transmission
+   * Flood (Experimental version)
  
  * **Utilities**
    * Zerobin - Code paste
