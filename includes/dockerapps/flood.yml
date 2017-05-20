@@ -1,0 +1,16 @@
+flood-%USER%:
+  restart: always
+  image: wonderfall/rtorrent-flood
+  container_name: flood-%USER%
+  environment:
+    - UID=%UID%
+    - GID=%GID%
+    - FLOOD_SECRET=%SECRET%
+    - CONTEXT_PATH=/
+    - RTORRENT_SCGI=0
+  ports:
+    - %PORT%:3000
+    - 49184:49184
+  volumes:
+    - /home/%USER%/downloads:/data
+    - /home/%USER%/dockers/flood/flooddb:/flood-db

@@ -5,6 +5,7 @@ Sickrage-TVShowsAutomation
 Headphones-MusicsAutomation
 Rtorrent-TorrentClient
 Transmission-TorrentClient
+Flood-TorrentClientExperimental
 HTPCManager-SeedboxManager
 Plex-MediaServer
 PlexPy-MonitorForMediaServer
