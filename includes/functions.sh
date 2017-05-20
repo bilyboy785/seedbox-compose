@@ -443,30 +443,32 @@ function install_services() {
 		sed -i "s|%USER%|$SEEDUSER|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%EMAIL%|$CONTACTEMAIL|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%IPADDRESS%|$IPADDRESS|g" $DOCKERCOMPOSEFILE
-		SUBURI=$(whiptail --title "Access Type" --menu \
-	            "Please choose how do you want access your Apps :" 10 45 2 \
-	            "1" "Subdomains" \
-	            "2" "URI" 3>&1 1>&2 2>&3)
-	    case $SUBURI in
-	        "1" )
-				PROXYACCESS="SUBDOMAIN"
-				FQDNTMP="$line.$DOMAIN"
-				FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
-				"Do you want to use a different subdomain for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
-				ACCESSURL=$FQDN
-				URI="/"
-				NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$FQDN.conf"
-	        	;;
-	        "2" )
-				PROXYACCESS="URI"
-				FQDN=$DOMAIN
-				FQDNTMP="/$line"
-				ACCESSURL=$(whiptail --title "SSL Subdomain" --inputbox \
-				"Do you want to use a different URI for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
-				URI=$ACCESSURL
-	        	NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$line.$DOMAIN.conf"
-				;;
-	    esac
+		if [[ "$DOMAIN" != "localhost" ]]; then
+			SUBURI=$(whiptail --title "Access Type" --menu \
+		            "Please choose how do you want access your Apps :" 10 45 2 \
+		            "1" "Subdomains" \
+		            "2" "URI" 3>&1 1>&2 2>&3)
+		    case $SUBURI in
+		        "1" )
+					PROXYACCESS="SUBDOMAIN"
+					FQDNTMP="$line.$DOMAIN"
+					FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
+					"Do you want to use a different subdomain for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
+					ACCESSURL=$FQDN
+					URI="/"
+					NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$FQDN.conf"
+		        	;;
+		        "2" )
+					PROXYACCESS="URI"
+					FQDN=$DOMAIN
+					FQDNTMP="/$line"
+					ACCESSURL=$(whiptail --title "SSL Subdomain" --inputbox \
+					"Do you want to use a different URI for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
+					URI=$ACCESSURL
+		        	NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$line.$DOMAIN.conf"
+					;;
+		    esac
+		fi
 		if [[ "$DOMAIN" != "localhost" ]]; then
 	        if [[ "$LESSL" == "y" ]]; then
 				NGINXPROXYFILE="/opt/seedbox-compose/includes/nginxproxyssl/$line.conf"
