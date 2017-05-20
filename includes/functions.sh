@@ -374,7 +374,7 @@ function create_user() {
 	else
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 		echo -e " ${BWHITE}* Adding $SEEDUSER to the system"
-		useradd -m -G $SEEDGROUP -p $PASS $SEEDUSER > /dev/null 2>&1
+		useradd -m -g $SEEDGROUP -p $PASS $SEEDUSER > /dev/null 2>&1
 		checking_errors $?
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
