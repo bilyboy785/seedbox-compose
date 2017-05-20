@@ -93,12 +93,11 @@ function script_option() {
 			"1" "Install Seedbox-Compose" 3>&1 1>&2 2>&3)
 		echo ""
 		case $ACTION in
-		"1")
+		"1") 
 			SCRIPT="INSTALL"
 			;;
 		esac
 	fi
-	
 }
 
 function conf_dir() {
@@ -875,19 +874,23 @@ function resume_seedbox() {
 			echo -e "	--> Domain : ${YELLOW}$DOMAIN${NC}"
 		fi
 	fi
-	grep -R "lychee" "$INSTALLEDFILE" > /dev/null 2>&1
-	if [[ "$?" == "0" ]]; then
-		echo ""
-		echo -e " ${BWHITE}* DB credentials for Lychee :${NC}"
-		echo -e "	--> DB Host : ${YELLOW}dblychee-$SEEDUSER${NC}"
-		echo -e "	--> Username : ${YELLOW}lychee${NC}"
-		echo -e "	--> Password : ${YELLOW}$LYCHEEDBPASSWORD${NC}"
+	if [[ "$LYCHEEDBPASSWORD" != "" ]]; then
+		grep -R "lychee" "$INSTALLEDFILE" > /dev/null 2>&1
+		if [[ "$?" == "0" ]]; then
+			echo ""
+			echo -e " ${BWHITE}* DB credentials for Lychee :${NC}"
+			echo -e "	--> DB Host : ${YELLOW}dblychee-$SEEDUSER${NC}"
+			echo -e "	--> Username : ${YELLOW}lychee${NC}"
+			echo -e "	--> Password : ${YELLOW}$LYCHEEDBPASSWORD${NC}"
+		fi
 	fi
-	echo ""
-	echo -e " ${BWHITE}* Here is your IDs :${NC}"
-	echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
-	echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
-	echo ""
+	if [[ ! -f "/etc/seedboxcompose/firstinstall" ]]; then
+		echo ""
+		echo -e " ${BWHITE}* Here is your IDs :${NC}"
+		echo -e "	--> Username : ${YELLOW}$HTUSER${NC}"
+		echo -e "	--> Password : ${YELLOW}$HTPASSWORD${NC}"
+		echo ""
+	fi
 	rm -Rf $SERVICESPERUSER > /dev/null 2>&1
 	# if [[ -f "/home/$SEEDUSER/downloads/medias/supervisord.log" ]]; then
 	# 	mv /home/$SEEDUSER/downloads/medias/supervisord.log /home/$SEEDUSER/downloads/medias/.supervisord.log > /dev/null 2>&1
@@ -895,6 +898,7 @@ function resume_seedbox() {
 	# fi
 	# chown $SEEDUSER: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
 	# chmod 775: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
+	touch "/etc/seedboxcompose/firstinstall" > /dev/null 2>&1
 }
 
 function backup_docker_conf() {
