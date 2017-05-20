@@ -920,6 +920,7 @@ function backup_docker_conf() {
 		echo -e " ${BWHITE}* Backing up Dockers conf..."
 		tar cvpzf $BACKUP $DOCKERCONFDIR > /dev/null 2>&1
 		echo -e "	${GREEN}--> Backup successfully created in $BACKUP${NC}"
+		echo ""
 	else
 		echo -e "	${YELLOW}--> Please launch the script to install Seedbox before make a Backup !${NC}"
 	fi
