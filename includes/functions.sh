@@ -42,7 +42,7 @@ function script_option() {
 			"4" "Manage Backups" \
 			"5" "Manage Docker" \
 			"6" "Install FTP Server" \
-			"7" "Manage SSL Certificates" \
+			"7" "Manage SSL Certificates (BETA)" \
 			"8" "Disable htaccess protection" \
 			"9" "Uninstall Seedbox-Compose"  3>&1 1>&2 2>&3)
 		echo ""
@@ -117,7 +117,7 @@ function script_option() {
 			;;
 		esac
 	fi
-	
+
 }
 
 function conf_dir() {
@@ -232,7 +232,7 @@ function checking_errors() {
 function install_nginx() {
 	echo -e "${BLUE}### NGINX ###${NC}"
 	NGINXDIR="/etc/nginx/"
-	if [[ ! -d "$NGINXDIR" ]]; then	
+	if [[ ! -d "$NGINXDIR" ]]; then
 		echo -e " * Installing Nginx"
 		apt-get install -y nginx > /dev/null 2>&1
 		checking_errors $?
@@ -246,7 +246,7 @@ function install_zsh() {
 	echo -e "${BLUE}### ZSH-OHMYZSH ###${NC}"
 	ZSHDIR="/usr/share/zsh"
 	OHMYZSHDIR="/root/.oh-my-zsh/"
-	if [[ ! -d "$OHMYZSHDIR" ]]; then	
+	if [[ ! -d "$OHMYZSHDIR" ]]; then
 		echo -e " * Installing ZSH"
 		apt-get install -y zsh > /dev/null 2>&1
 		checking_errors $?
@@ -337,7 +337,7 @@ function create_user() {
 	if [[ ! -f "$GROUPFILE" ]]; then
 		touch $GROUPFILE
 		SEEDGROUP=$(whiptail --title "Group" --inputbox \
-        	"Create a group for your Seedbox" 7 50 3>&1 1>&2 2>&3)	
+        	"Create a group for your Seedbox" 7 50 3>&1 1>&2 2>&3)
 		echo "$SEEDGROUP" > "$GROUPFILE"
 	else
 		TMPGROUP=$(cat $GROUPFILE)
@@ -578,7 +578,7 @@ function create_reverse() {
 		if [[ "$PROXYACCESS" == "URI" ]]; then
 			echo -e " ${BWHITE}--> [$DOMAIN] - Creating reverse${NC}"
 			generate_ssl_cert $CONTACTEMAIL $DOMAIN
-		else	
+		else
 			for line in $(cat $INSTALLEDFILE);
 			do
 				SERVICE=$(echo $line | cut -d\- -f1)
@@ -677,7 +677,7 @@ function manage_apps() {
 	ACTIONONAPP=$(whiptail --title "App Manager" --menu \
 	                "Select an action :" 12 45 6 \
 	                "1" "Add Docker App"  \
-	                "2" "Delete an App" 3>&1 1>&2 2>&3)        
+	                "2" "Delete an App" 3>&1 1>&2 2>&3)
 	[[ "$?" = 1 ]] && break;
 	case $ACTIONONAPP in
 		"1" ) ## ADDING APP
