@@ -332,7 +332,7 @@ function define_parameters() {
 }
 
 function create_user() {
-	echo -e " ${BWHITE}* Checking group for Seedbox${NC}"
+	# echo -e " ${BWHITE}* Checking group for Seedbox${NC}"
 	if [[ ! -f "$GROUPFILE" ]]; then
 		touch $GROUPFILE
 		SEEDGROUP=$(whiptail --title "Group" --inputbox \
@@ -354,7 +354,7 @@ function create_user() {
 		SEEDGROUP=$TMPGROUP
 	    echo -e " ${YELLOW}* No need to create group $SEEDGROUP, already exist.${NC}"
 	fi
-	echo -e " ${BWHITE}* Checking user for Seedbox${NC}"
+	# echo -e " ${BWHITE}* Checking user for Seedbox${NC}"
 	if [[ ! -f "$USERSFILE" ]]; then
 		touch $USERSFILE
 	fi
@@ -544,8 +544,8 @@ function docker_compose() {
 }
 
 function config_post_compose() {
-	echo -e "${BLUE}### CONFIG POST COMPOSE ###${NC}"
 	if [[ "$PROXYACCESS" == "URI" ]]; then
+		echo -e "${BLUE}### CONFIG POST COMPOSE ###${NC}"
 		grep -R "jackett" "$INSTALLEDFILE" > /dev/null 2>&1
 		if [[ "$?" == "0" ]]; then
 			echo -e " ${BWHITE}* Processing jackett config file...${NC}"
@@ -860,16 +860,15 @@ function resume_seedbox() {
 	echo -e "${BLUE}##########################################${NC}"
 	echo -e "${BLUE}###       RESUMING SEEDBOX INSTALL     ###${NC}"
 	echo -e "${BLUE}##########################################${NC}"
+	echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 	if [[ "$DOMAIN" != "localhost" ]]; then
-		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 		for line in $(cat $INSTALLEDFILE);
 		do
 			ACCESSDOMAIN=$(echo $line | cut -d\- -f3)
 			DOCKERAPP=$(echo $line | cut -d\- -f1)
-			echo -e "	--> ${BWHITE}$line${NC} from ${YELLOW}$ACCESSDOMAIN${NC}"
+			echo -e "	--> ${BWHITE}$DOCKERAPP${NC} from ${YELLOW}$ACCESSDOMAIN${NC}"
 		done
 	else
-		echo -e " ${BWHITE}* Access apps from these URL :${NC}"
 		for line in $(cat $INSTALLEDFILE);
 		do
 			APPINSTALLED=$(echo $line | cut -d\- -f1)
