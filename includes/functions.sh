@@ -16,13 +16,13 @@ function check_domain() {
 		echo -e " ${BWHITE}* Ping $TESTDOMAIN...${NC}"
 		ping -c 1 $TESTDOMAIN | grep "$IPADDRESS" > /dev/null
 		checking_errors $?
-		for line in $(cat $SERVICESAVAILABLE)
-		do
-			DOCKERAPPLICATION=$(echo $line | cut -d\- -f1)
-			echo -e " ${BWHITE}* Ping $DOCKERAPPLICATION.$TESTDOMAIN...${NC}"
-			ping -c 1 ${DOCKERAPPLICATION,,}.$TESTDOMAIN | grep "$IPADDRESS" > /dev/null 2>&1
-			checking_errors $?
-		done
+		# for line in $(cat $SERVICESAVAILABLE)
+		# do
+		# 	DOCKERAPPLICATION=$(echo $line | cut -d\- -f1)
+		# 	echo -e " ${BWHITE}* Ping $DOCKERAPPLICATION.$TESTDOMAIN...${NC}"
+		# 	ping -c 1 ${DOCKERAPPLICATION,,}.$TESTDOMAIN | grep "$IPADDRESS" > /dev/null 2>&1
+		# 	checking_errors $?
+		# done
 	fi
 	pause
 }
@@ -117,7 +117,6 @@ function script_option() {
 			;;
 		esac
 	fi
-
 }
 
 function conf_dir() {
@@ -445,6 +444,7 @@ function install_services() {
 	touch $DOCKERCOMPOSEFILE
 	for line in $(cat $SERVICESPERUSER);
 	do
+		check_domain "$line.$DOMAIN"
 		cat "/opt/seedbox-compose/includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		sed -i "s|%TIMEZONE%|$TIMEZONE|g" $DOCKERCOMPOSEFILE
 		sed -i "s|%UID%|$USERID|g" $DOCKERCOMPOSEFILE
