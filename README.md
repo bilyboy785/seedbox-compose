@@ -1,15 +1,13 @@
 # Seedbox-Compose [![Build Status](https://travis-ci.org/bilyboy785/seedbox-compose.svg?branch=master)](https://travis-ci.org/bilyboy785/seedbox-compose)
 A docker-compose file to deploy complete Seedbox based only Docker. Install a fresh Debian / Ubuntu Server, install git and docker and use this **Docker-compose.yml** to deploy your Seedbox.
 
-![Imgur](http://i.imgur.com/fweV56n.png)
-
-![Imgur](http://i.imgur.com/jiEP7IJ.png)
+![Imgur](http://i.imgur.com/MTV85EA.png)
 
 ### Tested on ###
  * [x] Debian 8.X
  * [x] Ubuntu 16.X
  * [ ] CentOS
- 
+
 ## Services availables in this docker-compose
  * **Movies automation**
    * Couchpotato
@@ -20,7 +18,7 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
    * Sonarr
 
  * **Music automation**
-   * Headphones 
+   * Headphones
 
  * **Seedbox manager**
    * HTPCManager
@@ -38,7 +36,7 @@ A docker-compose file to deploy complete Seedbox based only Docker. Install a fr
    * Rtorrent/Rutorrent
    * Transmission
    * Flood (Experimental version)
- 
+
  * **Utilities**
    * Zerobin - Code paste
    * Jackett - Torrent Providers finder
