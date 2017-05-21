@@ -11,9 +11,7 @@ function under_developpment() {
 function check_domain() {
 	if (whiptail --title "Domain access" --yesno "Are you sure your DNS entries are correctly configured ? We can test them now ;)" 10 90) then
 		TESTDOMAIN=$1
-		echo ""
-		echo -e "${BLUE}### CHECKING DNS ENTRIES ###${NC}"
-		echo -e " ${BWHITE}* Ping $TESTDOMAIN...${NC}"
+		echo -e " ${BWHITE}* Checking domain - ping $TESTDOMAIN...${NC}"
 		ping -c 1 $TESTDOMAIN | grep "$IPADDRESS" > /dev/null
 		checking_errors $?
 		# for line in $(cat $SERVICESAVAILABLE)
@@ -24,7 +22,7 @@ function check_domain() {
 		# 	checking_errors $?
 		# done
 	fi
-	pause
+	# pause
 }
 
 function check_dir() {
@@ -689,7 +687,6 @@ function manage_apps() {
 				install_services
 				docker_compose
 				create_reverse
-				valid_htpasswd
 				resume_seedbox
 				backup_docker_conf
 			;;
