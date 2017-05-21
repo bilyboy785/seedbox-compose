@@ -664,7 +664,7 @@ function manage_apps() {
 	done
 	## CHOOSE USER
 	SEEDUSER=$(whiptail --title "App Manager" --menu \
-	                "Please select user to manage Apps" 8 45 3 \
+	                "Please select user to manage Apps" 12 50 3 \
 	                "${TABUSERS[@]}"  3>&1 1>&2 2>&3)
 	[[ "$?" = 1 ]] && break;
 	## RESUME USER INFORMATIONS
@@ -675,7 +675,7 @@ function manage_apps() {
 	echo -e " ${BWHITE}* Resume file : $USERRESUMEFILE${NC}"
 	## CHOOSE AN ACTION FOR APPS
 	ACTIONONAPP=$(whiptail --title "App Manager" --menu \
-	                "Select an action :" 12 45 6 \
+	                "Select an action :" 12 50 3 \
 	                "1" "Add Docker App"  \
 	                "2" "Delete an App" 3>&1 1>&2 2>&3)
 	[[ "$?" = 1 ]] && break;
