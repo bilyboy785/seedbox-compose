@@ -323,8 +323,7 @@ function define_parameters() {
 	fi
 	if (whiptail --title "Use domain name" --yesno "Do you want to use a domain to join your apps ?" 7 50) then
 		DOMAIN=$(whiptail --title "Your domain name" --inputbox \
-		"Please enter your domain :" 7 50 \
-		3>&1 1>&2 2>&3)
+		"Please enter your domain :" 7 50 3>&1 1>&2 2>&3)
 	else
 		DOMAIN="localhost"
 	fi
@@ -401,6 +400,10 @@ function choose_services() {
 		echo -e "	${GREEN}* $(echo $APPDOCKER | tr -d '"')${NC}"
 		echo $(echo ${APPDOCKER,,} | tr -d '"') >> $SERVICESPERUSER
 	done
+	if [[ "$DOMAIN" == "" ]]; then
+		DOMAIN=$(whiptail --title "Your domain name" --inputbox \
+		"Please enter your domain :" 7 50 3>&1 1>&2 2>&3)
+	fi
 	rm /tmp/menuservices.txt
 }
 
@@ -670,9 +673,10 @@ function manage_apps() {
 	## RESUME USER INFORMATIONS
 	USERDOCKERCOMPOSEFILE="/home/$SEEDUSER/docker-compose.yml"
 	USERRESUMEFILE="/home/$SEEDUSER/resume"
-	echo -e "${BLUE}### Application manager for $SEEDUSER ###${NC}"
+	echo -e "${BLUE}### App manager for : $SEEDUSER ###${NC}"
 	echo -e " ${BWHITE}* Docker-Compose file : $USERDOCKERCOMPOSEFILE${NC}"
 	echo -e " ${BWHITE}* Resume file : $USERRESUMEFILE${NC}"
+	echo ""
 	## CHOOSE AN ACTION FOR APPS
 	ACTIONONAPP=$(whiptail --title "App Manager" --menu \
 	                "Select an action :" 12 50 3 \
@@ -681,7 +685,6 @@ function manage_apps() {
 	[[ "$?" = 1 ]] && break;
 	case $ACTIONONAPP in
 		"1" ) ## ADDING APP
-			echo -e " ${BWHITE}* Add new apps${NC}"
 				choose_services
 				install_services
 				docker_compose
