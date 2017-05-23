@@ -14,6 +14,20 @@ function check_dir() {
 	fi
 }
 
+function conf_dir() {
+	if [[ ! -d "$CONFDIR" ]]; then
+		mkdir $CONFDIR > /dev/null 2>&1
+	fi
+}
+
+function checking_errors() {
+	if [[ "$1" == "0" ]]; then
+		echo -e "	${GREEN}--> Operation success !${NC}"
+	else
+		echo -e "	${RED}--> Operation failed !${NC}"
+	fi
+}
+
 function script_option() {
 	if [[ -d "$CONFDIR" ]]; then
 		ACTION=$(whiptail --title "Seedbox-Compose" --menu "Welcome to Seedbox-Compose Script. Please choose an action below :" 18 80 10 \
@@ -46,8 +60,8 @@ function script_option() {
 			;;
 		"4")
 			ACTIONBACKUP=$(whiptail --title "Manage Backup" --menu "Choose an action for backups !" 10 75 2 \
-				"1" "Create a backup now of my Home !" \
-				"2" "Schedule a backup for my data !" 3>&1 1>&2 2>&3)
+				"1" "Backup my dockers conf" \
+				"2" "Schedule a backup" 3>&1 1>&2 2>&3)
 			echo ""
 			case $ACTIONBACKUP in
 			"1")
@@ -93,16 +107,10 @@ function script_option() {
 			"1" "Install Seedbox-Compose" 3>&1 1>&2 2>&3)
 		echo ""
 		case $ACTION in
-		"1") 
+		"1")
 			SCRIPT="INSTALL"
 			;;
 		esac
-	fi
-}
-
-function conf_dir() {
-	if [[ ! -d "$CONFDIR" ]]; then
-		mkdir $CONFDIR > /dev/null 2>&1
 	fi
 }
 
@@ -201,18 +209,10 @@ function checking_system() {
 	echo ""
 }
 
-function checking_errors() {
-	if [[ "$1" == "0" ]]; then
-		echo -e "	${GREEN}--> Operation success !${NC}"
-	else
-		echo -e "	${RED}--> Operation failed !${NC}"
-	fi
-}
-
 function install_nginx() {
 	echo -e "${BLUE}### NGINX ###${NC}"
 	NGINXDIR="/etc/nginx/"
-	if [[ ! -d "$NGINXDIR" ]]; then	
+	if [[ ! -d "$NGINXDIR" ]]; then
 		echo -e " * Installing Nginx"
 		apt-get install -y nginx > /dev/null 2>&1
 		checking_errors $?
@@ -226,7 +226,7 @@ function install_zsh() {
 	echo -e "${BLUE}### ZSH-OHMYZSH ###${NC}"
 	ZSHDIR="/usr/share/zsh"
 	OHMYZSHDIR="/root/.oh-my-zsh/"
-	if [[ ! -d "$OHMYZSHDIR" ]]; then	
+	if [[ ! -d "$OHMYZSHDIR" ]]; then
 		echo -e " * Installing ZSH"
 		apt-get install -y zsh > /dev/null 2>&1
 		checking_errors $?
@@ -313,36 +313,32 @@ function define_parameters() {
 }
 
 function create_user() {
-	echo -e " ${BWHITE}* Checking group for Seedbox${NC}"
+	echo -e " ${BWHITE}* Checking group Seedbox group file${NC}"
 	if [[ ! -f "$GROUPFILE" ]]; then
 		touch $GROUPFILE
-		SEEDGROUP=$(whiptail --title "Group" --inputbox \
-        	"Create a group for your Seedbox" 7 50 3>&1 1>&2 2>&3)	
+		SEEDGROUP=$(whiptail --title "Group" --inputbox "Create a group for your Seedbox" 7 50 3>&1 1>&2 2>&3)
 		echo "$SEEDGROUP" > "$GROUPFILE"
 	else
 		TMPGROUP=$(cat $GROUPFILE)
 		if [[ "$TMPGROUP" == "" ]]; then
-			SEEDGROUP=$(whiptail --title "Group" --inputbox \
-        		"Create a group for your Seedbox" 7 50 3>&1 1>&2 2>&3)
-        fi
+			SEEDGROUP=$(whiptail --title "Group" --inputbox "Create a group for your Seedbox" 7 50 3>&1 1>&2 2>&3)
+    fi
 	fi
-    egrep "^$SEEDGROUP" /etc/group >/dev/null
+  egrep "^$SEEDGROUP" /etc/group >/dev/null
 	if [[ "$?" != "0" ]]; then
 		echo -e " ${BWHITE}* Creating group $SEEDGROUP"
-	    groupadd $SEEDGROUP
-	    checking_errors $?
+	  groupadd $SEEDGROUP
+	  checking_errors $?
 	else
 		SEEDGROUP=$TMPGROUP
 	    echo -e "	${YELLOW}--> No need to create group $SEEDGROUP, already exist.${NC}"
 	fi
-	echo -e " ${BWHITE}* Checking user for Seedbox${NC}"
+	echo -e " ${BWHITE}* Checking Seedbox user file${NC}"
 	if [[ ! -f "$USERSFILE" ]]; then
 		touch $USERSFILE
 	fi
-	SEEDUSER=$(whiptail --title "Username" --inputbox \
-		"Please enter a username :" 7 50 3>&1 1>&2 2>&3)
-	PASSWORD=$(whiptail --title "Password" --passwordbox \
-		"Please enter a password :" 7 50 3>&1 1>&2 2>&3)
+	SEEDUSER=$(whiptail --title "Username" --inputbox "Please enter a username :" 7 50 3>&1 1>&2 2>&3)
+	PASSWORD=$(whiptail --title "Password" --passwordbox "Please enter a password :" 7 50 3>&1 1>&2 2>&3)
 	egrep "^$SEEDUSER" /etc/passwd >/dev/null
 	if [ $? -eq 0 ]; then
 		echo -e " ${YELLOW}* User already exist !${NC}"
@@ -361,32 +357,6 @@ function create_user() {
 	fi
 	add_user_htpasswd $SEEDUSER $PASSWORD
 	echo $SEEDUSER >> $USERSFILE
-}
-
-function choose_services() {
-	echo -e "${BLUE}### SERVICES ###${NC}"
-	echo -e " ${BWHITE}--> Services will be installed : ${NC}"
-	for app in $(cat $SERVICESAVAILABLE);
-	do
-		service=$(echo $app | cut -d\- -f1)
-		desc=$(echo $app | cut -d\- -f2)
-		echo "$service $desc off" >> /tmp/menuservices.txt
-	done
-	SERVICESTOINSTALL=$(whiptail --title "Services manager" --checklist \
-	"Please select services you want to add for $SEEDUSER (Use space to select)" 28 60 19 \
-	$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
-	SERVICESPERUSER="$SERVICESUSER$SEEDUSER"
-	touch $SERVICESPERUSER
-	for APPDOCKER in $SERVICESTOINSTALL
-	do
-		echo -e "	${GREEN}* $(echo $APPDOCKER | tr -d '"')${NC}"
-		echo $(echo ${APPDOCKER,,} | tr -d '"') >> $SERVICESPERUSER
-		if [[ "$(echo ${APPDOCKER,,} | tr -d '"')" == "lychee" ]]; then
-			ROOTPASSWD=$(whiptail --title "MariaDB" --inputbox "Enter root password for MariaDB" 7 60 3>&1 1>&2 2>&3)
-			LYCHEEDBPASSWORD=$(whiptail --title "MariaDB" --inputbox "Enter DB password for Lychee" 7 60 3>&1 1>&2 2>&3)
-		fi
-	done
-	rm /tmp/menuservices.txt
 }
 
 function add_user_htpasswd() {
@@ -409,8 +379,46 @@ function add_user_htpasswd() {
 	fi
 }
 
+function valid_htpasswd() {
+	if [[ -d "/etc/nginx/" ]]; then
+		HTFOLDER="/etc/nginx/passwd/"
+		mkdir -p $HTFOLDER > /dev/null 2>&1
+		HTTEMPFOLDER="/tmp/"
+		HTFILE=".htpasswd-$SEEDUSER"
+		cat "$HTTEMPFOLDER$HTFILE" >> "$HTFOLDER$HTFILE" > /dev/null 2>&1
+		rm "$HTTEMPFOLDER$HTFILE" > /dev/null 2>&1
+	fi
+}
+
+function choose_services() {
+	echo -e "${BLUE}### SERVICES ###${NC}"
+	echo -e " ${BWHITE}--> Services will be installed : ${NC}"
+	for app in $(cat $SERVICESAVAILABLE);
+	do
+		service=$(echo $app | cut -d\- -f1)
+		desc=$(echo $app | cut -d\- -f2)
+		echo "$service $desc off" >> /tmp/menuservices.txt
+	done
+	SERVICENEEDED=$(whiptail --title "Services manager" --checklist \
+				"Please select services you want to add for $SEEDUSER (Use space to select)" 28 60 19 \
+				$(cat /tmp/menuservices.txt) 3>&1 1>&2 2>&3)
+	SERVICESPERUSER="$SERVICESUSER$SEEDUSER"
+	touch $SERVICESPERUSER
+	for DOCKERAPP in $SERVICENEEDED
+	do
+		echo -e "	${GREEN}* $(echo $DOCKERAPP | tr -d '"')${NC}"
+		echo $(echo ${DOCKERAPP,,} | tr -d '"') >> $SERVICESPERUSER
+		if [[ "$(echo ${DOCKERAPP,,} | tr -d '"')" == "lychee" ]]; then
+			ROOTPASSWD=$(whiptail --title "MariaDB" --inputbox "Enter root password for MariaDB" 7 60 3>&1 1>&2 2>&3)
+			LYCHEEDBPASSWORD=$(whiptail --title "MariaDB" --inputbox "Enter DB password for Lychee" 7 60 3>&1 1>&2 2>&3)
+		fi
+	done
+	rm /tmp/menuservices.txt
+}
+
 function install_services() {
 	INSTALLEDFILE="/home/$SEEDUSER/resume"
+	DOCKERCOMPOSEFILE="/home/$SEEDUSER/docker-compose.yml"
 	touch $INSTALLEDFILE > /dev/null 2>&1
 	if [[ -f "$FILEPORTPATH" ]]; then
 		declare -i PORT=$(cat $FILEPORTPATH | tail -1)
@@ -424,13 +432,12 @@ function install_services() {
 			LESSL="n"
 		fi
 	fi
-	DOCKERCOMPOSEFILE="/home/$SEEDUSER/docker-compose.yml"
 	if [[ ! -f $DOCKERCOMPOSEFILE ]]; then
 		touch $DOCKERCOMPOSEFILE
 	fi
 	for line in $(cat $SERVICESPERUSER);
 	do
-		cat "/opt/seedbox-compose/includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
+		cat "$BASEDIR/includes/dockerapps/$line.yml" >> $DOCKERCOMPOSEFILE
 		if [[ "$line" == "lychee" ]]; then
 			sed -i "s|%ROOTPASSWD%|$ROOTPASSWD|g" $DOCKERCOMPOSEFILE
 			sed -i "s|%LYCHEEDBPASSWD%|$LYCHEEDBPASSWORD|g" $DOCKERCOMPOSEFILE
@@ -447,25 +454,23 @@ function install_services() {
 		            "Please choose how do you want access your Apps :" 10 45 2 \
 		            "1" "Subdomains" \
 		            "2" "URI" 3>&1 1>&2 2>&3)
-		    case $SUBURI in
-		        "1" )
-					PROXYACCESS="SUBDOMAIN"
-					FQDNTMP="$line.$DOMAIN"
-					FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
-					"Do you want to use a different subdomain for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
-					ACCESSURL=$FQDN
-					URI="/"
-					NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$FQDN.conf"
+			case $SUBURI in
+		      "1" )
+							PROXYACCESS="SUBDOMAIN"
+							FQDN=$(whiptail --title "SSL Subdomain" --inputbox \
+							"Do you want to use a different subdomain for $line ? default :" 7 75 "$line.$DOMAIN" 3>&1 1>&2 2>&3)
+							ACCESSURL=$FQDN
+							URI="/"
+							NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$FQDN.conf"
 		        	;;
-		        "2" )
-					PROXYACCESS="URI"
-					FQDN=$DOMAIN
-					FQDNTMP="/$line"
-					ACCESSURL=$(whiptail --title "SSL Subdomain" --inputbox \
-					"Do you want to use a different URI for $line ? default :" 7 75 "$FQDNTMP" 3>&1 1>&2 2>&3)
-					URI=$ACCESSURL
+		      "2" )
+							PROXYACCESS="URI"
+							FQDN=$DOMAIN
+							ACCESSURL=$(whiptail --title "SSL Subdomain" --inputbox \
+							"Do you want to use a different URI for $line ? default :" 7 75 "/$line" 3>&1 1>&2 2>&3)
+							URI=$ACCESSURL
 		        	NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$line.$DOMAIN.conf"
-					;;
+							;;
 		    esac
 		else
 			NGINXSITE="/etc/nginx/conf.d/$SEEDUSER.$line.conf"
@@ -541,17 +546,6 @@ function docker_compose() {
 	cd $ACTDIR
 }
 
-function valid_htpasswd() {
-	if [[ -d "/etc/nginx/" ]]; then
-		HTFOLDER="/etc/nginx/passwd/"
-		mkdir -p $HTFOLDER > /dev/null 2>&1
-		HTTEMPFOLDER="/tmp/"
-		HTFILE=".htpasswd-$SEEDUSER"
-		cat "$HTTEMPFOLDER$HTFILE" >> "$HTFOLDER$HTFILE" > /dev/null 2>&1
-		rm "$HTTEMPFOLDER$HTFILE" > /dev/null 2>&1
-	fi
-}
-
 function create_reverse() {
 	if [[ "$DOMAIN" != "localhost" ]]; then
 		echo -e "${BLUE}### REVERSE PROXY ###${NC}"
@@ -562,7 +556,7 @@ function create_reverse() {
 		if [[ "$PROXYACCESS" == "URI" ]]; then
 			echo -e " ${BWHITE}--> [$DOMAIN] - Creating reverse${NC}"
 			generate_ssl_cert $CONTACTEMAIL $DOMAIN
-		else	
+		else
 			for line in $(cat $INSTALLEDFILE);
 			do
 				SERVICE=$(echo $line | cut -d\- -f1)
@@ -661,7 +655,7 @@ function manage_apps() {
 	ACTIONONAPP=$(whiptail --title "App Manager" --menu \
 	                "Select an action :" 12 55 2 \
 	                "1" "Add Docker App"  \
-	                "2" "Delete an App" 3>&1 1>&2 2>&3)        
+	                "2" "Delete an App" 3>&1 1>&2 2>&3)
 	[[ "$?" = 1 ]] && script_option;
 	case $ACTIONONAPP in
 		"1" ) ## ADDING APP
