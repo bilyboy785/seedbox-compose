@@ -329,7 +329,6 @@ function define_parameters() {
 }
 
 function create_user() {
-	# echo -e " ${BWHITE}* Checking group for Seedbox${NC}"
 	if [[ ! -f "$GROUPFILE" ]]; then
 		touch $GROUPFILE
 		SEEDGROUP=$(whiptail --title "Group" --inputbox \
@@ -351,7 +350,6 @@ function create_user() {
 		SEEDGROUP=$TMPGROUP
 	    echo -e " ${YELLOW}* No need to create group $SEEDGROUP, already exist.${NC}"
 	fi
-	# echo -e " ${BWHITE}* Checking user for Seedbox${NC}"
 	if [[ ! -f "$USERSFILE" ]]; then
 		touch $USERSFILE
 	fi
@@ -370,7 +368,7 @@ function create_user() {
 	else
 		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
 		echo -e " ${BWHITE}* Adding $SEEDUSER to the system"
-		useradd -m -g $SEEDGROUP -p $PASS $SEEDUSER > /dev/null 2>&1
+		useradd -m -g $SEEDGROUP -p $PASS -s /bin/false $SEEDUSER > /dev/null 2>&1
 		checking_errors $?
 		USERID=$(id -u $SEEDUSER)
 		GRPID=$(id -g $SEEDUSER)
