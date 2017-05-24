@@ -590,7 +590,8 @@ function create_reverse() {
 function generate_ssl_cert() {
 	EMAILADDRESS=$1
 	DOMAINSSL=$2
-	ping -c 1 $DOMAINSSL | grep "$IPADDRESS" > /dev/null
+	WANIP=$(dig o-o.myaddr.l.google.com @ns1.google.com txt +short | sed 's/"//g')
+	ping -c 1 $DOMAINSSL | grep "$WANIP" > /dev/null
 	if [[ "$?" == "0" ]]; then
 		echo -e "	${BWHITE}--> Generating LE certificate for $DOMAINSSL, please wait...${NC}"
 		bash /opt/letsencrypt/letsencrypt-auto certonly --standalone --preferred-challenges http-01 --agree-tos --rsa-key-size 4096 --non-interactive --quiet --email $EMAILADDRESS -d $DOMAINSSL
