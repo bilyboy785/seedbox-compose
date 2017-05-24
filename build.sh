@@ -43,9 +43,7 @@ if [ $USER = "root" ] ; then
 				resume_seedbox
 				## Backup dockers app Configuration
 				backup_docker_conf
-				#schedule_backup_seedbox
-				## Display Teamspeak IDs
-				##access_token_ts
+				#schedule_backup_seedboxe
 				schedule_backup_seedbox
 	    	else
 				clear

@@ -895,6 +895,7 @@ function resume_seedbox() {
 	# chown $SEEDUSER: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
 	# chmod 775: -R /home/$SEEDUSER/downloads/{tv;movies;medias}
 	touch "/etc/seedboxcompose/firstinstall" > /dev/null 2>&1
+	service nginx restart > /dev/null 2>&1
 }
 
 function backup_docker_conf() {
