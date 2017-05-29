@@ -13,3 +13,4 @@ locate
 tree
 openssl
 members
+dnsutils
