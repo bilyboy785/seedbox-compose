@@ -313,50 +313,43 @@ function define_parameters() {
 }
 
 function create_user() {
-	echo -e " ${BWHITE}* Checking group Seedbox group file${NC}"
-	if [[ ! -f "$GROUPFILE" ]]; then
-		touch $GROUPFILE
-		SEEDGROUP=$(whiptail --title "Group" --inputbox "Create a group for your Seedbox" 7 50 3>&1 1>&2 2>&3)
-		echo "$SEEDGROUP" > "$GROUPFILE"
-	else
-		TMPGROUP=$(cat $GROUPFILE)
-		if [[ "$TMPGROUP" == "" ]]; then
-			SEEDGROUP=$(whiptail --title "Group" --inputbox "Create a group for your Seedbox" 7 50 3>&1 1>&2 2>&3)
-    fi
-	fi
-  egrep "^$SEEDGROUP" /etc/group >/dev/null
-	if [[ "$?" != "0" ]]; then
-		echo -e " ${BWHITE}* Creating group $SEEDGROUP"
-	  groupadd $SEEDGROUP
-	  checking_errors $?
-	else
-		SEEDGROUP=$TMPGROUP
-	    echo -e "	${YELLOW}--> No need to create group $SEEDGROUP, already exist.${NC}"
-	fi
-	echo -e " ${BWHITE}* Checking Seedbox user file${NC}"
-	if [[ ! -f "$USERSFILE" ]]; then
-		touch $USERSFILE
-	fi
-	SEEDUSER=$(whiptail --title "Username" --inputbox "Please enter a username :" 7 50 3>&1 1>&2 2>&3)
-	PASSWORD=$(whiptail --title "Password" --passwordbox "Please enter a password :" 7 50 3>&1 1>&2 2>&3)
-	egrep "^$SEEDUSER" /etc/passwd >/dev/null
-	if [ $? -eq 0 ]; then
-		echo -e " ${YELLOW}* User already exist !${NC}"
-		USERID=$(id -u $SEEDUSER)
-		GRPID=$(id -g $SEEDUSER)
-		echo -e " ${BWHITE}* Adding $SEEDUSER in $SEEDGROUP"
-		usermod -a -G $SEEDGROUP $SEEDUSER
-		checking_errors $?
-	else
-		PASS=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
-		echo -e " ${BWHITE}* Adding $SEEDUSER to the system"
-		useradd -m -G $SEEDGROUP -p $PASS $SEEDUSER > /dev/null 2>&1
-		checking_errors $?
-		USERID=$(id -u $SEEDUSER)
-		GRPID=$(id -g $SEEDUSER)
-	fi
-	add_user_htpasswd $SEEDUSER $PASSWORD
-	echo $SEEDUSER >> $USERSFILE
+	while :; do
+		SEEDUSER=$(whiptail --title "Username" --inputbox \
+		"Please enter a username :" 7 50 3>&1 1>&2 2>&3)
+		PASSWORD=$(whiptail --title "Password" --passwordbox \
+		"Please enter a password :" 7 50 3>&1 1>&2 2>&3)
+		grep -w "$SEEDUSER" /etc/passwd &> /dev/null
+		if [ $? -eq 1 ]; then
+			echo -e " ${BWHITE}* Adding $SEEDUSER to the system"
+			useradd -M -s /bin/bash "$SEEDUSER"
+			checking_errors $?
+			echo "${SEEDUSER}:${PASSWORD}" | chpasswd
+			mkdir -p /home/"$SEEDUSER"/{watch,torrents,dockers}
+			chown -R "$SEEDUSER":"$SEEDUSER" /home/"$SEEDUSER"
+			chown root:"$SEEDUSER" /home/"$SEEDUSER"
+			chmod 755 /home/"$SEEDUSER"
+			USERID=$(id -u $SEEDUSER)
+			GRPID=$(id -g $SEEDUSER)
+
+			sed -i "s/Subsystem[[:blank:]]sftp[[:blank:]]\/usr\/lib\/openssh\/sftp-server/Subsystem sftp internal-sftp/g;" /etc/ssh/sshd_config
+			sed -i "s/UsePAM/#UsePAM/g;" /etc/ssh/sshd_config
+
+			cat <<- EOF >> /etc/ssh/sshd_config
+			Match User $SEEDUSER
+			ChrootDirectory /home/$SEEDUSER
+			EOF
+
+			service ssh restart
+			checking_errors $?
+
+			add_user_htpasswd $SEEDUSER $PASSWORD
+			echo $SEEDUSER >> $USERSFILE
+			break
+		else
+			whiptail --title "Error" --msgbox \
+			"User already exist !" 10 60
+		fi
+	done
 }
 
 function add_user_htpasswd() {
